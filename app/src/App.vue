@@ -26,13 +26,17 @@ export default {
   padding: 30px;
 }
 
-.container {
-  margin-left: 50px;
-  margin-right: 50px;
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
-.container-fluid {
-  width: 100%;
+.title {
+  color: #b01e0f;
 }
 
+.subtitle {
+  color: #b01e0f;
+}
 </style>
