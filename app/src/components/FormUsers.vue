@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid">
-    <b-form @submit.prevent="">
+    <b-form @submit.prevent="addUser">
       <h4 class="subtitle mt-4">Dados Pessoais</h4>
       <!-- Nome password-->
       <div class="row">
@@ -806,8 +806,13 @@
         </div>
       </div>
 
-      <b-button class="btn-add mt-5 mb-5" type="submit" variant="danger"
-        >Adicionar</b-button>
+      <div
+        class="row align-items-center d-flex justify-content-center mt-5 mb-5"
+      >
+        <b-button class="btn-add mt-5 mb-5" type="submit" variant="danger"
+          >Adicionar</b-button
+        >
+      </div>
     </b-form>
   </div>
 </template>
@@ -878,18 +883,4 @@ export default {
 </script>
 
 <style>
-#button .btnAdd {
-  color: #b01e0f;
-  text-align: center;
-}
-
-.btn.btn-add.btn-danger {
-  color: #fff;
-  background-color: #b01e0f;
-  border-color: #b01e0f;
-  position: absolute;
-  left: 46.3%;
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
-}
 </style>
