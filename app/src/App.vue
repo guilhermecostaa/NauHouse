@@ -39,4 +39,13 @@ body {
 .subtitle {
   color: #b01e0f;
 }
+
+.btn.btn-add.btn-danger {
+  color: #fff;
+  background-color: #b01e0f;
+  border-color: #b01e0f;
+  position: absolute;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
 </style>
