@@ -41,9 +41,13 @@
         </div>
       </div>
 
-      <b-button squared class="btn-add mt-5 mb-5" type="submit" variant="danger"
-        >Adicionar</b-button
+      <div
+        class="row align-items-center d-flex justify-content-center mt-5 mb-5"
       >
+        <b-button class="btn-add mt-5 mb-5" type="submit" variant="danger"
+          >Adicionar</b-button
+        >
+      </div>
     </b-form>
   </div>
 </template>
