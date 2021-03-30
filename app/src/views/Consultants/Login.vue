@@ -54,7 +54,7 @@ export default {
 
 <style>
 #login {
-  margin-top: 150px;
+  margin-top: 120px;
 }
 .btn.btn-login.btn-danger {
   color: #fff;
