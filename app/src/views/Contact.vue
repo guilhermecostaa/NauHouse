@@ -89,7 +89,9 @@
             </div>
           </div>
 
-          <div class="row align-items-center d-flex justify-content-center mt-5 mb-5">
+          <div
+            class="row align-items-center d-flex justify-content-center mt-5 mb-5"
+          >
             <b-button class="btn-add mt-5 mb-5" type="submit" variant="danger"
               >Contactar</b-button
             >
@@ -115,7 +117,7 @@ export default {
     };
   },
   methods: {
-    sendEmail: (e) => {
+    sendEmail(e){
       emailjs
         .sendForm(
           "service_7r1oyel",
@@ -125,9 +127,21 @@ export default {
         )
         .then(
           (result) => {
+            this.$swal({
+              text: `Email enviado!`,
+              icon: "success",
+              timer: 2000,
+              showConfirmButton: false,
+            });
             console.log("SUCCESS!", result.status, result.text);
           },
           (error) => {
+            this.$swal({
+              text: "Ups! Ocorreu um erro! Tente de novo",
+              icon: "error",
+              timer: 2000,
+              showConfirmButton: false,
+            });
             console.log("FAILED...", error);
           }
         );
