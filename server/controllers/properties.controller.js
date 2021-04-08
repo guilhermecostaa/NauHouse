@@ -120,6 +120,7 @@ async function editProperty(req, res) {
     if (video) {
         set.push(`video = "${video}"`)
     }
+    //Area
     if (usableArea) {
         setArea.push(`usable_area = "${usableArea}"`)
     }

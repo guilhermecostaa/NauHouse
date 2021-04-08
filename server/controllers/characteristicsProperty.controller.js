@@ -13,7 +13,7 @@ async function getCharacteristicsProperty(req, res) {
 
 async function addCharacteristicProperty(req, res) {
     const { idCharacteristics, idProperty } = req.body
-    const query = `insert into characteristics_property (id_property, id_characteristics) values ("${idCharacteristics}", "${idProperty}")`
+    const query = `insert into characteristics_property (id_characteristics, id_property) values ("${idCharacteristics}", "${idProperty}")`
     con.query(query, (err, results, fields) => {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
@@ -24,7 +24,7 @@ async function addCharacteristicProperty(req, res) {
 
 async function deleteCharacteristicProperty(req, res) {
     const { id } = req.params
-    const query = `delete from characteristics_property where id_characteristic = ${id}`
+    const query = `delete from characteristics_property where id_characteristics = ${id}`
     con.query(query, (err, results, fields) => {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
@@ -38,12 +38,12 @@ async function editCharacteristicProperty(req, res) {
     const { idCharacteristic, idProperty } = req.body
     let set = []
     if (idCharacteristic) {
-        set.push(`id_characteristic = "${idCharacteristic}"`) 
+        set.push(`id_characteristics = "${idCharacteristic}"`) 
     }
     if (idProperty) {
         set.push(`id_property = "${idProperty}"`) 
     }
-    const query = `update characteristics_property set ${set.join()} where id_characteristic = ${id}`
+    const query = `update characteristics_property set ${set.join()} where id_characteristics = ${id}`
     con.query(query, (err, results, fields) => {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))

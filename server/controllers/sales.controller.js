@@ -13,8 +13,8 @@ async function getSales(req, res) {
 
 async function addSale(req, res) {
     const { idProperty, propertyValue, consultantGains, companyGains } = req.body
-    const query = `insert into sales (id_property, property_value, consultant_gains, companyGains) values ("${idProperty}",
-                    "${propertyValue}", "${consultantGains}". "${companyGains}")`
+    const query = `insert into sales (id_property, property_value, consultant_gains, company_gains) values ("${idProperty}",
+                    "${propertyValue}", "${consultantGains}", "${companyGains}")`
     con.query(query, (err, results, fields) => {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
