@@ -2,9 +2,9 @@ const express = require("express")
 const router = express.Router()
 const controller = require("../controllers/status.controller")
 
-router.get("/", controller.getStatus)
-router.post("/", controller.addStatus)
-router.delete("/:id", controller.deleteStatus)
-router.put("/:id", controller.editStatus)
+router.get("/", auth, controller.getStatus)
+router.post("/", auth, controller.addStatus)
+router.delete("/:id", auth, controller.deleteStatus)
+router.put("/:id", auth, controller.editStatus)
 
 module.exports = app => app.use("/status", router)
