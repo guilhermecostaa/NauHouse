@@ -1,6 +1,7 @@
 const express = require("express")
 const router = express.Router()
 const controller = require("../controllers/sales.controller")
+const auth = require("../middleware/auth.middleware")
 
 router.get("/", auth, controller.getSales)
 router.post("/", auth, controller.addSale)

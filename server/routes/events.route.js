@@ -1,6 +1,7 @@
 const express = require("express")
 const router = express.Router()
 const controller = require("../controllers/events.controller")
+const auth = require("../middleware/auth.middleware")
 
 router.get("/", auth, controller.getEvents)
 router.post("/", auth, controller.addEvent)

@@ -1,8 +1,9 @@
 const express = require("express")
 const router = express.Router()
 const controller = require("../controllers/news.controller")
+const auth = require("../middleware/auth.middleware")
 
-router.get("/", auth ,controller.getNews)
+router.get("/", auth, controller.getNews)
 router.post("/", auth, controller.addNew)
 router.delete("/:id", auth, controller.deleteNew)
 router.put("/:id", auth, controller.editNew)

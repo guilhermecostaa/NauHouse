@@ -1,6 +1,7 @@
 const express = require("express")
 const router = express.Router()
 const controller = require("../controllers/contactUser.controller")
+const auth = require("../middleware/auth.middleware")
 
 router.get("/", auth, controller.getContactUser)
 router.post("/", auth, controller.addContactUser)
