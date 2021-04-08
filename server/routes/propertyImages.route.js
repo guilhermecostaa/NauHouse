@@ -1,3 +1,4 @@
+const express = require("express")
 const router = express.Router()
 const controller = require("../controllers/propertyImages.controller")
 
@@ -6,4 +7,4 @@ router.post("/", controller.addPropertyImage)
 router.delete("/:id", controller.deletePropertyImage)
 router.put("/:id", controller.editPropertyImage)
 
-module.exports = app => app.use("/porpertyImages", router)
+module.exports = app => app.use("/propertyImages", router)
