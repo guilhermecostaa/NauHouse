@@ -13,7 +13,7 @@ async function getShapes(req, res) {
 
 async function addShape(req, res) {
     const { shape } = req.body
-    const query = `insert into shapes (shape) values ("${shape}")`
+    const query = `insert into shape (shape) values ("${shape}")`
     con.query(query, (err, results, fields) => {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))

@@ -24,7 +24,7 @@ async function addImage(req, res) {
 
 async function deleteImage(req, res) {
     const { id } = req.params
-    const query = `delete from images where id_image = ${id}`
+    const query = `delete from images where id_images = ${id}`
     con.query(query, (err, results, fields) => {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
@@ -40,7 +40,7 @@ async function editImage(req, res) {
     if (image) {
         set.push(`image = "${image}"`) 
     }
-    const query = `update images set ${set.join()} where id_image = ${id}`
+    const query = `update images set ${set.join()} where id_images = ${id}`
     con.query(query, (err, results, fields) => {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))

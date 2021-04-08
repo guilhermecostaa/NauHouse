@@ -13,7 +13,7 @@ async function getContacts(req, res) {
 
 async function addContact(req, res) {
     const { name, number, desc, status } = req.body
-    const query = `insert into contacts (name, number, desc, status) values ("${name}", "${number}", "${desc}", "${status}")`
+    const query = `insert into contacts (name, number, description, status) values ("${name}", "${number}", "${desc}", "${status}")`
     con.query(query, (err, results, fields) => {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
@@ -44,12 +44,12 @@ async function editContact(req, res) {
         set.push(`number = "${number}"`) 
     }
     if (desc) {
-        set.push(`desc = "${desc}"`) 
+        set.push(`description = "${desc}"`) 
     }
     if (status) {
         set.push(`status = "${status}"`) 
     }
-    const query = `update contacts set ${set.join()} where id_contact = ${id}`
+    const query = `update contacts set ${set.join()} where id_contacts = ${id}`
     con.query(query, (err, results, fields) => {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))

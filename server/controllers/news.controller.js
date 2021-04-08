@@ -12,8 +12,8 @@ async function getNews(req, res) {
 }
 
 async function addNew(req, res) {
-    const { title, desc, image } = req.body
-    const query = `insert into news (title, desc, image) values ("${title}", "${desc}", "${image}")`
+    const { Title, Desc, Image } = req.body
+    const query = `insert into news(title, description, image) values ("${Title}", "${Desc}", "${Image}")`
     con.query(query, (err, results, fields) => {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
@@ -24,7 +24,7 @@ async function addNew(req, res) {
 
 async function deleteNew(req, res) {
     const { id } = req.params
-    const query = `delete from news where id_new = ${id}`
+    const query = `delete from news where id_news = ${id}`
     con.query(query, (err, results, fields) => {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
@@ -41,12 +41,12 @@ async function editNew(req, res) {
         set.push(`title = "${title}"`) 
     }
     if (desc) {
-        set.push(`desc = "${desc}"`) 
+        set.push(`description = "${desc}"`) 
     }
     if (image) {
         set.push(`image = "${image}"`) 
     }
-    const query = `update news set ${set.join()} where id_new = ${id}`
+    const query = `update news set ${set.join()} where id_news = ${id}`
     con.query(query, (err, results, fields) => {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))

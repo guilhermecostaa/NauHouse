@@ -2,7 +2,7 @@ const con = require("../connection")
 const messages = require("../messages")
 
 async function getGroups(req, res) {
-    const query = "select * from groups;"
+    const query = "select * from mydb.groups;"
     con.query(query, (err, results, fields) => {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
@@ -12,8 +12,8 @@ async function getGroups(req, res) {
 }
 
 async function addGroup(req, res) {
-    const { group } = req.body
-    const query = `insert into group (group) values ("${group}")`
+    const { name } = req.body
+    const query = `insert into mydb.groups (name) values ("${name}")`
     con.query(query, (err, results, fields) => {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
@@ -24,7 +24,7 @@ async function addGroup(req, res) {
 
 async function deleteGroup(req, res) {
     const { id } = req.params
-    const query = `delete from group where id_group = ${id}`
+    const query = `delete from mydb.groups where id_group = ${id}`
     con.query(query, (err, results, fields) => {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
@@ -35,12 +35,12 @@ async function deleteGroup(req, res) {
 
 async function editGroup(req, res) {
     const { id } = req.params
-    const { group } = req.body
+    const { name } = req.body
     let set = []
-    if (group) {
-        set.push(`group = "${group}"`) 
+    if (name) {
+        set.push(`name = "${name}"`) 
     }
-    const query = `update group set ${set.join()} where id_group = ${id}`
+    const query = `update mydb.groups set ${set.join()} where id_group = ${id}`
     con.query(query, (err, results, fields) => {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))

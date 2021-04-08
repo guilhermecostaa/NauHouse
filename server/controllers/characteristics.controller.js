@@ -12,8 +12,8 @@ async function getCharacteristics(req, res) {
 }
 
 async function addCharacteristic(req, res) {
-    const { characteristic } = req.body
-    const query = `insert into characteristics (characteristic) values ("${characteristic}")`
+    const { characteristic, idGroup} = req.body
+    const query = `insert into characteristics (characteristic, id_group) values ("${characteristic}", "${idGroup}")`
     con.query(query, (err, results, fields) => {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
@@ -24,7 +24,7 @@ async function addCharacteristic(req, res) {
 
 async function deleteCharacteristic(req, res) {
     const { id } = req.params
-    const query = `delete from characteristics where id_characteristic = ${id}`
+    const query = `delete from characteristics where id_characteristics = ${id}`
     con.query(query, (err, results, fields) => {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
@@ -35,12 +35,15 @@ async function deleteCharacteristic(req, res) {
 
 async function editCharacteristic(req, res) {
     const { id } = req.params
-    const { characteristic } = req.body
+    const { characteristic, idGroup } = req.body
     let set = []
     if (characteristic) {
         set.push(`characteristic = "${characteristic}"`) 
     }
-    const query = `update characteristics set ${set.join()} where id_characteristic = ${id}`
+    if (idGroup) {
+        set.push(`id_group = "${idGroup}"`) 
+    }
+    const query = `update characteristics set ${set.join()} where id_characteristics = ${id}`
     con.query(query, (err, results, fields) => {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
