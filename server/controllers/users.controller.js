@@ -1,6 +1,6 @@
 const con = require("../connection")
 const messages = require("../messages")
-const moment = require("moment")
+const bcrypt = require("bcryptjs")
 
 async function getUsers(req, res) {
     const query = "select * from users;"
@@ -13,13 +13,17 @@ async function getUsers(req, res) {
 }
 
 async function addUser(req, res) {
-    const { name, email, number, password, userType, nacionality, avatar, birthday, placeOfBirth, maritalStatus, civilId,
+    let { name, email, number, password, userType, nacionality, avatar, birthday, placeOfBirth, maritalStatus, civilId,
         validity, address, postalCode, fiscalId, niss, academicQualification, academicArea, personalContact, emergencyContact,
         employmentSituation, personalEmail, regime, schedule, nif, experience, time, agency, ownCar, actingZone, team, elements,
         acquisition, transaction, faturationVolume, anotation, idAvailability, days, availabilitySchedule, availability,
         generalMeeting, accomplishMeeting, scale, idWorkType, workType, idObjectivesUsers, mensalInvoice, mensalAcquisition,
         averageTransaction, positioningZone, mensalPublicity, flyers, publicityZone, idZone, firstZone, secondZone,
         thirdZone, idBalance, active, passive } = req.body
+    
+    let salt = 10
+    let hash = await bcrypt.hash(password, salt)
+    password = hash
 
     const queryAvailability = `insert into availability (days, availability_schedule, availability, general_meeting, accomplish_meeting, scale)
                                 values("${days}", "${availabilitySchedule}", "${availability}", "${generalMeeting}", "${accomplishMeeting}", 
@@ -282,7 +286,7 @@ async function editUser(req, res) {
     const queryUser = `update users set ${set.join()} where id_user = ${id}`
     const queryAvailability = `update availability set ${setAvailability.join()} where id_availability = ${idAvailability}`
     const queryWorkType = `update work_type set ${setWorkType.join()} where id_work_type = ${idWorkType}`
-    const queryObjective = `update objetive_user set ${setObjectives.join()} where id_objectives_users = ${idObjectivesUsers}`
+    const queryObjective = `update objective_user set ${setObjectives.join()} where id_objectives_users = ${idObjectivesUsers}`
     const queryZone = `update zone set ${set.join()} where id_zone = ${idZone}`
     const queryBalance = `update balance set ${setBalance.join()} where id_balance = ${idBalance}`
     con.query(queryAvailability, (err, results, fields) => {
