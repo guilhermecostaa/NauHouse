@@ -11,6 +11,18 @@ async function getNews(req, res) {
     })
 }
 
+async function getNewById(req, res) {
+    const _id = req.params.id
+    const query = "select * from news where id_news = ?"
+    con.query(query, _id, (err, results, fields) => {
+        if (err) {
+            return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
+        }
+        res.send(messages.getSuccess("getNews", results))
+    })
+}
+
+
 async function addNew(req, res) {
     const { Title, Desc, Image } = req.body
     const query = `insert into news(title, description, image) values ("${Title}", "${Desc}", "${Image}")`
@@ -56,4 +68,4 @@ async function editNew(req, res) {
 }
 
 
-module.exports = { getNews, addNew, deleteNew, editNew}
+module.exports = { getNews, getNewById, addNew, deleteNew, editNew}

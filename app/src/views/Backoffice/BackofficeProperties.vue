@@ -6,16 +6,67 @@
         <FormProperty/>
       </div>
     </div>
+
+    <div class="dataTable container-fluid mt-5">
+      <DataTable
+        name="propety"
+        :items="getProperties"
+        :fields="['id', 'habitation','county', 'price', 'actions']"
+        type="property"
+      ></DataTable>
+    </div>
   </div>
 </template>
 
 <script>
 import FormProperty from "@/components/FormProperty.vue";
+import DataTable from "@/components/DataTable.vue";
 export default {
   name: "BackofficeProperties",
   components: {
     FormProperty,
+    DataTable
   },
+  created(){
+    this.loadProperties()
+    this.$store.subscribe(mutation => {
+			switch (mutation.type) {
+				case "ADD_PROPERTY":
+          this.loadProperties();
+          break
+        case "DELETE_PROPERTY":
+          this.loadProperties();
+          break
+			}
+		})
+  },
+  data() {
+    return {
+      properties: [],
+    };
+  },
+  methods: {
+    async loadProperties() {
+      try {
+        const response = await this.$http.get("/property")
+				if (response.status === 200) {
+          this.properties = response.data.content
+          console.log(this.properties)
+          return this.properties;
+				}
+      } catch (err) {
+        console.log(err.response);
+      }
+    },
+  },
+  computed: {
+    getProperties(){
+      return this.properties
+    },
+    getRows(){
+      return this.properties.length
+    }
+  }
 };
 </script>
 

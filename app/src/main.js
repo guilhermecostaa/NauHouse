@@ -2,21 +2,34 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import axios from 'axios'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-import VueSweetalert2 from 'vue-sweetalert2';
+import 'vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css';
+import VueSweetalert2 from 'vue-sweetalert2'
+import 'sweetalert2/dist/sweetalert2.min.css'
+import ToggleButton from 'vue-js-toggle-button'
+import VueCtkDateTimePicker from 'vue-ctk-date-time-picker';
+
 import{ init } from 'emailjs-com';
 init("user_ERkgj4TuWJz3216R2nMuM");
 
-import 'sweetalert2/dist/sweetalert2.min.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 
+const http = axios.create({
+  baseURL: "http://localhost:3000",
+});
+
+Vue.prototype.$http = http
 
 Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 Vue.use(VueSweetalert2);
+Vue.use(ToggleButton);
+Vue.component('VueCtkDateTimePicker', VueCtkDateTimePicker);
+
 
 Vue.config.productionTip = false
 

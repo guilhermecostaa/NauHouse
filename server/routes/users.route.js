@@ -3,8 +3,8 @@ const router = express.Router()
 const controller = require("../controllers/users.controller")
 const auth = require("../middleware/auth.middleware")
 
-router.get("/", auth, controller.getUsers)
-router.post("/", auth, controller.addUser)
+router.get("/", controller.getUsers)
+router.post("/", controller.addUser)
 router.delete("/:id", auth, controller.deleteUser)
 router.put("/:id", auth, controller.editUser)
 

@@ -48,8 +48,8 @@
             label-for="input-avatar"
           >
             <b-form-file
-              v-model="avatar"
-              :state="Boolean(avatar)"
+              v-model="form.avatar"
+              :state="Boolean(form.avatar)"
               required
             ></b-form-file>
           </b-form-group>
@@ -67,7 +67,7 @@
               id="input-phone"
               v-model="form.phone"
               type="tel"
-              pattern="[0-9]{3}-[0-9]{3}-[0-9]{3}"
+              max="9"
               required
             ></b-form-input>
           </b-form-group>
@@ -75,21 +75,14 @@
         <div class="col-md-6 col-sm-12">
           <b-form-group
             id="input-userType"
-            label="Tipo de Utilizador"
+            label="Tipo de Utilizador:"
             label-for="input-userType"
           >
-            <div class="form-group">
-              <select
-                class="form-control"
-                name
-                id="input-userType"
-                v-model="form.userType"
-              >
-                <option disabled>Selecione Uma</option>
-                <option>Admistrador</option>
-                <option>Consultor</option>
-              </select>
-            </div>
+            <b-form-select
+              id="input-userType"
+              v-model="form.userType"
+              :options="userTypes"
+            ></b-form-select>
           </b-form-group>
         </div>
       </div>
@@ -123,7 +116,6 @@
                 month: 'numeric',
                 day: 'numeric',
               }"
-              :pickerOptions="pickerOptions"
               type="date"
               class="mb-2"
               required
@@ -176,7 +168,6 @@
                 month: 'numeric',
                 day: 'numeric',
               }"
-              :pickerOptions="pickerOptions"
               type="date"
               class="mb-2"
               required
@@ -876,9 +867,147 @@ export default {
         secondZone: "",
         thirdZone: "",
       },
+      userTypes: [
+        { text: "Select One", value: null },
+        { text: "Consultor", value: "1" },
+        { text: "Admistrador", value: "2" },
+        { text: "Assistente Executiva", value: "3" },
+        { text: "Consultora de Marketing e Multimédia", value: "4" }
+      ],
     };
   },
-  methods: {},
+  methods: {
+    async addUser() {
+      try {
+        const response = await this.$http.post("/users", {
+          name: this.form.name,
+          email: this.form.email,
+          number: this.form.phone,
+          password: this.form.password,
+          nacionality: this.form.nacionality,
+          avatar: this.form.avatar,
+          birthday: this.form.birthday,
+          userType: this.form.userType,
+          placeOfBirth: this.form.placeOfBirth,
+          civilId: this.form.civilId,
+          validity: this.form.validity,
+          address: this.form.address,
+          maritalStatus: this.form.maritalStatus,
+          postalCode: this.form.postalCode,
+          fiscalId: this.form.fiscalId,
+          niss: this.form.niss,
+          academicQualification: this.form.academicQualification,
+          academicArea: this.form.academicArea,
+          personalContact: this.form.personalContact,
+          emergencyContact: this.form.emergencyContact,
+          employmentSituation: this.form.employmentSituation,
+          personalEmail: this.form.personalEmail,
+          regime: this.form.regime,
+          schedule: this.form.schedule,
+          nif: this.form.nif,
+          experience: this.form.experience,
+          time: this.form.time,
+          agency: this.form.agency,
+          ownCar: this.form.ownCar,
+          actingZone: this.form.actingZone,
+          team: this.form.team,
+          elements: this.form.elements,
+          acquisition: this.form.acquisition,
+          transaction: this.form.transaction,
+          faturationVolume: this.form.faturationVolume,
+          anotation: this.form.anotation,
+          availability: this.form.availability,
+          workType: this.form.workType,
+          days: this.form.availabilityDays,
+          availabilitySchedule: this.form.availabilitySchedule,
+          generalMeeting: this.form.generalMeeting,
+          accomplishMeeting: this.form.suportMeeting,
+          scale: this.form.scale,
+          publicityZone: this.form.publicityZone,
+          positioningZone: this.form.positioningZone,
+          mensalPublicity: this.form.mensalPublicity,
+          flyers: this.form.flyers,
+          mensalInvoice: this.form.mensalInvoice,
+          mensalAcquisition: this.form.mensalAcquisition,
+          averageTransaction: this.form.mensalTransaction,
+          firstZone: this.form.firstZone,
+          secondZone: this.form.secondZone,
+          thirdZone: this.form.title,
+        });
+        console.log(response);
+        this.$swal({
+          text: `Utilizador Adicionada!`,
+          icon: "success",
+          showConfirmButton: false,
+          timer: 2000,
+        });
+          /*this.form.name = "",
+          this.form.password = "",
+          this.form.email = "",
+          this.form.avatar = "",
+          this.form.phone = "",
+          this.form.userType= "",
+          this.form.nacionality = "",
+          this.form.birthday = "",
+          this.form.placeOfBirth = "",
+          this.form.civilId = "",
+          this.form.validity = "",
+          this.form.address= "",
+          this.form.maritalStatus = "",
+          this.form.postalCode = "",
+          this.form.fiscalId= "",
+          this.form.niss = "",
+          this.form.academicQualification ="",
+          this.form.academicArea = "",
+          this.form.personalContact = "",
+          this.form.emergencyContact = "",
+          this.form.employmentSituation = "",
+          this.form.personalEmail = "",
+          this.form.regime = "",
+          this.form.schedule = "",
+          this.form.nif = "",
+          this.form.experience = "",
+          this.form.time = "",
+          this.form.agency = "",
+          this.form.ownCar = "",
+          this.form.actingZone = "",
+          this.form.team = "",
+          this.form.elements = "",
+          this.form.acquisition = "",
+          this.form.transaction = "",
+          this.form.faturationVolume = "",
+          this.form.anotation = "",
+          this.form.availability = "",
+          this.form.workType = "",
+          this.form.availabilityDays = "",
+          this.form.availabilitySchedule = "",
+          this.form.generalMeeting = "",
+          this.form.suportMeeting = "",
+          this.form.scale = "",
+          this.form.publicityZone = "",
+          this.form.positioningZone = "",
+          this.form.mensalPublicity = "",
+          this.form.flyers = "",
+          this.form.mensalInvoice = "",
+          this.form.mensalAcquisition = "",
+          this.form.mensalTransaction = "",
+          this.form.firstZone = "",
+          this.form.secondZone = "",
+          this.form.title = "" */
+      } catch (err) {
+        console.log(err);
+        if (err) {
+          this.$swal({
+            text: `Ups occoreu um erro!`,
+            icon: "error",
+            timer: 2000,
+            showConfirmButton: false,
+          });
+          console.log(err)
+        }
+      }
+    },
+  },
 };
 </script>
 

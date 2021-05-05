@@ -1,5 +1,6 @@
 const con = require("../connection")
 const messages = require("../messages")
+let properties = []
 
 async function getProperties(req, res) {
     const query = "select * from property;"
@@ -11,10 +12,31 @@ async function getProperties(req, res) {
     })
 }
 
+async function getPropertiesByUser(req, res) {
+    const { id } = req.params
+    const query = `select * from property where consultant_id = ${id}`
+    con.query(query, (err, results, fields) => {
+        if (err) {
+            return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
+        }
+        properties = results
+        for (let i = 0; i < properties.length; i++) {
+            const id = properties[i].id_property
+            const query2 = `select * from area where id_property = ${id}`
+            con.query(query2, (err, results2, fields) => {
+                if (err) {
+                    return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
+                }
+                res.send(messages.getSuccess("getPropertiesByUser", results2))
+            })   
+        }
+    })
+}
+
 async function addProperty(req, res) {
     const { idProperty, title, subtitle, desc, district, county, address, postalCode, idCategory, idPurpose, price, idShape,
         habitation, bathrooms, suites, room, closedGarage, parking, consultantId, idEnergeticEfficiency, idStatus,
-        video, usableArea, landArea, constructionGrossArea, implementationArea} = req.body
+        video, usableArea, landArea, constructionGrossArea, implementationArea } = req.body
     const query = `insert into property (id_property, title, subtitle, description, district, county, address, postal_code, id_category,
                     id_purpose, price, id_shape, habitation, bathrooms, suites, room, closed_garage, parking, consultant_id,
                     id_energetic_efficiency, id_status, video) values ("${idProperty}", "${title}", "${subtitle}", "${desc}", "${district}",
@@ -33,7 +55,8 @@ async function addProperty(req, res) {
             }
             res.send(messages.getSuccess("addProperty", results))
         }
-    )})
+        )
+    })
 }
 
 async function deleteProperty(req, res) {
@@ -149,4 +172,4 @@ async function editProperty(req, res) {
 }
 
 
-module.exports = { getProperties, addProperty, deleteProperty, editProperty }
+module.exports = { getProperties, getPropertiesByUser, addProperty, deleteProperty, editProperty }

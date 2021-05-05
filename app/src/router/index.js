@@ -38,13 +38,11 @@ const routes = [
     path: '/news',
     name: 'News',
     component: News,
-    children: [
-      {
-        path: "new/:id",
-        name: "New",
-        component: New,
-      }
-    ],
+  },
+  {
+    path: "/news/:id",
+    name: "New",
+    component: New,
   },
   {
     path: '/contact',
@@ -70,18 +68,16 @@ const routes = [
     path: "/consultant/:id",
     name: "Perfil",
     component: Perfil,
-    children: [
-      {
-        path: "contacts",
-        name: "Contacts",
-        component: Contacts,
-      },
-      {
-        path: "agenda",
-        name: "Agenda",
-        component: Agenda,
-      },
-    ],
+  },
+  {
+    path: "/contacts/:id",
+    name: "Contacts",
+    component: Contacts,
+  },
+  {
+    path: "/agenda/:id",
+    name: "Agenda",
+    component: Agenda,
   },
   {
     path: "/backoffice/news",

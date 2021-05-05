@@ -40,6 +40,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
@@ -48,6 +49,61 @@ export default {
         password: "",
       },
     };
+  },
+  methods: {
+    async login() {
+      if (!this.form.email || !this.form.password) {
+        this.$swal("Preencha todos os campos", "", {
+          timeout: 2000,
+          showProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+        });
+      } else {
+        try {
+          const response = await this.$http.post("/auth/sign-in", {
+            email: this.form.email,
+            password: this.form.password,
+          });
+          this.$store.commit("SET_JWT_TOKEN", response.data.content.jwt);
+          this.$store.commit("SIGN_IN", response.data.content.user);
+          this.$http.defaults.headers.common[
+            "Authorization"
+          ] = `Bearer ${this.getJwtToken}`;
+          this.$swal({
+            text: `Bem-vindo ${response.data.content.user.name}!`,
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 2000,
+          });
+          console.log(this.getLoggedUser);
+          this.$router.push({
+            name: "Perfil",
+            params: { id: response.data.content.user.id_user },
+          });
+        } catch (err) {
+          if (err.response.data.message === "User not Found") {
+            this.$swal({
+              text: `Utilizador não encontrado!`,
+              icon: "error",
+              timer: 2000,
+              showConfirmButton: false,
+            });
+          }
+          if (err.response.data.message === "invalidPassword") {
+            this.$swal({
+              text: `Palavra passe incorreta!`,
+              icon: "error",
+              timer: 2000,
+              showConfirmButton: false,
+            });
+          }
+        }
+      }
+    },
+  },
+  computed: {
+    ...mapGetters(["getLoggedUser", "getJwtToken"]),
   },
 };
 </script>

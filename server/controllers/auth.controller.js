@@ -18,7 +18,6 @@ async function signIn(req, res) {
     if (!email || !password) {
         return res.status(400).send({ error: "Missing arguments." })
     }
-
     const query = `select * from users where email = "${email}"`
     con.query(query, (err, results, fields) => {
         if (err) {
@@ -37,8 +36,7 @@ async function signIn(req, res) {
                         user
                     }))
                 } else {
-                    console.log(password)
-                    return res.status(messages.error().status).send(messages.error("error", "Inválid password"))
+                    return res.status(messages.error().status).send(messages.error("error", "invalidPassword"))
                 }
             }
         )

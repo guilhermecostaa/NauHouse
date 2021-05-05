@@ -2,22 +2,22 @@
   <div id="contact">
     <div class="container-fluid">
       <div class="row align-items-center d-flex justify-content-center">
-        <h4 class="subtitle mt-5">NauHouse</h4>
+        <h3 class="subtitle mt-5">NauHouse</h3>
       </div>
       <div class="row align-items-center d-flex justify-content-center mt-3">
-        <p>
+        <p class="mr-2 ml-2">
           <b-icon-house-door-fill /> NauHouse - Vila do Conde | Avenida Dr. João
           Canavarro, 201 | 4480-668 Vila do Conde
         </p>
       </div>
       <div class="row align-baseline d-flex justify-content-center">
-        <p><b-icon-telephone-fill /> +351 252 167 609</p>
+        <p class="mr-2 ml-2"><b-icon-telephone-fill /> +351 252 167 609</p>
       </div>
       <div class="row align-items-center d-flex justify-content-center">
-        <p><b-icon-envelope /> geral@nauhouse.pt</p>
+        <p class="mr-2 ml-2"><b-icon-envelope /> geral@nauhouse.pt</p>
       </div>
       <div class="row align-items-center d-flex justify-content-center">
-        <h4 class="subtitle mt-5">Contacto Direto</h4>
+        <h3 class="subtitle mt-5">Contacto Direto</h3>
       </div>
 
       <div class="mb-5">
@@ -98,14 +98,21 @@
           </div>
         </b-form>
       </div>
+      <div id="footer" class="mt-5" style="width: 100%">
+        <Footer />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import Footer from "@/components/Footer.vue";
 import emailjs from "emailjs-com";
 export default {
   name: "Contact",
+  components: {
+    Footer,
+  },
   data() {
     return {
       form: {
@@ -117,7 +124,7 @@ export default {
     };
   },
   methods: {
-    sendEmail(e){
+    sendEmail(e) {
       emailjs
         .sendForm(
           "service_7r1oyel",

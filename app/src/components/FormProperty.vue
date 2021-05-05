@@ -179,7 +179,7 @@
       <!-- IdImóvel EficienciaEnergética -->
       <div class="row">
         <div class="col-md-6 col-sm-12">
-          <b-form-group id="input-id" label="Preço" label-for="input-id">
+          <b-form-group id="input-id" label="Id do Imóvel" label-for="input-id">
             <b-form-input
               id="input-id"
               v-model="form.id"
@@ -224,7 +224,7 @@
         <div class="col-md-6 col-sm-12">
           <b-form-group
             id="input-constructionYear"
-            label="Concelho"
+            label="Ano de Construção"
             label-for="input-constructionYear"
           >
             <b-form-input
@@ -607,6 +607,7 @@ export default {
       form: {
         title: "",
         subtitle: "",
+        desc: "",
         district: "",
         county: "",
         address: "",
@@ -619,6 +620,8 @@ export default {
         energeticEfficiency: null,
         habitation: "",
         constructionYear: "",
+        usableArea: "",
+        landArea: "",
         constructionGrossArea: "",
         implementationArea: "",
         rooms: "",
@@ -628,7 +631,7 @@ export default {
         garage: "",
         parking: "",
         video: null,
-        photo: [null],
+        photos: [null],
         status: "",
         consultantId: "",
         sunExposure: [],
@@ -688,6 +691,61 @@ export default {
         { text: "Sudeste", value: "Sudeste" },
       ],
     };
+  },
+  methods: {
+    async addProperty() {
+      try {
+        const response = await this.$http.post("/news", {
+          title: this.form.title,
+          subtitle: this.form.subtitle,
+          desc: this.form.desc,
+          district: this.form.district,
+          county: this.form.county,
+          address: this.form.address,
+          postalCode: this.form.postalCode,
+          price: this.form.price,
+          idCategory: this.form.category,
+          idPurpose: this.form.purpose,
+          idShape: this.form.shape,
+          idProperty: this.form.id,
+          idEnergeticEfficiency: this.form.energeticEfficiency,
+          habitation: this.form.habitation,
+          constructionYear: this.form.constructionYear,
+          usableArea: this.form.usableArea,
+          landArea: this.form.landArea,
+          constructionGrossArea: this.form.constructionGrossArea,
+          implementationArea: this.implementationArea,
+          room: this.form.rooms,
+          bathrooms: this.form.bathroom,
+          suites: this.form.suites,
+          bedroom: this.form.bedrooms,
+          closedGarage: this.form.garage,
+          parking: this.form.parking,
+          photos: this.form.photos,
+          video: this.form.video,   
+          consultantId: this.form.consultantId,
+          idStatus: this.form.status      
+        });
+        console.log(response);
+        this.$swal({
+          text: `Noticia Adicionada!`,
+          icon: "success",
+          showConfirmButton: false,
+          timer: 2000,
+        });
+        this.$store.commit("ADD_PROPERTY", "Imóvel Adicionada");
+      } catch (err) {
+        console.log(err);
+        if (err) {
+          this.$swal({
+            text: `Ups occoreu um erro!`,
+            icon: "error",
+            timer: 2000,
+            showConfirmButton: false,
+          });
+        }
+      }
+    },
   },
 };
 </script>

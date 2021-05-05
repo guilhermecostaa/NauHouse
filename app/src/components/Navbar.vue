@@ -31,10 +31,10 @@
           >
         </b-navbar-nav>
 
-        <b-nav-item-dropdown right>
+        <b-nav-item-dropdown right v-show="getJwtToken === '' ? false : true">
           <!-- Using 'button-content' slot -->
           <template #button-content>
-            <em>User</em>
+            <em>Olá, {{ getLoggedUser.name }}</em>
           </template>
           <b-dropdown-item href="#" @click="btnPerfilClicked"
             >Perfil</b-dropdown-item
@@ -45,13 +45,22 @@
           <b-dropdown-item href="#" @click="btnAgendaClicked"
             >Agenda</b-dropdown-item
           >
-          <b-dropdown-item href="#" @click="btnAddUserClicked"
+          <b-dropdown-item
+            href="#"
+            @click="btnAddUserClicked"
+            v-show="getLoggedUser.userType == 'consultor' ? false : true"
             >Adicionar Utilizador</b-dropdown-item
           >
-          <b-dropdown-item href="#" @click="btnAddPropertyClicked"
+          <b-dropdown-item
+            href="#"
+            @click="btnAddPropertyClicked"
+            v-show="getLoggedUser.userType == 'consultor' ? false : true"
             >Adicionar Imóvel</b-dropdown-item
           >
-          <b-dropdown-item href="#" @click="btnAddNewsClicked"
+          <b-dropdown-item
+            href="#"
+            @click="btnAddNewsClicked"
+            v-show="getLoggedUser.userType == 'consultor' ? false : true"
             >Adicionar Noticia</b-dropdown-item
           >
           <b-dropdown-item href="#" @click="btnLogoutClicked"
@@ -64,6 +73,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   name: "Navbar",
   methods: {
@@ -86,13 +96,22 @@ export default {
       this.$router.push({ name: "Contact" });
     },
     btnPerfilClicked() {
-      this.$router.push({ name: "Perfil" });
+    this.$router.push({
+      name: "Perfil",
+      params: { id: this.getLoggedUser.id_user },
+    });
     },
     btnContactsClicked() {
-      this.$router.push({ name: "Contacts" });
+      this.$router.push({
+        name: "Contacts",
+        params: { id: this.getLoggedUser.id_user },
+      });
     },
     btnAgendaClicked() {
-      this.$router.push({ name: "Agenda" });
+      this.$router.push({
+        name: "Agenda",
+        params: { id: this.getLoggedUser.id_user },
+      });
     },
     btnAddUserClicked() {
       this.$router.push({ name: "BackofficeUsers" });
@@ -104,8 +123,12 @@ export default {
       this.$router.push({ name: "BackofficeNews" });
     },
     btnLogoutClicked() {
-      this.$router.push({ name: "Login" });
+      this.$store.commit("SIGN_OUT");
+      this.$router.push({ name: "Consultants" });
     },
+  },
+  computed: {
+    ...mapGetters(["getJwtToken", "getLoggedUser"]),
   },
 };
 </script>

@@ -2,7 +2,8 @@ const con = require("../connection")
 const messages = require("../messages")
 
 async function getContactUser(req, res) {
-    const query = "select * from contact_user;"
+    const { id } = req.params
+    const query = `select * from contact_user where id_user = ${id}`
     con.query(query, (err, results, fields) => {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))

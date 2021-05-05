@@ -11,9 +11,20 @@ async function getContacts(req, res) {
     })
 }
 
+async function getContactsByUserID(req, res) {
+    const { id } = req.params
+    const query = `select * from contacts where user_id = ${id}`
+    con.query(query, (err, results, fields) => {
+        if (err) {
+            return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
+        }
+        res.send(messages.getSuccess("getContacts", results))
+    })
+}
+
 async function addContact(req, res) {
-    const { name, number, desc, status } = req.body
-    const query = `insert into contacts (name, number, description, status) values ("${name}", "${number}", "${desc}", "${status}")`
+    const { name, number, desc, email, status, id} = req.body
+    const query = `insert into contacts (name, number, description, status, email, user_id) values ("${name}", "${number}", "${desc}", "${status}",  "${email}", "${id}")`
     con.query(query, (err, results, fields) => {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
@@ -24,7 +35,7 @@ async function addContact(req, res) {
 
 async function deleteContact(req, res) {
     const { id } = req.params
-    const query = `delete from contacts where id_contact = ${id}`
+    const query = `delete from contacts where id_contacts = ${id}`
     con.query(query, (err, results, fields) => {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
@@ -59,4 +70,4 @@ async function editContact(req, res) {
 }
 
 
-module.exports = { getContacts, addContact, deleteContact, editContact}
+module.exports = { getContacts, getContactsByUserID, addContact, deleteContact, editContact}

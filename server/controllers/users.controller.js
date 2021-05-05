@@ -20,7 +20,7 @@ async function addUser(req, res) {
         generalMeeting, accomplishMeeting, scale, idWorkType, workType, idObjectivesUsers, mensalInvoice, mensalAcquisition,
         averageTransaction, positioningZone, mensalPublicity, flyers, publicityZone, idZone, firstZone, secondZone,
         thirdZone, idBalance, active, passive } = req.body
-    
+
     let salt = 10
     let hash = await bcrypt.hash(password, salt)
     password = hash
@@ -80,8 +80,8 @@ async function addUser(req, res) {
                                 return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
                             }
                             res.send(messages.getSuccess("addUser", results))
-                        })  
-                    })  
+                        })
+                    })
                 })
             })
         })
@@ -107,13 +107,19 @@ async function editUser(req, res) {
         acquisition, transaction, faturationVolume, anotation, idAvailability, days, availabilitySchedule, availability,
         generalMeeting, accomplishMeeting, scale, idWorkType, workType, idObjectivesUsers, mensalInvoice, mensalAcquisition,
         averageTransaction, positioningZone, mensalPublicity, flyers, publicityZone, idZone, firstZone, secondZone,
-        thirdZone, idBalance, active, passive} = req.body
+        thirdZone, idBalance, active, passive } = req.body
+
+    let salt = 10
+    let hash = await bcrypt.hash(password, salt)
+    password = hash
+
     let set = []
     let setAvailability = []
     let setWorkType = []
     let setObjectives = []
     let setZone = []
     let setBalance = []
+
 
     //User
     if (name) {
@@ -126,7 +132,7 @@ async function editUser(req, res) {
         set.push(`password = "${password}"`)
     }
     if (userType) {
-        set.push(`user_type = "${userType}"`)
+        set.push(`user_type_id = "${userType}"`)
     }
     if (nacionality) {
         set.push(`nacionality = "${nacionality}"`)
@@ -138,10 +144,10 @@ async function editUser(req, res) {
         set.push(`birthday = "${birthday}"`)
     }
     if (placeOfBirth) {
-        set.push(`placeOfBirth = "${placeOfBirth}"`)
+        set.push(`place_of_birth = "${placeOfBirth}"`)
     }
     if (maritalStatus) {
-        set.push(`maritalStatus = "${maritalStatus}"`)
+        set.push(`marital_status = "${maritalStatus}"`)
     }
     if (civilId) {
         set.push(`civil_id = "${civilId}"`)
@@ -153,7 +159,7 @@ async function editUser(req, res) {
         set.push(`address = "${address}"`)
     }
     if (postalCode) {
-        set.push(`postalCode = "${postalCode}"`)
+        set.push(`postal_code = "${postalCode}"`)
     }
     if (fiscalId) {
         set.push(`fiscal_id = "${fiscalId}"`)
@@ -174,7 +180,7 @@ async function editUser(req, res) {
         set.push(`emergency_contact = "${emergencyContact}"`)
     }
     if (employmentSituation) {
-        set.push(`employmentSituation = "${employmentSituation}"`)
+        set.push(`employment_situation = "${employmentSituation}"`)
     }
     if (personalEmail) {
         set.push(`personal_email = "${personalEmail}"`)
@@ -201,7 +207,7 @@ async function editUser(req, res) {
         set.push(`own_car = "${ownCar}"`)
     }
     if (actingZone) {
-        set.push(`actingZone = "${actingZone}"`)
+        set.push(`acting_zone = "${actingZone}"`)
     }
     if (team) {
         set.push(`team = "${team}"`)
@@ -216,7 +222,7 @@ async function editUser(req, res) {
         set.push(`transaction = "${transaction}"`)
     }
     if (faturationVolume) {
-        set.push(`faturationVolume = "${faturationVolume}"`)
+        set.push(`faturation_volume = "${faturationVolume}"`)
     }
     if (anotation) {
         set.push(`anotation = "${anotation}"`)
@@ -282,13 +288,14 @@ async function editUser(req, res) {
     }
     if (passive) {
         setBalance.push(`passive = "${passive}"`)
-    } 
+    }
     const queryUser = `update users set ${set.join()} where id_user = ${id}`
     const queryAvailability = `update availability set ${setAvailability.join()} where id_availability = ${idAvailability}`
     const queryWorkType = `update work_type set ${setWorkType.join()} where id_work_type = ${idWorkType}`
     const queryObjective = `update objective_user set ${setObjectives.join()} where id_objectives_users = ${idObjectivesUsers}`
-    const queryZone = `update zone set ${set.join()} where id_zone = ${idZone}`
+    const queryZone = `update zone set ${setZone.join()} where id_zone = ${idZone}`
     const queryBalance = `update balance set ${setBalance.join()} where id_balance = ${idBalance}`
+
     con.query(queryAvailability, (err, results, fields) => {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
@@ -314,8 +321,8 @@ async function editUser(req, res) {
                                 return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
                             }
                             res.send(messages.getSuccess("EditUser", results))
-                        })  
-                    })  
+                        })
+                    })
                 })
             })
         })

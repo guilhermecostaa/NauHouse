@@ -18,7 +18,7 @@
       <div class="row">
         <div class="col-sm-12">
           <b-form-group label="Foto">
-            <b-form-file id="file-default"></b-form-file>
+            <b-form-file id="file-default" v-model="form.photo"></b-form-file>
           </b-form-group>
         </div>
       </div>
@@ -33,7 +33,7 @@
             <b-form-textarea
               label="Descrição"
               id="textarea"
-              v-model="desc"
+              v-model="form.desc"
               rows="3"
               max-rows="6"
             ></b-form-textarea>
@@ -62,6 +62,38 @@ export default {
         desc: "",
       },
     };
+  },
+  methods: {
+    async addNew() {
+      try {
+        const response = await this.$http.post("/news", {
+          Title: this.form.title,
+          Image: this.form.photo,
+          Desc: this.form.desc,
+        });
+        console.log(response);
+        this.$swal({
+          text: `Noticia Adicionada!`,
+          icon: "success",
+          showConfirmButton: false,
+          timer: 2000,
+        });
+        this.form.title = "";
+        this.form.photo = "";
+        this.form.desc = "";
+        this.$store.commit("ADD_NEW", "New Adicionada")
+      } catch (err) {
+        console.log(err);
+        if (err) {
+          this.$swal({
+            text: `Ups occoreu um erro!`,
+            icon: "error",
+            timer: 2000,
+            showConfirmButton: false,
+          });
+        }
+      }
+    },
   },
 };
 </script>
