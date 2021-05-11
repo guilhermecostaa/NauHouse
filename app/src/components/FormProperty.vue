@@ -41,7 +41,7 @@
             <b-form-textarea
               label="Descrição"
               id="textarea"
-              v-model="desc"
+              v-model="form.desc"
               rows="3"
               max-rows="6"
             ></b-form-textarea>
@@ -126,7 +126,11 @@
             <b-form-select
               id="input-category"
               v-model="form.category"
-              :options="categories"
+              :options="
+                categories.map((category) => {
+                  return { value: category.id_category, text: category.name };
+                })
+              "
               required
             ></b-form-select>
           </b-form-group>
@@ -140,7 +144,11 @@
             <b-form-select
               id="input-purpose"
               v-model="form.purpose"
-              :options="purposes"
+              :options="
+                purposes.map((purpose) => {
+                  return { value: purpose.id_purpose, text: purpose.name };
+                })
+              "
               required
             ></b-form-select>
           </b-form-group>
@@ -169,7 +177,11 @@
             <b-form-select
               id="input-shape"
               v-model="form.shape"
-              :options="shape"
+              :options="
+                shapes.map((shape) => {
+                  return { value: shape.id_shape, text: shape.shape };
+                })
+              "
               required
             ></b-form-select>
           </b-form-group>
@@ -198,7 +210,14 @@
             <b-form-select
               id="input-energeticEfficiency"
               v-model="form.energeticEfficiency"
-              :options="energeticEfficiency"
+              :options="
+                energeticEfficiency.map((energeticEfficiency) => {
+                  return {
+                    value: energeticEfficiency.id_energetic_efficiency,
+                    text: energeticEfficiency.value,
+                  };
+                })
+              "
               required
             ></b-form-select>
           </b-form-group>
@@ -401,12 +420,12 @@
       <div class="row">
         <div class="col-md-6 col-sm-12">
           <b-form-group label="Video">
-            <b-form-file id="file-default" v-model="video"></b-form-file>
+            <b-form-file id="file-video" v-model="form.video"></b-form-file>
           </b-form-group>
         </div>
         <div class="col-md-6 col-sm-12">
           <b-form-group label="Foto">
-            <b-form-file id="file-default" v-model="photo"></b-form-file>
+            <b-form-file id="file-photo" v-model="form.photo"></b-form-file>
           </b-form-group>
         </div>
       </div>
@@ -422,7 +441,11 @@
             <b-form-select
               id="input-status"
               v-model="form.status"
-              :options="status"
+              :options="
+                status.map((status) => {
+                  return { value: status.id_status, text: status.status };
+                })
+              "
               required
             ></b-form-select>
           </b-form-group>
@@ -447,20 +470,38 @@
       <!-- Exposição e Vista-->
       <div class="row">
         <div class="col-md-6 col-sm-12">
-          <p class="bold mt-3 mb-1">Exposição Solar</p>
+          <p class="bold mt-3 mb-1">{{ groups[0].name }}</p>
           <b-form-checkbox-group
             id="checkbox-group-sunExposure"
             v-model="sunExposure"
-            :options="sunExposure"
+            :options="
+              getCharacteristicsByGroupId(groups[0].id_group).map(
+                (characteristic) => {
+                  return {
+                    value: characteristic.id_characteristic,
+                    text: characteristic.characteristic,
+                  };
+                }
+              )
+            "
           >
           </b-form-checkbox-group>
         </div>
         <div class="col-md-6 col-sm-12">
-          <p class="bold mt-3 mb-1">Vista</p>
+          <p class="bold mt-3 mb-1">{{ groups[1].name }}</p>
           <b-form-checkbox-group
             id="checkbox-group-view"
             v-model="view"
-            :options="sunExposure"
+            :options="
+              getCharacteristicsByGroupId(groups[1].id_group).map(
+                (characteristic) => {
+                  return {
+                    value: characteristic.id_characteristic,
+                    text: characteristic.characteristic,
+                  };
+                }
+              )
+            "
           >
           </b-form-checkbox-group>
         </div>
@@ -469,20 +510,38 @@
       <!-- Piso e Revestimento-->
       <div class="row">
         <div class="col-md-6 col-sm-12">
-          <p class="bold mt-3 mb-1">Piso</p>
+          <p class="bold mt-3 mb-1">{{ groups[2].name }}</p>
           <b-form-checkbox-group
             id="checkbox-group-level"
             v-model="level"
-            :options="sunExposure"
+            :options="
+              getCharacteristicsByGroupId(groups[2].id_group).map(
+                (characteristic) => {
+                  return {
+                    value: characteristic.id_characteristic,
+                    text: characteristic.characteristic,
+                  };
+                }
+              )
+            "
           >
           </b-form-checkbox-group>
         </div>
         <div class="col-md-6 col-sm-12">
-          <p class="bold mt-3 mb-1">Vista</p>
+          <p class="bold mt-3 mb-1">{{ groups[12].name }}</p>
           <b-form-checkbox-group
-            id="checkbox-group-view"
+            id="checkbox-group-externalCoating"
             v-model="externalCoating"
-            :options="sunExposure"
+            :options="
+              getCharacteristicsByGroupId(groups[12].id_group).map(
+                (characteristic) => {
+                  return {
+                    value: characteristic.id_characteristic,
+                    text: characteristic.characteristic,
+                  };
+                }
+              )
+            "
           >
           </b-form-checkbox-group>
         </div>
@@ -491,20 +550,38 @@
       <!-- Caixilharia e Persianas-->
       <div class="row">
         <div class="col-md-6 col-sm-12">
-          <p class="bold mt-3 mb-1">Caixilharia</p>
+          <p class="bold mt-3 mb-1">{{ groups[3].name }}</p>
           <b-form-checkbox-group
-            id="checkbox-group-floor"
+            id="checkbox-group-frames"
             v-model="frames"
-            :options="sunExposure"
+            :options="
+              getCharacteristicsByGroupId(groups[3].id_group).map(
+                (characteristic) => {
+                  return {
+                    value: characteristic.id_characteristic,
+                    text: characteristic.characteristic,
+                  };
+                }
+              )
+            "
           >
           </b-form-checkbox-group>
         </div>
         <div class="col-md-6 col-sm-12">
-          <p class="bold mt-3 mb-1">Persianas</p>
+          <p class="bold mt-3 mb-1">{{ groups[4].name }}</p>
           <b-form-checkbox-group
-            id="checkbox-group-view"
+            id="checkbox-group-blinds"
             v-model="blinds"
-            :options="sunExposure"
+            :options="
+              getCharacteristicsByGroupId(groups[4].id_group).map(
+                (characteristic) => {
+                  return {
+                    value: characteristic.id_characteristic,
+                    text: characteristic.characteristic,
+                  };
+                }
+              )
+            "
           >
           </b-form-checkbox-group>
         </div>
@@ -513,20 +590,38 @@
       <!-- Pavimento e Segurança-->
       <div class="row">
         <div class="col-md-6 col-sm-12">
-          <p class="bold mt-3 mb-1">Pavimento</p>
+          <p class="bold mt-3 mb-1">{{ groups[5].name }}</p>
           <b-form-checkbox-group
             id="checkbox-group-floor"
             v-model="floor"
-            :options="sunExposure"
+            :options="
+              getCharacteristicsByGroupId(groups[5].id_group).map(
+                (characteristic) => {
+                  return {
+                    value: characteristic.id_characteristic,
+                    text: characteristic.characteristic,
+                  };
+                }
+              )
+            "
           >
           </b-form-checkbox-group>
         </div>
         <div class="col-md-6 col-sm-12">
-          <p class="bold mt-3 mb-1">Seguranças</p>
+          <p class="bold mt-3 mb-1">{{ groups[6].name }}</p>
           <b-form-checkbox-group
             id="checkbox-group-security"
             v-model="security"
-            :options="sunExposure"
+            :options="
+              getCharacteristicsByGroupId(groups[6].id_group).map(
+                (characteristic) => {
+                  return {
+                    value: characteristic.id_characteristic,
+                    text: characteristic.characteristic,
+                  };
+                }
+              )
+            "
           >
           </b-form-checkbox-group>
         </div>
@@ -535,20 +630,38 @@
       <!-- Alarme e Infraestruturas-->
       <div class="row">
         <div class="col-md-6 col-sm-12">
-          <p class="bold mt-3 mb-1">Alarme</p>
+          <p class="bold mt-3 mb-1">{{ groups[7].name }}</p>
           <b-form-checkbox-group
             id="checkbox-group-alarm"
             v-model="alarm"
-            :options="sunExposure"
+            :options="
+              getCharacteristicsByGroupId(groups[7].id_group).map(
+                (characteristic) => {
+                  return {
+                    value: characteristic.id_characteristic,
+                    text: characteristic.characteristic,
+                  };
+                }
+              )
+            "
           >
           </b-form-checkbox-group>
         </div>
         <div class="col-md-6 col-sm-12">
-          <p class="bold mt-3 mb-1">Infraestruturas</p>
+          <p class="bold mt-3 mb-1">{{ groups[8].name }}</p>
           <b-form-checkbox-group
             id="checkbox-group-infraestructure"
             v-model="infraestructure"
-            :options="sunExposure"
+            :options="
+              getCharacteristicsByGroupId(groups[8].id_group).map(
+                (characteristic) => {
+                  return {
+                    value: characteristic.id_characteristic,
+                    text: characteristic.characteristic,
+                  };
+                }
+              )
+            "
           >
           </b-form-checkbox-group>
         </div>
@@ -557,20 +670,38 @@
       <!-- Cozinha e Equipamento-->
       <div class="row">
         <div class="col-md-6 col-sm-12">
-          <p class="bold mt-3 mb-1">Cozinha</p>
+          <p class="bold mt-3 mb-1">{{ groups[9].name }}</p>
           <b-form-checkbox-group
             id="checkbox-group-kitchen"
             v-model="kitchen"
-            :options="sunExposure"
+            :options="
+              getCharacteristicsByGroupId(groups[9].id_group).map(
+                (characteristic) => {
+                  return {
+                    value: characteristic.id_characteristic,
+                    text: characteristic.characteristic,
+                  };
+                }
+              )
+            "
           >
           </b-form-checkbox-group>
         </div>
         <div class="col-md-6 col-sm-12">
-          <p class="bold mt-3 mb-1">Equipamento de Cozinha</p>
+          <p class="bold mt-3 mb-1">{{ groups[10].name }}</p>
           <b-form-checkbox-group
             id="checkbox-group-equipment"
             v-model="equipment"
-            :options="sunExposure"
+            :options="
+              getCharacteristicsByGroupId(groups[10].id_group).map(
+                (characteristic) => {
+                  return {
+                    value: characteristic.id_characteristic,
+                    text: characteristic.characteristic,
+                  };
+                }
+              )
+            "
           >
           </b-form-checkbox-group>
         </div>
@@ -579,11 +710,20 @@
       <!-- Anotações-->
       <div class="row">
         <div class="col-sm-12">
-          <p class="bold mt-3 mb-1">Anotações Gerais</p>
+          <p class="bold mt-3 mb-1">{{ groups[11].name }}</p>
           <b-form-checkbox-group
             id="checkbox-group-notes"
             v-model="notes"
-            :options="sunExposure"
+            :options="
+              getCharacteristicsByGroupId(groups[11].id_group).map(
+                (characteristic) => {
+                  return {
+                    value: characteristic.id_characteristic,
+                    text: characteristic.characteristic,
+                  };
+                }
+              )
+            "
           >
           </b-form-checkbox-group>
         </div>
@@ -602,6 +742,15 @@
 
 <script>
 export default {
+  created() {
+    this.loadCategories();
+    this.loadPurposes();
+    this.loadShapes();
+    this.loadEnergeticEfficiency();
+    this.loadStatus();
+    this.loadGroups();
+    this.loadCharacteristics();
+  },
   data() {
     return {
       form: {
@@ -634,65 +783,113 @@ export default {
         photos: [null],
         status: "",
         consultantId: "",
-        sunExposure: [],
-        view: [],
-        level: [],
-        externalCoating: [],
-        frames: [],
-        blinds: [],
-        floor: [],
-        security: [],
-        alarm: [],
-        infraestructure: [],
-        kitchen: [],
-        equipment: [],
-        notes: [],
       },
-      categories: [
-        { text: "Select One", value: null },
-        { text: "Apartamento", value: "1" },
-        { text: "Moradia", value: "2" },
-      ],
-      purposes: [
-        { text: "Select One", value: null },
-        { text: "Venda", value: "1" },
-        { text: "Arrendamento", value: "2" },
-      ],
-      shape: [
-        { text: "Select One", value: null },
-        { text: "Novo", value: "1" },
-        { text: "Semi-Novo", value: "2" },
-        { text: "Ruinas", value: "3" },
-      ],
-      energeticEfficiency: [
-        { text: "Select One", value: null },
-        { text: "A", value: "1" },
-        { text: "B", value: "2" },
-        { text: "C", value: "3" },
-      ],
+      categories: [],
+      purposes: [],
+      shapes: [],
+      energeticEfficiency: [],
       consultants: [
         { text: "Select One", value: null },
         { text: "Carla Lopes", value: "1" },
         { text: "Carlos Conceição", value: "2" },
         { text: "Tânia Igreja", value: "3" },
       ],
-      status: [
-        { text: "Select One", value: null },
-        { text: "Livre", value: "1" },
-        { text: "Reservado", value: "2" },
-        { text: "Cancelado", value: "3" },
-      ],
-      sunExposure: [
-        { text: "Norte", value: "Norte" },
-        { text: "Sul", value: "Sul" },
-        { text: "Oesta(poente)", value: "Oeste" },
-        { text: "Este(Nascente", value: "Este" },
-        { text: "Sudoeste", value: "Sudoeste" },
-        { text: "Sudeste", value: "Sudeste" },
-      ],
+      groups: [],
+      characteristics: [],
+      status: [],
+      sunExposure: [],
+      view: [],
+      level: [],
+      externalCoating: [],
+      frames: [],
+      blinds: [],
+      floor: [],
+      security: [],
+      alarm: [],
+      infraestructure: [],
+      kitchen: [],
+      equipment: [],
+      notes: [],
     };
   },
   methods: {
+    getCharacteristicsByGroupId(id) {
+      return this.characteristics.filter(
+        (characteristic) => characteristic.id_group === id
+      );
+    },
+    async loadCharacteristics() {
+      try {
+        const response = await this.$http.get(`/characteristics`);
+        if (response.status === 200) {
+          this.characteristics = response.data.content;
+          console.log(this.characteristics);
+        }
+      } catch (err) {
+        console.log(err.response);
+      }
+    },
+    async loadGroups() {
+      try {
+        const response = await this.$http.get(`/group`);
+        if (response.status === 200) {
+          this.groups = response.data.content;
+          console.log(this.groups);
+        }
+      } catch (err) {
+        console.log(err.response);
+      }
+    },
+    async loadCategories() {
+      try {
+        const response = await this.$http.get(`/category`);
+        if (response.status === 200) {
+          this.categories = response.data.content;
+        }
+      } catch (err) {
+        console.log(err.response);
+      }
+    },
+    async loadPurposes() {
+      try {
+        const response = await this.$http.get(`/purpose`);
+        if (response.status === 200) {
+          this.purposes = response.data.content;
+        }
+      } catch (err) {
+        console.log(err.response);
+      }
+    },
+    async loadShapes() {
+      try {
+        const response = await this.$http.get(`/shape`);
+        if (response.status === 200) {
+          this.shapes = response.data.content;
+        }
+      } catch (err) {
+        console.log(err.response);
+      }
+    },
+    async loadEnergeticEfficiency() {
+      try {
+        const response = await this.$http.get(`/energeticEfficiency`);
+        if (response.status === 200) {
+          this.energeticEfficiency = response.data.content;
+        }
+      } catch (err) {
+        console.log(err.response);
+      }
+    },
+    async loadStatus() {
+      try {
+        const response = await this.$http.get(`/status`);
+        if (response.status === 200) {
+          this.status = response.data.content;
+        }
+      } catch (err) {
+        console.log(err.response);
+      }
+    },
     async addProperty() {
       try {
         const response = await this.$http.post("/news", {
@@ -722,15 +919,15 @@ export default {
           closedGarage: this.form.garage,
           parking: this.form.parking,
           photos: this.form.photos,
-          video: this.form.video,   
+          video: this.form.video,
           consultantId: this.form.consultantId,
-          idStatus: this.form.status      
+          idStatus: this.form.status,
         });
         console.log(response);
         this.$swal({
           text: `Noticia Adicionada!`,
           icon: "success",
-          showConfirmButton: false,
+          button: false,
           timer: 2000,
         });
         this.$store.commit("ADD_PROPERTY", "Imóvel Adicionada");
@@ -741,7 +938,7 @@ export default {
             text: `Ups occoreu um erro!`,
             icon: "error",
             timer: 2000,
-            showConfirmButton: false,
+            button: false,
           });
         }
       }

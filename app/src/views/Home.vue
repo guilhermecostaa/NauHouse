@@ -2,60 +2,208 @@
   <div class="home">
     <div id="homeImgFilter">
       <img src="@/assets/img/Home.png" class="img-fluid" alt="Home" />
-      <div class="filterTop">
-        <b-list-group horizontal="sm" class="listgroup">
-          <b-list-group-item>Vender</b-list-group-item>
-          <b-list-group-item>Arrendar</b-list-group-item>
-          <b-list-group-item>Trespasse</b-list-group-item>
-          <b-list-group-item>Outros</b-list-group-item>
-        </b-list-group>
+      <div>
+        <b-nav tabs align="center">
+          <b-nav-item active>Active</b-nav-item>
+          <b-nav-item>Link</b-nav-item>
+          <b-nav-item>Link with a long name </b-nav-item>
+          <b-nav-item disabled>Disabled</b-nav-item>
+        </b-nav>
       </div>
-
-      <div class="filterDown">
-        <b-form inline>
-          <b-form-select
-            v-model="selected"
-            :options="options"
-            class="selectForm"
-          >
-            <template #first>
-              <b-form-select-option class="selectForm" :value="null" disabled
-                >------- Todos -------</b-form-select-option
+      <div class="row">
+        <div class=".col-md-6 .offset-md-3">
+          <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+              <a
+                class="nav-item nav-link active"
+                id="nav-home-tab"
+                data-toggle="tab"
+                href="#nav-home"
+                role="tab"
+                aria-controls="nav-home"
+                aria-selected="true"
+                >Home</a
               >
-            </template>
-          </b-form-select>
-
-          <b-form-select
-            v-model="selected"
-            :options="options"
-            class="selectForm"
-          >
-            <template v-slot:first>
-              <b-form-select-option :value="null" disabled
-                >------- Distrito -------</b-form-select-option
+              <a
+                class="nav-item nav-link"
+                id="nav-profile-tab"
+                data-toggle="tab"
+                href="#nav-profile"
+                role="tab"
+                aria-controls="nav-profile"
+                aria-selected="false"
+                >Profile</a
               >
-            </template>
-          </b-form-select>
-
-          <b-form-select
-            v-model="selected"
-            :options="options"
-            class="selectForm"
-          >
-            <template #first>
-              <b-form-select-option :value="null" disabled
-                >------- Concelho -------</b-form-select-option
+              <a
+                class="nav-item nav-link"
+                id="nav-contact-tab"
+                data-toggle="tab"
+                href="#nav-contact"
+                role="tab"
+                aria-controls="nav-contact"
+                aria-selected="false"
+                >Contact</a
               >
-            </template>
-          </b-form-select>
+            </div>
+          </nav>
+          <div class="tab-content" id="nav-tabContent">
+            <div
+              class="tab-pane fade show active"
+              id="nav-home"
+              role="tabpanel"
+              aria-labelledby="nav-home-tab"
+            >
+              <b-form inline>
+                <b-form-select
+                  v-model="selected"
+                  :options="options"
+                  class="selectForm"
+                >
+                  <template #first>
+                    <b-form-select-option
+                      class="selectForm"
+                      :value="null"
+                      disabled
+                      >------- Todos -------</b-form-select-option
+                    >
+                  </template>
+                </b-form-select>
 
-          <b-button class="btn btn-search"
-            ><b-icon-search></b-icon-search
-          ></b-button>
-        </b-form>
+                <b-form-select
+                  v-model="selected"
+                  :options="options"
+                  class="selectForm"
+                >
+                  <template v-slot:first>
+                    <b-form-select-option :value="null" disabled
+                      >------- Distrito -------</b-form-select-option
+                    >
+                  </template>
+                </b-form-select>
+
+                <b-form-select
+                  v-model="selected"
+                  :options="options"
+                  class="selectForm"
+                >
+                  <template #first>
+                    <b-form-select-option :value="null" disabled
+                      >------- Concelho -------</b-form-select-option
+                    >
+                  </template>
+                </b-form-select>
+
+                <b-button class="btn btn-search"
+                  ><b-icon-search></b-icon-search
+                ></b-button>
+              </b-form>
+            </div>
+            <div
+              class="tab-pane fade"
+              id="nav-profile"
+              role="tabpanel"
+              aria-labelledby="nav-profile-tab"
+            >
+              <b-form inline>
+                <b-form-select
+                  v-model="selected"
+                  :options="options"
+                  class="selectForm"
+                >
+                  <template #first>
+                    <b-form-select-option
+                      class="selectForm"
+                      :value="null"
+                      disabled
+                      >------- Todos -------</b-form-select-option
+                    >
+                  </template>
+                </b-form-select>
+
+                <b-form-select
+                  v-model="selected"
+                  :options="options"
+                  class="selectForm"
+                >
+                  <template v-slot:first>
+                    <b-form-select-option :value="null" disabled
+                      >------- Distrito -------</b-form-select-option
+                    >
+                  </template>
+                </b-form-select>
+
+                <b-form-select
+                  v-model="selected"
+                  :options="options"
+                  class="selectForm"
+                >
+                  <template #first>
+                    <b-form-select-option :value="null" disabled
+                      >------- Concelho -------</b-form-select-option
+                    >
+                  </template>
+                </b-form-select>
+
+                <b-button class="btn btn-search"
+                  ><b-icon-search></b-icon-search
+                ></b-button>
+              </b-form>
+            </div>
+            <div
+              class="tab-pane fade"
+              id="nav-contact"
+              role="tabpanel"
+              aria-labelledby="nav-contact-tab"
+            >
+              <b-form inline>
+                <b-form-select
+                  v-model="selected"
+                  :options="options"
+                  class="selectForm"
+                >
+                  <template #first>
+                    <b-form-select-option
+                      class="selectForm"
+                      :value="null"
+                      disabled
+                      >------- Todos -------</b-form-select-option
+                    >
+                  </template>
+                </b-form-select>
+
+                <b-form-select
+                  v-model="selected"
+                  :options="options"
+                  class="selectForm"
+                >
+                  <template v-slot:first>
+                    <b-form-select-option :value="null" disabled
+                      >------- Distrito -------</b-form-select-option
+                    >
+                  </template>
+                </b-form-select>
+
+                <b-form-select
+                  v-model="selected"
+                  :options="options"
+                  class="selectForm"
+                >
+                  <template #first>
+                    <b-form-select-option :value="null" disabled
+                      >------- Concelho -------</b-form-select-option
+                    >
+                  </template>
+                </b-form-select>
+
+                <b-button class="btn btn-search"
+                  ><b-icon-search></b-icon-search
+                ></b-button>
+              </b-form>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-
     <div id="information" class="container mt-5">
       <div class="row mt-5">
         <div class="col-lg-4 info_container">

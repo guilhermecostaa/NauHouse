@@ -13,7 +13,7 @@
             controls
           >
             <source
-              src="@/assets/videos/video.mp4"
+              src="@/assets/video/video.mp4"
               type="video/mp4"
               size="1080"
             />

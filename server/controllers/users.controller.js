@@ -16,14 +16,20 @@ async function addUser(req, res) {
     let { name, email, number, password, userType, nacionality, avatar, birthday, placeOfBirth, maritalStatus, civilId,
         validity, address, postalCode, fiscalId, niss, academicQualification, academicArea, personalContact, emergencyContact,
         employmentSituation, personalEmail, regime, schedule, nif, experience, time, agency, ownCar, actingZone, team, elements,
-        acquisition, transaction, faturationVolume, anotation, idAvailability, days, availabilitySchedule, availability,
-        generalMeeting, accomplishMeeting, scale, idWorkType, workType, idObjectivesUsers, mensalInvoice, mensalAcquisition,
-        averageTransaction, positioningZone, mensalPublicity, flyers, publicityZone, idZone, firstZone, secondZone,
-        thirdZone, idBalance, active, passive } = req.body
+        acquisition, transaction, faturationVolume, anotation, days, availabilitySchedule, availability,
+        generalMeeting, accomplishMeeting, scale, workType, mensalInvoice, mensalAcquisition,
+        averageTransaction, positioningZone, mensalPublicity, flyers, publicityZone, firstZone, secondZone,
+        thirdZone, active, passive } = req.body
 
     let salt = 10
     let hash = await bcrypt.hash(password, salt)
     password = hash
+
+    let idAvailability = 0
+    let idWorkType = 0
+    let idObjectivesUsers = 0
+    let idZone = 0
+    let idBalance = 0
 
     const queryAvailability = `insert into availability (days, availability_schedule, availability, general_meeting, accomplish_meeting, scale)
                                 values("${days}", "${availabilitySchedule}", "${availability}", "${generalMeeting}", "${accomplishMeeting}", 
@@ -59,22 +65,27 @@ async function addUser(req, res) {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
         }
+        idAvailability = results.insertId
         con.query(queryWorkType, (err, results, fields) => {
             if (err) {
                 return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
             }
+            idWorkType = results.insertId
             con.query(queryObjective, (err, results, fields) => {
                 if (err) {
                     return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
                 }
+                idObjectivesUsers = results.insertId
                 con.query(queryZone, (err, results, fields) => {
                     if (err) {
                         return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
                     }
+                    idZone = results.insertId
                     con.query(queryBalance, (err, results, fields) => {
                         if (err) {
                             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
                         }
+                        idBalance = results.insertId
                         con.query(queryUser, (err, results, fields) => {
                             if (err) {
                                 return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))

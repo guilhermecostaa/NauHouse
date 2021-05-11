@@ -106,7 +106,7 @@ export default {
         this.$swal({
           text: `Evento Adicionado!`,
           icon: "success",
-          showConfirmButton: false,
+          button: false,
           timer: 2000,
         });
         this.modal = false
@@ -117,7 +117,7 @@ export default {
             text: `Ups occoreu um erro!`,
             icon: "error",
             timer: 2000,
-            showConfirmButton: false,
+            button: false,
           });
         }
       }

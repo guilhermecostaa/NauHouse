@@ -11,7 +11,7 @@
       <DataTable
         name="propety"
         :items="getProperties"
-        :fields="['id', 'habitation','county', 'price', 'actions']"
+        :fields="['id_property', 'habitation','county', 'price', 'id_status', 'actions']"
         type="property"
       ></DataTable>
     </div>

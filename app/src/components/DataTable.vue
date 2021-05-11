@@ -26,11 +26,18 @@
             <b-button
               class="mr-2"
               variant="primary"
+              @click="sellHouse(data.item)"
+              v-if="type == 'property'"
+              >Vender</b-button
+            >
+            <b-button
+              class="mr-2"
+              variant="primary"
               @click="editItem(data.item)"
-              >Edit</b-button
+              >Editar</b-button
             >
             <b-button variant="danger" @click="deleteItem(data.item)"
-              >Delete</b-button
+              >Apagar</b-button
             >
           </template>
         </b-table>
@@ -201,12 +208,100 @@
         </b-form>
       </div>
     </b-modal>
+
+    <!--Modal Vendas-->
+    <b-modal ref="mdlupdateNew" v-model="modalSell" hide-footer>
+      <div class="d-block text-left">
+        <!-- Form de Vender-->
+        <b-form @submit.prevent="sell()">
+          <!-- Consultor -->
+          <div class="row">
+            <div class="col-sm-12">
+              <b-form-group
+                id="input-consultantId"
+                label="Consultor"
+                label-for="input-consultantId"
+              >
+                <b-form-select
+                  id="input-consultantId"
+                  v-model="form.sell.consultantId"
+                  :options="consultants"
+                  required
+                ></b-form-select>
+              </b-form-group>
+            </div>
+          </div>
+          <!-- Preço -->
+          <div class="row">
+            <div class="col-sm-12">
+              <b-form-group
+                id="input-price"
+                label="Preço"
+                label-for="input-price"
+              >
+                <b-form-input
+                  id="input-price"
+                  v-model="form.sell.price"
+                  type="number"
+                  required
+                ></b-form-input>
+              </b-form-group>
+            </div>
+          </div>
+          <!-- Ganho Empresa -->
+          <div class="row">
+            <div class="col-sm-12">
+              <b-form-group
+                id="input-companyGains"
+                label="Ganhos Empresa"
+                label-for="input-companyGains"
+              >
+                <b-form-input
+                  id="input-companyGains"
+                  v-model="form.sell.companyGains"
+                  type="number"
+                  required
+                ></b-form-input>
+              </b-form-group>
+            </div>
+          </div>
+          <!-- Ganho Consultor -->
+          <div class="row">
+            <div class="col-sm-12">
+              <b-form-group
+                id="input-consultantGains"
+                label="Ganhos Consultor:"
+                label-for="input-consultantGains"
+              >
+                <b-form-input
+                  id="input-consultantGains"
+                  v-model="form.sell.consultantGains"
+                  type="number"
+                  required
+                ></b-form-input>
+              </b-form-group>
+            </div>
+          </div>
+          <div
+            class="row align-items-center d-flex justify-content-center mt-5 mb-5"
+          >
+            <b-button class="btn-add mt-5 mb-5" type="submit" variant="danger"
+              >Vender</b-button
+            >
+          </div>
+        </b-form>
+      </div>
+    </b-modal>
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   props: ["items", "fields", "type"],
+  created() {
+    this.loadContacts();
+  },
   data() {
     return {
       bordered: true,
@@ -214,9 +309,19 @@ export default {
       perPage: 5,
       currentPage: 1,
       filter: "",
+      verifyNumber: false,
+      verifyEmail: false,
+      contacts: [],
       form: {
+        sell: {
+          consultantId: "",
+          price: "",
+          companyGains: "",
+          consultantGains: "",
+        },
         edit: {
           contact: {
+            id: "",
             name: "",
             email: "",
             number: "",
@@ -224,51 +329,124 @@ export default {
             description: "",
           },
           news: {
+            id: "",
             title: "",
             photo: null,
             desc: "",
           },
         },
       },
+      consultants: [
+        { text: "Select One", value: null },
+        { text: "Carla Lopes", value: "1" },
+        { text: "Carlos Conceição", value: "2" },
+        { text: "Tânia Igreja", value: "3" },
+      ],
       modal: false,
+      modalSell: false,
     };
   },
   methods: {
+    async loadContacts() {
+      try {
+        const response = await this.$http.get(
+          `/contacts/${this.getLoggedUser.id_user}`
+        );
+        if (response.status === 200) {
+          this.contacts = response.data.content;
+        }
+      } catch (err) {
+        console.log(err.response);
+      }
+    },
+    sellHouse(obj) {
+      this.modalSell = true;
+      console.log(obj);
+    },
+    sell() {
+      try {
+        const response = this.$http.post(`/sales`, {
+          idProperty: this.form.sell.consultantId,
+          propertyValue: this.form.sell.price,
+          consultantGains: this.form.sell.consultantGains,
+          companyGains: this.form.sell.companyGains,
+        });
+        console.log(response);
+        this.$swal({
+          text: `Venda Adicionada!`,
+          icon: "success",
+          showConfirmButton: false,
+          timer: 2000,
+        });
+      } catch (error) {
+        if (error) {
+          this.$swal({
+            text: `Ups occoreu um erro!`,
+            icon: "error",
+            timer: 2000,
+            showConfirmButton: false,
+          });
+          console.log(error);
+        }
+      }
+    },
     deleteItem(obj) {
       console.log(obj);
       this.$swal({
         title: "Tem a certeza?",
         text: "Não vai conseguir reverter!",
         icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Apagar",
+        buttons: true,
+        dangerMode: true
       }).then((result) => {
-        if (result.value) {
+        if (result) {
           if (this.type == "news") {
+            console.log("entrei");
             const response = this.$http.delete(`/news/${obj.id_news}`);
             this.$store.commit("DELETE_NEW", "New Apagada");
             console.log(response);
-            this.$swal("Apagada!", "A noticia foi apagada", "success");
+            this.$swal({
+              title: "Apagada!",
+              text: "A noticia foi apagada",
+              icon: "success",
+              buttons: false,
+              timer: 2000,
+            });
           }
           if (this.type == "users") {
             const response = this.$http.delete(`/users/${obj.id_user}`);
             console.log(response);
-            this.$swal("Apagado!", "O utilizador foi apagado", "success");
+            this.$swal({
+              title: "Apagado!",
+              text: "O utilizador foi apagado",
+              icon: "success",
+              buttons: false,
+              timer: 2000,
+            });
           }
           if (this.type == "property") {
-            const response = this.$http.delete(
-              `/property/${this.obj.id_property}`
-            );
+            const response = this.$http.delete(`/property/${obj.id_property}`);
             console.log(response);
-            this.$swal("Apagado!", "O imóvel foi apagado", "success");
+            this.$swal({
+              title: "Apagado!",
+              text: "O imóvel foi apagado",
+              icon: "success",
+              buttons: false,
+              timer: 2000,
+            });
           }
           if (this.type == "contacts") {
-            console.log(obj)
+            console.log(obj);
             const response = this.$http.delete(`/contacts/${obj.id_contacts}`);
-            console.log(response)
-            this.$swal("Apagado!", "O contacto foi apagado", "success");
+            this.$store.commit("DELETE_CONTACT", "Contacto Apagado");
+            console.log(response);
+            this.$swal({
+              title: "Apagado!",
+              text: "O contacto foi apagado",
+              icon: "success",
+              buttons: false,
+              timer: 2000,
+            });
           }
         }
       });
@@ -277,30 +455,33 @@ export default {
       this.modal = true;
       // Exibir a janela
       if (this.type == "news") {
-        (this.form.edit.news.title = obj.title),
+        (this.form.edit.news.id = obj.id_news),
+          (this.form.edit.news.title = obj.title),
           (this.form.edit.news.photo = obj.image),
           (this.form.edit.news.desc = obj.description);
       }
       if (this.type == "contacts") {
-        (this.form.edit.contact.name = obj.name),
-        (this.form.edit.contact.email = obj.email),
-        (this.form.edit.contact.number = obj.number);
+        (this.form.edit.contact.id = obj.id_contacts),
+          (this.form.edit.contact.name = obj.name),
+          (this.form.edit.contact.email = obj.email),
+          (this.form.edit.contact.number = obj.number);
         (this.form.edit.contact.status = obj.status),
-        (this.form.edit.contact.description = obj.description);
+          (this.form.edit.contact.description = obj.description);
       }
     },
     updateNews() {
       try {
-        const response = this.$http.put(`/news/${obj.id_news}`, {
-          Title: this.form.edit.news.title,
-          Image: this.form.edit.news.photo,
-          Desc: this.form.edit.news.desc,
+        const response = this.$http.put(`/news/${this.form.edit.news.id}`, {
+          title: this.form.edit.news.title,
+          image: this.form.edit.news.photo,
+          desc: this.form.edit.news.desc,
         });
         console.log(response);
+        this.$store.commit("EDIT_NEW", "Noticia Editada");
         this.$swal({
           text: `Noticia Editada!`,
           icon: "success",
-          showConfirmButton: false,
+          button: false,
           timer: 2000,
         });
       } catch (err) {
@@ -310,28 +491,67 @@ export default {
     },
     updateContact() {
       try {
-        const response = this.$http.put(`/news/${obj.id_news}`, {
-          Title: this.form.edit.news.title,
-          Image: this.form.edit.news.photo,
-          Desc: this.form.edit.news.desc,
-        });
-        console.log(response);
-        this.$swal({
-          text: `Noticia Editada!`,
-          icon: "success",
-          showConfirmButton: false,
-          timer: 2000,
-        });
+        this.verifyEmail = false;
+        this.verifyNumber = false;
+        for (let i = 0; i < this.contacts.length; i++) {
+          if (this.contacts[i].number == this.form.edit.contact.number) {
+            this.verifyNumber = true;
+          }
+          if (this.contacts[i].email == this.form.edit.contact.email) {
+            this.verifyEmail = true;
+          }
+        }
+        if (this.verifyNumber) {
+          this.$swal({
+            text: `Já tem um contacto com esse número!`,
+            icon: "error",
+            timer: 2000,
+            button: false,
+          });
+        } else if (this.verifyEmail) {
+          this.$swal({
+            text: `Já tem um contacto com esse email!`,
+            icon: "error",
+            timer: 2000,
+            button: false,
+          });
+        } else {
+          const response = this.$http.put(
+            `/contacts/${this.form.edit.contact.id}`,
+            {
+              name: this.form.edit.contact.name,
+              number: this.form.edit.contact.number,
+              email: this.form.edit.contact.email,
+              desc: this.form.edit.contact.description,
+              status: this.form.edit.contact.status,
+            }
+          );
+          this.$store.commit("EDIT_CONTACT", "Contacto Editado");
+          console.log(response);
+          this.$swal({
+            text: `Contacto Editado!`,
+            icon: "success",
+            button: false,
+            timer: 2000,
+          });
+          this.modal = false;
+        }
       } catch (err) {
         console.log(err.response);
+        this.$swal({
+          text: `Ups! Ocorreu um erro!`,
+          icon: "error",
+          timer: 2000,
+          button: false,
+        });
       }
-      this.modal = false;
     },
   },
   computed: {
     totalRows() {
       return this.items.length;
     },
+    ...mapGetters(["getLoggedUser"]),
   },
 };
 </script>

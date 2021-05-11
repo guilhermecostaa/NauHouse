@@ -34,6 +34,9 @@ export default {
         case "ADD_NEW":
           this.loadNews();
           break;
+        case "EDIT_NEW":
+          this.loadNews();
+          break;
         case "DELETE_NEW":
           this.loadNews();
           break;

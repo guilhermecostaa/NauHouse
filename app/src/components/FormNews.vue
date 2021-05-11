@@ -75,7 +75,7 @@ export default {
         this.$swal({
           text: `Noticia Adicionada!`,
           icon: "success",
-          showConfirmButton: false,
+          button: false,
           timer: 2000,
         });
         this.form.title = "";
@@ -89,7 +89,7 @@ export default {
             text: `Ups occoreu um erro!`,
             icon: "error",
             timer: 2000,
-            showConfirmButton: false,
+            button: false,
           });
         }
       }

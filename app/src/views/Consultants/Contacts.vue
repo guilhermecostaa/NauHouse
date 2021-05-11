@@ -101,7 +101,7 @@
       <DataTable
         name="contacts"
         :items="getContacts"
-        :fields="['name', 'number', 'description', 'actions']"
+        :fields="['name', 'number', 'description', 'status', 'actions']"
         type="contacts"
       ></DataTable>
     </div>
@@ -121,6 +121,9 @@ export default {
     this.$store.subscribe((mutation) => {
       switch (mutation.type) {
         case "ADD_CONTACT":
+          this.loadContacts();
+          break;
+        case "EDIT_CONTACT":
           this.loadContacts();
           break;
         case "DELETE_CONTACT":
@@ -173,14 +176,14 @@ export default {
             text: `Já tem um contacto com esse número!`,
             icon: "error",
             timer: 2000,
-            showConfirmButton: false,
+            button: false,
           });
         } else if (this.verifyEmail) {
           this.$swal({
             text: `Já tem um contacto com esse email!`,
             icon: "error",
             timer: 2000,
-            showConfirmButton: false,
+            button: false,
           });
         } else {
           const response = await this.$http.post(`/contacts`, {
@@ -195,7 +198,7 @@ export default {
           this.$swal({
             text: `Contacto Adicionada!`,
             icon: "success",
-            showConfirmButton: false,
+            button: false,
             timer: 2000,
           });
           this.$store.commit("ADD_CONTACT", "Contacto Adicionado");
@@ -211,7 +214,7 @@ export default {
             text: `Ups occoreu um erro!`,
             icon: "error",
             timer: 2000,
-            showConfirmButton: false,
+            button: false,
           });
           console.log(err);
         }

@@ -46,13 +46,16 @@ async function deleteContact(req, res) {
 
 async function editContact(req, res) {
     const { id } = req.params
-    const { name, number, desc, status } = req.body
+    const { name, email, number, desc, status } = req.body
     let set = []
     if (name) {
         set.push(`name = "${name}"`) 
     }
     if (number) {
         set.push(`number = "${number}"`) 
+    }
+    if (email) {
+        set.push(`email = "${email}"`) 
     }
     if (desc) {
         set.push(`description = "${desc}"`) 

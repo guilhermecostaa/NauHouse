@@ -14,7 +14,9 @@ export default new Vuex.Store({
     jwt: "",
     loggedUser: {},
     addnew: "",
-    addContact: ""
+    addContact: "",
+    addUser: "",
+    addProperty: ""
   },
   getters: {
     getJwtToken: state => state.jwt,
@@ -34,8 +36,14 @@ export default new Vuex.Store({
     },
     ADD_NEW: (state, addnew) => state.addnew = addnew,
     DELETE_NEW: (state, addnew) => state.addnew = addnew,
+    EDIT_NEW: (state, addnew) => state.addnew = addnew,
     ADD_CONTACT: (state, addContact) => state.addContact = addContact,
+    EDIT_CONTACT: (state, addContact) => state.addContact = addContact,
     DELETE_CONTACT: (state, addContact) => state.addContact = addContact,
+    ADD_USER: (state, addUser) => state.addUser = addUser,
+    DELETE_USER: (state, addUser) => state.addUser = addUser,
+    ADD_PROPERTY: (state, addProperty) => state.addProperty = addProperty,
+    DELETE_PROPERTY: (state, addProperty) => state.addProperty = addProperty,
   },
   actions: {
   },

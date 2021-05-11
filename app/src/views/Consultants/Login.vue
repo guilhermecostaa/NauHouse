@@ -73,7 +73,7 @@ export default {
           this.$swal({
             text: `Bem-vindo ${response.data.content.user.name}!`,
             icon: 'success',
-            showConfirmButton: false,
+            button: false,
             timer: 2000,
           });
           console.log(this.getLoggedUser);
@@ -87,7 +87,7 @@ export default {
               text: `Utilizador não encontrado!`,
               icon: "error",
               timer: 2000,
-              showConfirmButton: false,
+              button: false,
             });
           }
           if (err.response.data.message === "invalidPassword") {
@@ -95,7 +95,7 @@ export default {
               text: `Palavra passe incorreta!`,
               icon: "error",
               timer: 2000,
-              showConfirmButton: false,
+              button: false,
             });
           }
         }

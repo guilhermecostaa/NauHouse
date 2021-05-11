@@ -29,16 +29,16 @@ export default {
   },
   created(){
     this.loadUsers()
-    /*this.$store.subscribe(mutation => {
+    this.$store.subscribe(mutation => {
 			switch (mutation.type) {
-				case "ADD_NEW":
-          this.loadNews();
+				case "ADD_USER":
+          this.loadUsers();
           break
-        case "DELETE_NEW":
-          this.loadNews();
+        case "DELETE_USER":
+          this.loadUsers();
           break
 			}
-		})*/
+		})
   },
   data() {
     return {

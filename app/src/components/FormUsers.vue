@@ -67,7 +67,6 @@
               id="input-phone"
               v-model="form.phone"
               type="tel"
-              max="9"
               required
             ></b-form-input>
           </b-form-group>
@@ -81,7 +80,7 @@
             <b-form-select
               id="input-userType"
               v-model="form.userType"
-              :options="userTypes"
+              :options="userTypes.map(userType => {return {value: userType.id_user_type, text: userType.user_type}})"
             ></b-form-select>
           </b-form-group>
         </div>
@@ -294,7 +293,6 @@
               id="input-personalContact"
               v-model="form.personalContact"
               type="tel"
-              pattern="[0-9]{3}-[0-9]{3}-[0-9]{3}"
               required
             ></b-form-input>
           </b-form-group>
@@ -309,7 +307,6 @@
               id="input-emergencyContact"
               v-model="form.emergencyContact"
               type="tel"
-              pattern="[0-9]{3}-[0-9]{3}-[0-9]{3}"
               class="mb-2"
               required
             ></b-form-input>
@@ -534,7 +531,7 @@
         <div class="col-md-4 col-sm-12">
           <b-form-group
             id="input-faturationVolume"
-            label="Elementos"
+            label="Volume Faturação"
             label-for="input-faturationVolume"
           >
             <b-form-input
@@ -565,6 +562,38 @@
       <h4 class="subtitle mt-4">
         Disponibilidade E Objetivos profissionais a que se Propõe
       </h4>
+      <!--disponibilidade Dias-->
+      <div class="row">
+        <div class="col-md-6 col-sm-12">
+          <b-form-group
+            id="input-availability"
+            label="Disponibilidade"
+            label-for="input-availability"
+          >
+            <b-form-input
+              id="input-availability"
+              v-model="form.availability"
+              type="text"
+              required
+            ></b-form-input>
+          </b-form-group>
+        </div>
+        <div class="col-md-6 col-sm-12">
+          <b-form-group
+            id="input-availabilityDays"
+            label="Dias"
+            label-for="input-availabilityDays"
+          >
+            <b-form-input
+              id="input-availabilityDays"
+              v-model="form.availabilityDays"
+              type="number"
+              class="mb-2"
+              required
+            ></b-form-input>
+          </b-form-group>
+        </div>
+      </div>
       <!-- Horário ReuniaoGeral ReuniãoAcompanhamento-->
       <div class="row">
         <div class="col-md-4 col-sm-12">
@@ -648,7 +677,7 @@
             <b-form-input
               id="input-positioningZone"
               v-model="form.positioningZone"
-              type="number"
+              type="text"
               class="mb-2"
               required
             ></b-form-input>
@@ -660,7 +689,7 @@
         <div class="col-md-4 col-sm-12">
           <b-form-group
             id="input-mensalPublicity"
-            label="Elementos"
+            label="Publicidade Mensal"
             label-for="input-mensalPublicity"
           >
             <b-form-input
@@ -810,6 +839,9 @@
 
 <script>
 export default {
+  created() {
+    this.loadUserType();
+  },
   data() {
     return {
       form: {
@@ -867,16 +899,60 @@ export default {
         secondZone: "",
         thirdZone: "",
       },
-      userTypes: [
-        { text: "Select One", value: null },
-        { text: "Consultor", value: "1" },
-        { text: "Admistrador", value: "2" },
-        { text: "Assistente Executiva", value: "3" },
-        { text: "Consultora de Marketing e Multimédia", value: "4" }
-      ],
+      userTypes: [],
+      availabilities: [],
+      workTypes: [],
+      zones: [],
+      balances: [],
+      objectives: [],  
     };
   },
   methods: {
+    getAvailabilityNextID: state => {
+      if (this.length === 0) {
+        return 1
+      } else {
+        return state.users[state.users.length - 1].id + 1
+      }
+    },
+    getWorkTypeNextID: state => {
+      if (state.users.length === 0) {
+        return 1
+      } else {
+        return state.users[state.users.length - 1].id + 1
+      }
+    },
+    getZoneNextID: state => {
+      if (state.users.length === 0) {
+        return 1
+      } else {
+        return state.users[state.users.length - 1].id + 1
+      }
+    },
+    getBalanceNextID: state => {
+      if (state.users.length === 0) {
+        return 1
+      } else {
+        return state.users[state.users.length - 1].id + 1
+      }
+    },
+    getObjectivesUserNextID: state => {
+      if (state.users.length === 0) {
+        return 1
+      } else {
+        return state.users[state.users.length - 1].id + 1
+      }
+    },
+    async loadUserType() {
+      try {
+        const response = await this.$http.get(`/userType`);
+        if (response.status === 200) {
+          this.userTypes = response.data.content;
+        }
+      } catch (err) {
+        console.log(err.response);
+      }
+    },
     async addUser() {
       try {
         const response = await this.$http.post("/users", {
@@ -933,15 +1009,17 @@ export default {
           firstZone: this.form.firstZone,
           secondZone: this.form.secondZone,
           thirdZone: this.form.title,
+          active: 0,
+          passive: 0
         });
         console.log(response);
         this.$swal({
           text: `Utilizador Adicionada!`,
           icon: "success",
-          showConfirmButton: false,
+          button: false,
           timer: 2000,
         });
-          /*this.form.name = "",
+        /*this.form.name = "",
           this.form.password = "",
           this.form.email = "",
           this.form.avatar = "",
@@ -1001,9 +1079,9 @@ export default {
             text: `Ups occoreu um erro!`,
             icon: "error",
             timer: 2000,
-            showConfirmButton: false,
+            button: false,
           });
-          console.log(err)
+          console.log(err);
         }
       }
     },

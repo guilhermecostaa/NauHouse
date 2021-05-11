@@ -138,7 +138,7 @@ export default {
               text: `Email enviado!`,
               icon: "success",
               timer: 2000,
-              showConfirmButton: false,
+              button: false,
             });
             console.log("SUCCESS!", result.status, result.text);
           },
@@ -147,7 +147,7 @@ export default {
               text: "Ups! Ocorreu um erro! Tente de novo",
               icon: "error",
               timer: 2000,
-              showConfirmButton: false,
+              button: false,
             });
             console.log("FAILED...", error);
           }
