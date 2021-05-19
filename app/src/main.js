@@ -11,6 +11,9 @@ import VueSweetalert2 from 'vue-sweetalert2';
 import ToggleButton from 'vue-js-toggle-button';
 import VueCtkDateTimePicker from 'vue-ctk-date-time-picker';
 import VueSwal from 'vue-swal'
+import VueSplide from '@splidejs/vue-splide';
+import '@splidejs/splide/dist/css/themes/splide-sea-green.min.css';
+
 
 import{ init } from 'emailjs-com';
 init("user_ERkgj4TuWJz3216R2nMuM");
@@ -31,7 +34,7 @@ Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 Vue.use(ToggleButton);
 Vue.component('VueCtkDateTimePicker', VueCtkDateTimePicker);
-
+Vue.use( VueSplide );
 
 Vue.config.productionTip = false
 

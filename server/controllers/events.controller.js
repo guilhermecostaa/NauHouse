@@ -11,9 +11,21 @@ async function getEvents(req, res) {
     })
 }
 
+async function getEventsByUserId(req, res) {
+    const { id } = req.params
+    const query = `select * from events where user_id = ${id};`
+    con.query(query, (err, results, fields) => {
+        if (err) {
+            return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
+        }
+        res.send(messages.getSuccess("getEventsByUserId", results))
+    })
+}
+
+
 async function addEvent(req, res) {
-    const { title, startDate, endDate } = req.body
-    const query = `insert into events (title, start_date, end_date) values ("${title}", "${startDate}", "${endDate}")`
+    const { title, startDate, endDate, userId} = req.body
+    const query = `insert into events (title, start_date, end_date, user_id) values ("${title}", "${startDate}", "${endDate}", "${userId}")`
     con.query(query, (err, results, fields) => {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
@@ -56,4 +68,4 @@ async function editEvent(req, res) {
 }
 
 
-module.exports = { getEvents, addEvent, deleteEvent, editEvent}
+module.exports = { getEvents, getEventsByUserId, addEvent, deleteEvent, editEvent}

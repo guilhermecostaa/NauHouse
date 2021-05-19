@@ -1,20 +1,27 @@
 <template>
   <b-col>
     <div>
-      <b-card :title="getTitle(property.title)" class="mb-1 mt-2">
+      <b-card :title="getTitle(property.title)" @click="propertyPage" class="mb-1 mt-2">
         <b-card-text>
           <div class="information">
             <p class="mt-2">{{ getDescription(property.description) }}</p>
             <div class="row">
-                <div class="col-lg-4">
-                    <p><b-icon-telephone-fill class="mr-2" /> {{ property.room }}</p>
-                </div>
-                <div class="col-lg-4">
-                    <p><b-icon-telephone-fill class="mr-2" /> {{ property.bathrooms }}</p>
-                </div>
-                <div class="col-lg-4">
-                    <p><b-icon-telephone-fill class="mr-2" /> {{ property.area }}</p>
-                </div>
+              <div class="col-lg-4">
+                <p>
+                  <b-icon-telephone-fill class="mr-2" /> {{ property.room }}
+                </p>
+              </div>
+              <div class="col-lg-4">
+                <p>
+                  <b-icon-telephone-fill class="mr-2" />
+                  {{ property.bathrooms }}
+                </p>
+              </div>
+              <div class="col-lg-4">
+                <p>
+                  <b-icon-telephone-fill class="mr-2" /> {{ property.area }}
+                </p>
+              </div>
             </div>
           </div>
         </b-card-text>
@@ -30,6 +37,12 @@ export default {
     return {};
   },
   methods: {
+    propertyPage() {
+      this.$router.push({
+        name: "Property",
+        params: { id: this.property.id_property },
+      });
+    },
     getDescription(description) {
       if (description.length < 120) {
         return description;

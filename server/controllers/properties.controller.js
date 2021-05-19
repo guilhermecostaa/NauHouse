@@ -12,6 +12,17 @@ async function getProperties(req, res) {
     })
 }
 
+async function getPropertiesById(req, res) {
+    const { id } = req.params
+    const query = `select * from property where id_property = ${id}`
+    con.query(query, (err, results, fields) => {
+        if (err) {
+            return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
+        }
+        res.send(messages.getSuccess("getPropertiesById", results))
+    })
+}
+
 async function getPropertiesByUser(req, res) {
     const { id } = req.params
     const query = `select * from property where consultant_id = ${id}`
@@ -172,4 +183,4 @@ async function editProperty(req, res) {
 }
 
 
-module.exports = { getProperties, getPropertiesByUser, addProperty, deleteProperty, editProperty }
+module.exports = { getProperties, getPropertiesById, getPropertiesByUser, addProperty, deleteProperty, editProperty }

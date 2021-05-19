@@ -4,9 +4,7 @@
       <div class="col-md-6 col-xs-6">
         <h3 class="subtitle mt-4">Propriedades</h3>
       </div>
-      <div
-        class="col-sm-6 col-xs-6 text-right"
-      >
+      <div class="col-sm-6 col-xs-6 text-right">
         <b-button v-b-toggle.sidebar-1 class="mt-3" variant="danger"
           ><b-icon-filter-left
         /></b-button>
@@ -35,7 +33,11 @@
             <b-form-select
               id="input-purpose"
               v-model="form.purpose"
-              :options="purposes"
+              :options="
+                purposes.map((purpose) => {
+                  return { value: purpose.id_purpose, text: purpose.name };
+                })
+              "
             ></b-form-select>
           </b-form-group>
 
@@ -47,7 +49,11 @@
             <b-form-select
               id="input-category"
               v-model="form.category"
-              :options="categories"
+              :options="
+                categories.map((category) => {
+                  return { value: category.id_category, text: category.name };
+                })
+              "
             ></b-form-select>
           </b-form-group>
 
@@ -59,7 +65,11 @@
             <b-form-select
               id="input-shape"
               v-model="form.shape"
-              :options="shape"
+              :options="
+                shapes.map((shape) => {
+                  return { value: shape.id_shape, text: shape.shape };
+                })
+              "
             ></b-form-select>
           </b-form-group>
           <b-form-group
@@ -88,10 +98,10 @@
             ></b-form-input>
           </b-form-group>
 
-          <toggle-button v-model="pool" color="#b01e0f" /> Piscina <br />
-          <toggle-button v-model="elevator" color="#b01e0f" /> Elevador <br />
-          <toggle-button v-model="garage" color="#b01e0f" /> Garagem <br />
-          <toggle-button v-model="parking" color="#b01e0f" /> Estacionamento
+          <toggle-button v-model="form.pool" color="#b01e0f" /> Piscina <br />
+          <toggle-button v-model="form.elevator" color="#b01e0f" /> Elevador <br />
+          <toggle-button v-model="form.garage" color="#b01e0f" /> Garagem <br />
+          <toggle-button v-model="form.parking" color="#b01e0f" /> Estacionamento
         </b-form>
       </div>
     </b-sidebar>
@@ -121,6 +131,9 @@ export default {
   components: { PropertyCard },
   created() {
     this.loadProperties();
+    this.loadCategories();
+    this.loadPurposes();
+    this.loadShapes();
   },
   data() {
     return {
@@ -135,26 +148,43 @@ export default {
         garage: false,
         parking: false,
       },
-      categories: [
-        { text: "Select One", value: null },
-        { text: "Apartamento", value: "1" },
-        { text: "Moradia", value: "2" },
-      ],
-      purposes: [
-        { text: "Select One", value: null },
-        { text: "Venda", value: "1" },
-        { text: "Arrendamento", value: "2" },
-      ],
-      shape: [
-        { text: "Select One", value: null },
-        { text: "Novo", value: "1" },
-        { text: "Semi-Novo", value: "2" },
-        { text: "Ruinas", value: "3" },
-      ],
+      categories: [],
+      purposes: [],
+      shapes: [],
       properties: [],
     };
   },
   methods: {
+    async loadCategories() {
+      try {
+        const response = await this.$http.get(`/category`);
+        if (response.status === 200) {
+          this.categories = response.data.content;
+        }
+      } catch (err) {
+        console.log(err.response);
+      }
+    },
+    async loadPurposes() {
+      try {
+        const response = await this.$http.get(`/purpose`);
+        if (response.status === 200) {
+          this.purposes = response.data.content;
+        }
+      } catch (err) {
+        console.log(err.response);
+      }
+    },
+    async loadShapes() {
+      try {
+        const response = await this.$http.get(`/shape`);
+        if (response.status === 200) {
+          this.shapes = response.data.content;
+        }
+      } catch (err) {
+        console.log(err.response);
+      }
+    },
     async loadProperties() {
       try {
         const response = await this.$http.get("/property");

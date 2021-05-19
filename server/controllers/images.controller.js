@@ -1,5 +1,7 @@
 const con = require("../connection")
 const messages = require("../messages")
+const multer = require("multer")
+const path = require("path")
 
 async function getImages(req, res) {
     const query = "select * from images;"
@@ -12,12 +14,20 @@ async function getImages(req, res) {
 }
 
 async function addImage(req, res) {
-    const { image } = req.body
+    const { image } = req.file
+    console.log(req.file)
+    
+    const upload = multer({
+        dest: './uploads/'
+    })
+
     const query = `insert into images (image) values ("${image}")`
-    con.query(query, (err, results, fields) => {
+    con.query(query, upload.single('file'), (err, results, fields) => {
         if (err) {
+            
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
-        }
+        } 
+        console.log(req.file)
         res.send(messages.getSuccess("addImage", results))
     })
 }
@@ -38,7 +48,7 @@ async function editImage(req, res) {
     const { image } = req.body
     let set = []
     if (image) {
-        set.push(`image = "${image}"`) 
+        set.push(`image = "${image}"`)
     }
     const query = `update images set ${set.join()} where id_images = ${id}`
     con.query(query, (err, results, fields) => {
@@ -50,4 +60,4 @@ async function editImage(req, res) {
 }
 
 
-module.exports = { getImages, addImage, deleteImage, editImage}
+module.exports = { getImages, addImage, deleteImage, editImage }

@@ -64,7 +64,7 @@ export default {
     async loadProperties() {
       try {
         const response = await this.$http.get(
-          `/property/${this.getLoggedUser.id_user}`
+          `/property/user/${this.getLoggedUser.id_user}`
         );
         if (response.status === 200) {
           this.properties = response.data.content;

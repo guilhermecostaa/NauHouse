@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid">
-    <b-form @submit.prevent="addUser">
+    <b-form @submit.prevent="addUser" enctype="multipart/form- data">
       <h4 class="subtitle mt-4">Dados Pessoais</h4>
       <!-- Nome password-->
       <div class="row">
@@ -50,6 +50,8 @@
             <b-form-file
               v-model="form.avatar"
               :state="Boolean(form.avatar)"
+              @change="selectFile"
+              ref="file"
               required
             ></b-form-file>
           </b-form-group>
@@ -80,7 +82,14 @@
             <b-form-select
               id="input-userType"
               v-model="form.userType"
-              :options="userTypes.map(userType => {return {value: userType.id_user_type, text: userType.user_type}})"
+              :options="
+                userTypes.map((userType) => {
+                  return {
+                    value: userType.id_user_type,
+                    text: userType.user_type,
+                  };
+                })
+              "
             ></b-form-select>
           </b-form-group>
         </div>
@@ -841,6 +850,8 @@
 export default {
   created() {
     this.loadUserType();
+    this.loadUsers();
+    console.log(this.users);
   },
   data() {
     return {
@@ -848,7 +859,7 @@ export default {
         name: "",
         password: "",
         email: "",
-        avatar: null,
+        avatar: "",
         phone: "",
         userType: "",
         nacionality: "",
@@ -899,49 +910,14 @@ export default {
         secondZone: "",
         thirdZone: "",
       },
+      users: [],
       userTypes: [],
-      availabilities: [],
-      workTypes: [],
-      zones: [],
-      balances: [],
-      objectives: [],  
+      verifyFields: false,
     };
   },
   methods: {
-    getAvailabilityNextID: state => {
-      if (this.length === 0) {
-        return 1
-      } else {
-        return state.users[state.users.length - 1].id + 1
-      }
-    },
-    getWorkTypeNextID: state => {
-      if (state.users.length === 0) {
-        return 1
-      } else {
-        return state.users[state.users.length - 1].id + 1
-      }
-    },
-    getZoneNextID: state => {
-      if (state.users.length === 0) {
-        return 1
-      } else {
-        return state.users[state.users.length - 1].id + 1
-      }
-    },
-    getBalanceNextID: state => {
-      if (state.users.length === 0) {
-        return 1
-      } else {
-        return state.users[state.users.length - 1].id + 1
-      }
-    },
-    getObjectivesUserNextID: state => {
-      if (state.users.length === 0) {
-        return 1
-      } else {
-        return state.users[state.users.length - 1].id + 1
-      }
+    selectFile() {
+      this.form.avatar = this.$refs.file.files[0];
     },
     async loadUserType() {
       try {
@@ -953,125 +929,215 @@ export default {
         console.log(err.response);
       }
     },
+    async loadUsers() {
+      try {
+        const response = await this.$http.get(`/users`);
+        if (response.status === 200) {
+          this.users = response.data.content;
+        }
+      } catch (err) {
+        console.log(err.response);
+      }
+    },
     async addUser() {
       try {
-        const response = await this.$http.post("/users", {
-          name: this.form.name,
-          email: this.form.email,
-          number: this.form.phone,
-          password: this.form.password,
-          nacionality: this.form.nacionality,
-          avatar: this.form.avatar,
-          birthday: this.form.birthday,
-          userType: this.form.userType,
-          placeOfBirth: this.form.placeOfBirth,
-          civilId: this.form.civilId,
-          validity: this.form.validity,
-          address: this.form.address,
-          maritalStatus: this.form.maritalStatus,
-          postalCode: this.form.postalCode,
-          fiscalId: this.form.fiscalId,
-          niss: this.form.niss,
-          academicQualification: this.form.academicQualification,
-          academicArea: this.form.academicArea,
-          personalContact: this.form.personalContact,
-          emergencyContact: this.form.emergencyContact,
-          employmentSituation: this.form.employmentSituation,
-          personalEmail: this.form.personalEmail,
-          regime: this.form.regime,
-          schedule: this.form.schedule,
-          nif: this.form.nif,
-          experience: this.form.experience,
-          time: this.form.time,
-          agency: this.form.agency,
-          ownCar: this.form.ownCar,
-          actingZone: this.form.actingZone,
-          team: this.form.team,
-          elements: this.form.elements,
-          acquisition: this.form.acquisition,
-          transaction: this.form.transaction,
-          faturationVolume: this.form.faturationVolume,
-          anotation: this.form.anotation,
-          availability: this.form.availability,
-          workType: this.form.workType,
-          days: this.form.availabilityDays,
-          availabilitySchedule: this.form.availabilitySchedule,
-          generalMeeting: this.form.generalMeeting,
-          accomplishMeeting: this.form.suportMeeting,
-          scale: this.form.scale,
-          publicityZone: this.form.publicityZone,
-          positioningZone: this.form.positioningZone,
-          mensalPublicity: this.form.mensalPublicity,
-          flyers: this.form.flyers,
-          mensalInvoice: this.form.mensalInvoice,
-          mensalAcquisition: this.form.mensalAcquisition,
-          averageTransaction: this.form.mensalTransaction,
-          firstZone: this.form.firstZone,
-          secondZone: this.form.secondZone,
-          thirdZone: this.form.title,
-          active: 0,
-          passive: 0
-        });
-        console.log(response);
-        this.$swal({
-          text: `Utilizador Adicionada!`,
-          icon: "success",
-          button: false,
-          timer: 2000,
-        });
-        /*this.form.name = "",
-          this.form.password = "",
-          this.form.email = "",
-          this.form.avatar = "",
-          this.form.phone = "",
-          this.form.userType= "",
-          this.form.nacionality = "",
-          this.form.birthday = "",
-          this.form.placeOfBirth = "",
-          this.form.civilId = "",
-          this.form.validity = "",
-          this.form.address= "",
-          this.form.maritalStatus = "",
-          this.form.postalCode = "",
-          this.form.fiscalId= "",
-          this.form.niss = "",
-          this.form.academicQualification ="",
-          this.form.academicArea = "",
-          this.form.personalContact = "",
-          this.form.emergencyContact = "",
-          this.form.employmentSituation = "",
-          this.form.personalEmail = "",
-          this.form.regime = "",
-          this.form.schedule = "",
-          this.form.nif = "",
-          this.form.experience = "",
-          this.form.time = "",
-          this.form.agency = "",
-          this.form.ownCar = "",
-          this.form.actingZone = "",
-          this.form.team = "",
-          this.form.elements = "",
-          this.form.acquisition = "",
-          this.form.transaction = "",
-          this.form.faturationVolume = "",
-          this.form.anotation = "",
-          this.form.availability = "",
-          this.form.workType = "",
-          this.form.availabilityDays = "",
-          this.form.availabilitySchedule = "",
-          this.form.generalMeeting = "",
-          this.form.suportMeeting = "",
-          this.form.scale = "",
-          this.form.publicityZone = "",
-          this.form.positioningZone = "",
-          this.form.mensalPublicity = "",
-          this.form.flyers = "",
-          this.form.mensalInvoice = "",
-          this.form.mensalAcquisition = "",
-          this.form.mensalTransaction = "",
-          this.form.firstZone = "",
-          this.form.secondZone = "",
-          this.form.title = "" */
+        this.verifyFields = false;
+        for (let i = 0; i < this.users.length; i++) {
+          if (this.form.email == this.users[i].email) {
+            this.verifyFields = true;
+            this.$swal({
+              text: `Já existe um utilizador com esse email!`,
+              icon: "error",
+              button: false,
+              timer: 2000,
+            });
+          }
+          if (this.form.phone == this.users[i].number) {
+            this.verifyFields = true;
+            this.$swal({
+              text: `Já existe um utilizador com esse número!`,
+              icon: "error",
+              button: false,
+              timer: 2000,
+            });
+          }
+          if (this.form.civilId == this.users[i].civil_id) {
+            this.verifyFields = true;
+            this.$swal({
+              text: `Já existe um utilizador com esse id civil!`,
+              icon: "error",
+              button: false,
+              timer: 2000,
+            });
+          }
+          if (this.form.niss == this.users[i].niss) {
+            this.verifyFields = true;
+            this.$swal({
+              text: `Já existe um utilizador com esse niss!`,
+              icon: "error",
+              button: false,
+              timer: 2000,
+            });
+          }
+          if (this.form.personalContact == this.users[i].personal_contact) {
+            this.verifyFields = true;
+            this.$swal({
+              text: `Já existe um utilizador com esse contacto pessoal!`,
+              icon: "error",
+              button: false,
+              timer: 2000,
+            });
+          }
+          if (this.form.emergencyContact == this.users[i].emergency_contact) {
+            this.verifyFields = true;
+            this.$swal({
+              text: `Já existe um utilizador com esse contacto pessoal!`,
+              icon: "error",
+              button: false,
+              timer: 2000,
+            });
+          }
+          if (this.form.personalEmail == this.users[i].personal_email) {
+            this.verifyFields = true;
+            this.$swal({
+              text: `Já existe um utilizador com esse email pessoal!`,
+              icon: "error",
+              button: false,
+              timer: 2000,
+            });
+          }
+          if (this.form.nif == this.users[i].nif) {
+            this.verifyFields = true;
+            this.$swal({
+              text: `Já existe um utilizador com esse nif!`,
+              icon: "error",
+              button: false,
+              timer: 2000,
+            });
+          }
+        }
+        if (this.verifyFields == false) {
+          const formData = new FormData();
+          formData.append("file", this.form.avatar);
+          const response = await this.$http.post("/users", {
+            name: this.form.name,
+            email: this.form.email,
+            number: this.form.phone,
+            password: this.form.password,
+            nacionality: this.form.nacionality,
+            avatar: this.form.avatar,
+            birthday: this.form.birthday,
+            userType: this.form.userType,
+            placeOfBirth: this.form.placeOfBirth,
+            civilId: this.form.civilId,
+            validity: this.form.validity,
+            address: this.form.address,
+            maritalStatus: this.form.maritalStatus,
+            postalCode: this.form.postalCode,
+            fiscalId: this.form.fiscalId,
+            niss: this.form.niss,
+            academicQualification: this.form.academicQualification,
+            academicArea: this.form.academicArea,
+            personalContact: this.form.personalContact,
+            emergencyContact: this.form.emergencyContact,
+            employmentSituation: this.form.employmentSituation,
+            personalEmail: this.form.personalEmail,
+            regime: this.form.regime,
+            schedule: this.form.schedule,
+            nif: this.form.nif,
+            experience: this.form.experience,
+            time: this.form.time,
+            agency: this.form.agency,
+            ownCar: this.form.ownCar,
+            actingZone: this.form.actingZone,
+            team: this.form.team,
+            elements: this.form.elements,
+            acquisition: this.form.acquisition,
+            transaction: this.form.transaction,
+            faturationVolume: this.form.faturationVolume,
+            anotation: this.form.anotation,
+            availability: this.form.availability,
+            workType: this.form.workType,
+            days: this.form.availabilityDays,
+            availabilitySchedule: this.form.availabilitySchedule,
+            generalMeeting: this.form.generalMeeting,
+            accomplishMeeting: this.form.suportMeeting,
+            scale: this.form.scale,
+            publicityZone: this.form.publicityZone,
+            positioningZone: this.form.positioningZone,
+            mensalPublicity: this.form.mensalPublicity,
+            flyers: this.form.flyers,
+            mensalInvoice: this.form.mensalInvoice,
+            mensalAcquisition: this.form.mensalAcquisition,
+            averageTransaction: this.form.mensalTransaction,
+            firstZone: this.form.firstZone,
+            secondZone: this.form.secondZone,
+            thirdZone: this.form.title,
+            active: 0,
+            passive: 0,
+          });
+          console.log(response);
+          this.$swal({
+            text: `Utilizador Adicionado!`,
+            icon: "success",
+            button: false,
+            timer: 2000,
+          });
+          this.$store.commit("ADD_USER", "User Adicionado");
+          (this.form.name = ""),
+            (this.form.password = ""),
+            (this.form.email = ""),
+            (this.form.avatar = ""),
+            (this.form.phone = ""),
+            (this.form.userType = ""),
+            (this.form.nacionality = ""),
+            (this.form.birthday = ""),
+            (this.form.placeOfBirth = ""),
+            (this.form.civilId = ""),
+            (this.form.validity = ""),
+            (this.form.address = ""),
+            (this.form.maritalStatus = ""),
+            (this.form.postalCode = ""),
+            (this.form.fiscalId = ""),
+            (this.form.niss = ""),
+            (this.form.academicQualification = ""),
+            (this.form.academicArea = ""),
+            (this.form.personalContact = ""),
+            (this.form.emergencyContact = ""),
+            (this.form.employmentSituation = ""),
+            (this.form.personalEmail = ""),
+            (this.form.regime = ""),
+            (this.form.schedule = ""),
+            (this.form.nif = ""),
+            (this.form.experience = ""),
+            (this.form.time = ""),
+            (this.form.agency = ""),
+            (this.form.ownCar = ""),
+            (this.form.actingZone = ""),
+            (this.form.team = ""),
+            (this.form.elements = ""),
+            (this.form.acquisition = ""),
+            (this.form.transaction = ""),
+            (this.form.faturationVolume = ""),
+            (this.form.anotation = ""),
+            (this.form.availability = ""),
+            (this.form.workType = ""),
+            (this.form.availabilityDays = ""),
+            (this.form.availabilitySchedule = ""),
+            (this.form.generalMeeting = ""),
+            (this.form.suportMeeting = ""),
+            (this.form.scale = ""),
+            (this.form.publicityZone = ""),
+            (this.form.positioningZone = ""),
+            (this.form.mensalPublicity = ""),
+            (this.form.flyers = ""),
+            (this.form.mensalInvoice = ""),
+            (this.form.mensalAcquisition = ""),
+            (this.form.mensalTransaction = ""),
+            (this.form.firstZone = ""),
+            (this.form.secondZone = ""),
+            (this.form.thirdZone = "");
+        }
       } catch (err) {
         console.log(err);
         if (err) {

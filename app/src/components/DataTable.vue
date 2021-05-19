@@ -415,6 +415,7 @@ export default {
           }
           if (this.type == "users") {
             const response = this.$http.delete(`/users/${obj.id_user}`);
+            this.$store.commit("DELETE_USER", "User Apagado");
             console.log(response);
             this.$swal({
               title: "Apagado!",

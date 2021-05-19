@@ -12,6 +12,17 @@ async function getUsers(req, res) {
     })
 }
 
+async function getUserById(req, res) {
+    const { id } = req.params
+    const query = `select * from users where id_user = ${id};`
+    con.query(query, (err, results, fields) => {
+        if (err) {
+            return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
+        }
+        res.send(messages.getSuccess("getUserById", results))
+    })
+}
+
 async function addUser(req, res) {
     let { name, email, number, password, userType, nacionality, avatar, birthday, placeOfBirth, maritalStatus, civilId,
         validity, address, postalCode, fiscalId, niss, academicQualification, academicArea, personalContact, emergencyContact,
@@ -48,49 +59,51 @@ async function addUser(req, res) {
 
     const queryBalance = `insert into balance (active, passive) values("${active}", "${passive}")`
 
-    const queryUser = `insert into users (user_type_id, name, email, number, password, nacionality, avatar, birthday,
-                    place_of_birth, marital_status, civil_id, validity, address, postal_code, fiscal_id, niss,
-                    academic_qualification, academic_area, personal_contact, emergency_contact, employment_situation,
-                    personal_email, regime, schedule, nif, experience, time, agency, own_car, acting_zone, team,
-                    elements, acquisition, transaction, faturation_volume, anotation, id_availability, id_work_type,
-                    id_objectives_users, id_zone, id_balance) values ("${userType}", "${name}", "${email}", "${number}", "${password}", 
-                    "${nacionality}", "${avatar}", "${birthday}", "${placeOfBirth}", "${maritalStatus}", "${civilId}", 
-                    "${validity}", "${address}", "${postalCode}", "${fiscalId}", "${niss}", "${academicQualification}", "${academicArea}",
-                    "${personalContact}", "${emergencyContact}", "${employmentSituation}", "${personalEmail}", "${regime}",
-                    "${schedule}", "${nif}", "${experience}", "${time}", "${agency}", "${ownCar}", "${actingZone}", "${team}", 
-                    "${elements}", "${acquisition}", "${transaction}", "${faturationVolume}", "${anotation}", "${idAvailability}",
-                    "${idWorkType}", "${idObjectivesUsers}", "${idZone}", "${idBalance}")`
 
     con.query(queryAvailability, (err, results, fields) => {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
         }
         idAvailability = results.insertId
-        con.query(queryWorkType, (err, results, fields) => {
+        con.query(queryWorkType, (err, results1, fields) => {
             if (err) {
                 return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
             }
-            idWorkType = results.insertId
-            con.query(queryObjective, (err, results, fields) => {
+            idWorkType = results1.insertId
+            con.query(queryObjective, (err, results2, fields) => {
                 if (err) {
                     return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
                 }
-                idObjectivesUsers = results.insertId
-                con.query(queryZone, (err, results, fields) => {
+                idObjectivesUsers = results2.insertId
+                con.query(queryZone, (err, results3, fields) => {
                     if (err) {
                         return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
                     }
-                    idZone = results.insertId
-                    con.query(queryBalance, (err, results, fields) => {
+                    idZone = results3.insertId
+                    con.query(queryBalance, (err, results4, fields) => {
                         if (err) {
                             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
                         }
-                        idBalance = results.insertId
-                        con.query(queryUser, (err, results, fields) => {
+                        idBalance = results4.insertId
+                        console.log(results4)
+                        const queryUser = `insert into users (user_type_id, name, email, number, password, nacionality, avatar, birthday,
+                            place_of_birth, marital_status, civil_id, validity, address, postal_code, fiscal_id, niss,
+                            academic_qualification, academic_area, personal_contact, emergency_contact, employment_situation,
+                            personal_email, regime, schedule, nif, experience, time, agency, own_car, acting_zone, team,
+                            elements, acquisition, transaction, faturation_volume, anotation, id_availability, id_work_type,
+                            id_objectives_users, id_zone, id_balance) values ("${userType}", "${name}", "${email}", "${number}", "${password}", 
+                            "${nacionality}", "${avatar}", "${birthday}", "${placeOfBirth}", "${maritalStatus}", "${civilId}", 
+                            "${validity}", "${address}", "${postalCode}", "${fiscalId}", "${niss}", "${academicQualification}", "${academicArea}",
+                            "${personalContact}", "${emergencyContact}", "${employmentSituation}", "${personalEmail}", "${regime}",
+                            "${schedule}", "${nif}", "${experience}", "${time}", "${agency}", "${ownCar}", "${actingZone}", "${team}", 
+                            "${elements}", "${acquisition}", "${transaction}", "${faturationVolume}", "${anotation}", "${idAvailability}",
+                            "${idWorkType}", "${idObjectivesUsers}", "${idZone}", "${idBalance}")`
+                        con.query(queryUser, (err, results5, fields) => {
+                            console.log(queryUser)
                             if (err) {
                                 return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
                             }
-                            res.send(messages.getSuccess("addUser", results))
+                            res.send(messages.getSuccess("addUser", results5))
                         })
                     })
                 })
@@ -101,7 +114,9 @@ async function addUser(req, res) {
 
 async function deleteUser(req, res) {
     const { id } = req.params
-    const query = `delete from users where id_user = ${id}`
+    const query = `delete from users where id_user = "${id}"`
+    console.log(query)
+    
     con.query(query, (err, results, fields) => {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
@@ -112,7 +127,7 @@ async function deleteUser(req, res) {
 
 async function editUser(req, res) {
     const { id } = req.params
-    const { name, email, password, userType, nacionality, avatar, birthday, placeOfBirth, maritalStatus, civilId,
+    let { name, email, password, userType, nacionality, avatar, birthday, placeOfBirth, maritalStatus, civilId,
         validity, address, postalCode, fiscalId, niss, academicQualification, academicArea, personalContact, emergencyContact,
         employmentSituation, personalEmail, regime, schedule, nif, experience, time, agency, ownCar, actingZone, team, elements,
         acquisition, transaction, faturationVolume, anotation, idAvailability, days, availabilitySchedule, availability,
@@ -340,4 +355,4 @@ async function editUser(req, res) {
     })
 }
 
-module.exports = { getUsers, addUser, deleteUser, editUser }
+module.exports = { getUsers, getUserById, addUser, deleteUser, editUser }

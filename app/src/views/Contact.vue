@@ -92,7 +92,7 @@
           <div
             class="row align-items-center d-flex justify-content-center mt-5 mb-5"
           >
-            <b-button class="btn-add mt-5 mb-5" type="submit" variant="danger"
+            <b-button class="btn-add mt-5 mb-5" squared type="submit" variant="danger"
               >Contactar</b-button
             >
           </div>

@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <h3 class="subtitle mt-4">Noticias</h3>
     <div>
-      <span v-if="this.news.length === 0">SEM CONSULTORES ADICIONADOS</span>
+      <span v-if="this.news.length === 0">SEM NOTICIAS ADICIONADOS</span>
       <div v-else>
         <div class="cards">
           <b-row>
