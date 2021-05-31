@@ -233,6 +233,9 @@ export default {
             timer: 2000,
           });
           this.editModal = false;
+          this.form.edit.title ="",
+          this.form.edit.start = "",
+          this.form.edit.end = "",
           this.$store.commit("EDIT_EVENT", "Evento Editado");
         }
       } catch (err) {
@@ -278,7 +281,10 @@ export default {
             button: false,
             timer: 2000,
           });
-          this.modal = false;
+          this.modal = false,
+          (this.form.title = ""),
+          (this.form.start = ""),
+          (this.form.end = ""),
           this.$store.commit("ADD_EVENT", "Evento adicionado");
         }
       } catch (err) {

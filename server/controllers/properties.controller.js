@@ -30,6 +30,7 @@ async function getPropertiesByUser(req, res) {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
         }
+        console.log(results)
         properties = results
         for (let i = 0; i < properties.length; i++) {
             const id = properties[i].id_property
@@ -38,7 +39,7 @@ async function getPropertiesByUser(req, res) {
                 if (err) {
                     return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
                 }
-                res.send(messages.getSuccess("getPropertiesByUser", results2))
+                res.send(messages.getSuccess("getPropertiesByUser", results))
             })   
         }
     })
@@ -47,13 +48,13 @@ async function getPropertiesByUser(req, res) {
 async function addProperty(req, res) {
     const { idProperty, title, subtitle, desc, district, county, address, postalCode, idCategory, idPurpose, price, idShape,
         habitation, bathrooms, suites, room, closedGarage, parking, consultantId, idEnergeticEfficiency, idStatus,
-        video, usableArea, landArea, constructionGrossArea, implementationArea } = req.body
+        video, bedroom, constructionYear, usableArea, landArea, constructionGrossArea, implementationArea } = req.body
     const query = `insert into property (id_property, title, subtitle, description, district, county, address, postal_code, id_category,
                     id_purpose, price, id_shape, habitation, bathrooms, suites, room, closed_garage, parking, consultant_id,
-                    id_energetic_efficiency, id_status, video) values ("${idProperty}", "${title}", "${subtitle}", "${desc}", "${district}",
+                    id_energetic_efficiency, id_status, video, bedroom, construction_year) values ("${idProperty}", "${title}", "${subtitle}", "${desc}", "${district}",
                     "${county}", "${address}", "${postalCode}", "${idCategory}", "${idPurpose}", "${price}","${idShape}", 
                     "${habitation}", "${bathrooms}", "${suites}", "${room}", "${closedGarage}", "${parking}", "${consultantId}",
-                    "${idEnergeticEfficiency}","${idStatus}", "${video}")`
+                    "${idEnergeticEfficiency}","${idStatus}", "${video}", "${bedroom}", "${constructionYear}")`
     const queryArea = `insert into area (id_property, usable_area, land_area, construction_gross_area, implementation_area) values
                     ("${idProperty}", "${usableArea}", "${landArea}", "${constructionGrossArea}", "${implementationArea}")`
     con.query(query, (err, results, fields) => {
@@ -182,5 +183,21 @@ async function editProperty(req, res) {
     })
 }
 
+async function editPropertyStatus(req, res) {
+    const { id } = req.params
+    const { idStatus } = req.body
+    let set = []
+    if (idStatus) {
+        set.push(`id_status = ${idStatus}`) 
+    }
+    const query = `update property set ${set.join()} where id_property = ${id}`
+    con.query(query, (err, results, fields) => {
+        if (err) {
+            return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
+        }
+        res.send(messages.getSuccess("editPropertyStatus", results))
+    })
+}
 
-module.exports = { getProperties, getPropertiesById, getPropertiesByUser, addProperty, deleteProperty, editProperty }
+
+module.exports = { getProperties, getPropertiesById, getPropertiesByUser, addProperty, deleteProperty, editProperty, editPropertyStatus }

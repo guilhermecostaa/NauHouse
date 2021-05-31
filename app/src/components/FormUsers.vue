@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid">
-    <b-form @submit.prevent="addUser" enctype="multipart/form- data">
+    <b-form @submit.prevent="addUser" enctype="multipart/form-data">
       <h4 class="subtitle mt-4">Dados Pessoais</h4>
       <!-- Nome password-->
       <div class="row">
@@ -918,6 +918,7 @@ export default {
   methods: {
     selectFile() {
       this.form.avatar = this.$refs.file.files[0];
+      console.log(this.$refs.file.files[0])
     },
     async loadUserType() {
       try {
@@ -1019,13 +1020,14 @@ export default {
         if (this.verifyFields == false) {
           const formData = new FormData();
           formData.append("file", this.form.avatar);
+          console.log(formData)
           const response = await this.$http.post("/users", {
             name: this.form.name,
             email: this.form.email,
             number: this.form.phone,
             password: this.form.password,
             nacionality: this.form.nacionality,
-            avatar: this.form.avatar,
+            avatar: this.formData,
             birthday: this.form.birthday,
             userType: this.form.userType,
             placeOfBirth: this.form.placeOfBirth,

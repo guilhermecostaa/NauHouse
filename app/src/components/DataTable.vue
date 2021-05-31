@@ -33,6 +33,19 @@
             <b-button
               class="mr-2"
               variant="primary"
+              v-if="type == 'property'"
+              >Tranferência</b-button
+            >
+            <b-button
+              class="mr-2"
+              variant="primary"
+              @click="statusModal(data.item)"
+              v-if="type == 'property'"
+              >Alterar Estado</b-button
+            >
+            <b-button
+              class="mr-2"
+              variant="primary"
               @click="editItem(data.item)"
               >Editar</b-button
             >
@@ -50,7 +63,7 @@
       </b-col>
     </b-row>
 
-    <b-modal ref="mdlupdateNew" v-model="modal" hide-footer>
+    <b-modal ref="mdlupdateNew" v-model="modal" title="Editar" hide-footer>
       <div class="d-block text-left">
         <!-- Form de News-->
         <b-form @submit.prevent="updateNews()" v-if="type == 'news'">
@@ -210,7 +223,7 @@
     </b-modal>
 
     <!--Modal Vendas-->
-    <b-modal ref="mdlupdateNew" v-model="modalSell" hide-footer>
+    <b-modal ref="mdlsellHouse" v-model="modalSell" hide-footer>
       <div class="d-block text-left">
         <!-- Form de Vender-->
         <b-form @submit.prevent="sell()">
@@ -225,7 +238,14 @@
                 <b-form-select
                   id="input-consultantId"
                   v-model="form.sell.consultantId"
-                  :options="consultants"
+                  :options="
+                    consultants.map((consultant) => {
+                      return {
+                        value: consultant.id_user,
+                        text: consultant.name,
+                      };
+                    })
+                  "
                   required
                 ></b-form-select>
               </b-form-group>
@@ -265,12 +285,29 @@
               </b-form-group>
             </div>
           </div>
+          <!-- Ganho Angariador -->
+          <div class="row">
+            <div class="col-sm-12">
+              <b-form-group
+                id="input-fundraiser"
+                label="Ganhos Angariador"
+                label-for="input-fundraiser"
+              >
+                <b-form-input
+                  id="input-fundraiser"
+                  v-model="form.sell.fundraiserGains"
+                  type="number"
+                  required
+                ></b-form-input>
+              </b-form-group>
+            </div>
+          </div>
           <!-- Ganho Consultor -->
           <div class="row">
             <div class="col-sm-12">
               <b-form-group
                 id="input-consultantGains"
-                label="Ganhos Consultor:"
+                label="Ganhos Consultor"
                 label-for="input-consultantGains"
               >
                 <b-form-input
@@ -292,16 +329,49 @@
         </b-form>
       </div>
     </b-modal>
+
+    <!--Modal Estado-->
+    <b-modal ref="mdlalterStatus" v-model="modalStatus" hide-footer>
+      <div class="d-block text-left">
+        <!-- Form de Estado-->
+        <b-form @submit.prevent="alterStatus()">
+          <!-- Estado -->
+          <div class="row">
+            <div class="col-sm-12">
+              <b-form-group
+                id="input-status"
+                label="Estado"
+                label-for="input-status"
+              >
+                <b-form-select
+                  id="input-status"
+                  v-model="form.edit.property.status"
+                  :options="
+                    status.map((status) => {
+                      return { value: status.id_status, text: status.status };
+                    })
+                  "
+                  required
+                ></b-form-select>
+              </b-form-group>
+            </div>
+          </div>
+          <div
+            class="row align-items-center d-flex justify-content-center mt-5 mb-5"
+          >
+            <b-button class="btn-add mt-5 mb-5" type="submit" variant="danger"
+              >Alterar</b-button
+            >
+          </div>
+        </b-form>
+      </div>
+    </b-modal>
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
 export default {
   props: ["items", "fields", "type"],
-  created() {
-    this.loadContacts();
-  },
   data() {
     return {
       bordered: true,
@@ -314,9 +384,11 @@ export default {
       contacts: [],
       form: {
         sell: {
+          idProperty: "",
           consultantId: "",
           price: "",
           companyGains: "",
+          fundraiserGains: "",
           consultantGains: "",
         },
         edit: {
@@ -334,26 +406,46 @@ export default {
             photo: null,
             desc: "",
           },
+          property: {
+            status: "",
+          },
         },
       },
-      consultants: [
-        { text: "Select One", value: null },
-        { text: "Carla Lopes", value: "1" },
-        { text: "Carlos Conceição", value: "2" },
-        { text: "Tânia Igreja", value: "3" },
-      ],
+      saled: false,
+      consultants: [],
+      status: [],
+      statusObj: [],
       modal: false,
       modalSell: false,
+      modalStatus: false,
     };
   },
+  created() {
+    this.loadUsers();
+    this.loadStatus();
+  },
   methods: {
-    async loadContacts() {
+    statusModal(obj) {
+      this.modalStatus = true;
+      this.statusObj = obj;
+    },
+    alterStatus() {
       try {
-        const response = await this.$http.get(
-          `/contacts/${this.getLoggedUser.id_user}`
-        );
+        const response = this.$http.put(
+          `/property/${this.statusObj.id_property}/status`,
+          {
+            idStatus: this.form.edit.property.status,
+          });
         if (response.status === 200) {
-          this.contacts = response.data.content;
+          this.$swal({
+            text: `Estado Alterado!`,
+            icon: "success",
+            button: false,
+            timer: 2000,
+          });
+          console.log("entreiiiiii")
+          this.$store.commit("EDIT_PROPERTY", "Propriedade Editado");
+          this.modalStatus = false;
         }
       } catch (err) {
         console.log(err.response);
@@ -366,25 +458,30 @@ export default {
     sell() {
       try {
         const response = this.$http.post(`/sales`, {
-          idProperty: this.form.sell.consultantId,
+          idProperty: this.form.sell.idProperty,
           propertyValue: this.form.sell.price,
           consultantGains: this.form.sell.consultantGains,
           companyGains: this.form.sell.companyGains,
+          fundraiserGains: this.form.sell.fundraiserGains,
+          idUser: this.form.sell.consultantId,
         });
         console.log(response);
         this.$swal({
           text: `Venda Adicionada!`,
           icon: "success",
-          showConfirmButton: false,
+          buttons: false,
           timer: 2000,
         });
+        this.$store.commit("EDIT_PROPERTY", "Imóvel Alterado");
+        this.modalSell = false;
+        this.saled = true;
       } catch (error) {
         if (error) {
           this.$swal({
             text: `Ups occoreu um erro!`,
             icon: "error",
             timer: 2000,
-            showConfirmButton: false,
+            buttons: false,
           });
           console.log(error);
         }
@@ -397,7 +494,7 @@ export default {
         text: "Não vai conseguir reverter!",
         icon: "warning",
         buttons: true,
-        dangerMode: true
+        dangerMode: true,
       }).then((result) => {
         if (result) {
           if (this.type == "news") {
@@ -547,12 +644,40 @@ export default {
         });
       }
     },
+    async loadUsers() {
+      try {
+        const response = await this.$http.get(`/users`);
+        if (response.status === 200) {
+          this.consultants = response.data.content;
+        }
+      } catch (err) {
+        console.log(err.response);
+      }
+    },
+    async loadStatus() {
+      try {
+        const response = await this.$http.get(`/status`);
+        if (response.status === 200) {
+          this.status = response.data.content;
+          for (let i = 0; i < this.status.length; i++) {
+            if (this.status[i].status == "Vendido") {
+              console.log("entrei")
+              const index = this.status.indexOf(this.status[i]);
+              if (index > -1) {
+                this.status.splice(index, 1);
+              }
+            }
+          }
+        }
+      } catch (err) {
+        console.log(err.response);
+      }
+    },
   },
   computed: {
     totalRows() {
       return this.items.length;
     },
-    ...mapGetters(["getLoggedUser"]),
   },
 };
 </script>

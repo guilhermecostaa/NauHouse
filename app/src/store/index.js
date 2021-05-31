@@ -45,6 +45,7 @@ export default new Vuex.Store({
     DELETE_USER: (state, addUser) => state.addUser = addUser,
     ADD_PROPERTY: (state, addProperty) => state.addProperty = addProperty,
     DELETE_PROPERTY: (state, addProperty) => state.addProperty = addProperty,
+    EDIT_PROPERTY: (state, addProperty) => state.addProperty = addProperty,
     ADD_EVENT: (state, addEvent) => state.addEvent = addEvent,
     EDIT_EVENT: (state, addEvent) => state.addEvent = addEvent,
     DELETE_EVENT: (state, addEvent) => state.addEvent = addEvent,

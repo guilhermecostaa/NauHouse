@@ -1,6 +1,11 @@
 const con = require("../connection")
 const messages = require("../messages")
 const bcrypt = require("bcryptjs")
+const multer = require('multer')
+
+const upload = multer({
+    dest: './upload/'
+})
 
 async function getUsers(req, res) {
     const query = "select * from users;"
@@ -116,7 +121,7 @@ async function deleteUser(req, res) {
     const { id } = req.params
     const query = `delete from users where id_user = "${id}"`
     console.log(query)
-    
+
     con.query(query, (err, results, fields) => {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))

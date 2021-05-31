@@ -1,7 +1,7 @@
 <template>
   <div>
     <div id="backofficeNews" class="container-fluid">
-      <h1 class="title mt-4 ml-4">Adicionar Noticia</h1>
+      <h3 class="title mt-4 ml-4">Adicionar Noticia</h3>
       <div class="mr-4">
         <FormNews />
       </div>

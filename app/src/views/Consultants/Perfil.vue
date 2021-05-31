@@ -20,9 +20,9 @@
         <div class="conta mr-5">
           <p class="name">Conta Corrente</p>
           <div class="information mt-3">
-            <p>Saldo: {{getLoggedUser.active + getLoggedUser.passive}}</p>
-            <p>Ativo:{{getLoggedUser.active}}</p>
-            <p>Passivo: {{getLoggedUser.passive}}</p>
+            <p>Saldo: {{ getLoggedUser.active + getLoggedUser.passive }}</p>
+            <p>Ativo:{{ getLoggedUser.active }}</p>
+            <p>Passivo: {{ getLoggedUser.passive }}</p>
           </div>
         </div>
       </div>
@@ -43,22 +43,45 @@
         </div>
       </div>
     </div>
+
+    <div class="dataTable mt-5">
+      <h3 class="subtitle mt-4">Vendas</h3>
+      <span v-if="this.sales.length === 0">SEM VENDAS</span>
+      <div v-else>
+        <div class="container-fluid">
+          <DataTable
+            name="sales"
+            :items="sales"
+            :fields="[
+              'id_property',
+              'property_value',
+              'company_gains',
+              'consultant_gains',
+            ]"
+            type="sales"
+          ></DataTable>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
+import DataTable from "@/components/DataTable.vue";
 import PropertyCard from "@/components/PropertyCard.vue";
 export default {
   name: "Perfil",
-  components: { PropertyCard },
+  components: { PropertyCard, DataTable },
   data() {
     return {
       properties: [],
+      sales: [],
     };
   },
   created() {
     this.loadProperties();
+    this.loadSales();
   },
   methods: {
     async loadProperties() {
@@ -67,7 +90,21 @@ export default {
           `/property/user/${this.getLoggedUser.id_user}`
         );
         if (response.status === 200) {
+          console.log(this.properties);
           this.properties = response.data.content;
+        }
+      } catch (err) {
+        console.log(err.response);
+      }
+    },
+    async loadSales() {
+      try {
+        const response = await this.$http.get(
+          `/sales/${this.getLoggedUser.id_user}`
+        );
+        if (response.status === 200) {
+          console.log(this.properties);
+          this.sales = response.data.content;
         }
       } catch (err) {
         console.log(err.response);
@@ -77,6 +114,9 @@ export default {
   computed: {
     getProperties() {
       return this.properties;
+    },
+    getSales() {
+      return this.sales;
     },
     ...mapGetters(["getLoggedUser"]),
   },
