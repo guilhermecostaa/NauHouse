@@ -98,10 +98,10 @@
           </div>
         </b-form>
       </div>
-      <div id="footer" class="mt-5" style="width: 100%">
+    </div>
+    <div id="footer" class="mt-5" style="width: 100%">
         <Footer />
       </div>
-    </div>
   </div>
 </template>
 

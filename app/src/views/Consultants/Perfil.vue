@@ -10,19 +10,25 @@
       </div>
       <div class="col-lg-9 col-md-8 col-12">
         <h5 class="topic pl-3 pt-2 pb-2">Informações Pessoais</h5>
-        <div class="information mt-2 ml-3">
-          <p class="name">{{ getLoggedUser.name }}</p>
-          <p class="mt">Consultor Imobiliário</p>
-          <p><b-icon-telephone-fill /> +351 252 167 609</p>
-          <p><b-icon-phone-fill /> {{ getLoggedUser.number }}</p>
-          <p><b-icon-envelope /> {{ getLoggedUser.email }}</p>
-        </div>
-        <div class="conta mr-5">
-          <p class="name">Conta Corrente</p>
-          <div class="information mt-3">
-            <p>Saldo: {{ getLoggedUser.active + getLoggedUser.passive }}</p>
-            <p>Ativo:{{ getLoggedUser.active }}</p>
-            <p>Passivo: {{ getLoggedUser.passive }}</p>
+        <div class="row">
+          <div class="col-md-6 col-12"> 
+            <div class="information mt-2 ml-3">
+              <p class="name">{{ getLoggedUser.name }}</p>
+              <p class="mt">Consultor Imobiliário</p>
+              <p><b-icon-telephone-fill /> +351 252 167 609</p>
+              <p><b-icon-phone-fill /> {{ getLoggedUser.number }}</p>
+              <p><b-icon-envelope /> {{ getLoggedUser.email }}</p>
+            </div>
+          </div>
+          <div class="col-md-6 col-12">
+            <div class="conta mr-5 ml-3">
+              <p class="name">Conta Corrente</p>
+              <div class="information mt-3">
+                <p>Saldo: {{ getLoggedUser.active + getLoggedUser.passive }}</p>
+                <p>Ativo:{{ getLoggedUser.active }}</p>
+                <p>Passivo: {{ getLoggedUser.passive }}</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -134,7 +140,4 @@ export default {
   margin-bottom: 2px;
 }
 
-.conta {
-  text-align: right;
-}
 </style>

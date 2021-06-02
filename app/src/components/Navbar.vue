@@ -48,19 +48,19 @@
           <b-dropdown-item
             href="#"
             @click="btnAddUserClicked"
-            v-show="getLoggedUser.userType == 'consultor' ? false : true"
+            v-show="getLoggedUser.user_type_id != 12 ? false : true"
             >Adicionar Utilizador</b-dropdown-item
           >
           <b-dropdown-item
             href="#"
             @click="btnAddPropertyClicked"
-            v-show="getLoggedUser.userType == 'consultor' ? false : true"
+            v-show="getLoggedUser.user_type_id != 12 ? false : true"
             >Adicionar Imóvel</b-dropdown-item
           >
           <b-dropdown-item
             href="#"
             @click="btnAddNewsClicked"
-            v-show="getLoggedUser.userType == 'consultor' ? false : true"
+            v-show="getLoggedUser.user_type_id != 12 ? false : true"
             >Adicionar Noticia</b-dropdown-item
           >
           <b-dropdown-item href="#" @click="btnLogoutClicked"
@@ -96,10 +96,10 @@ export default {
       this.$router.push({ name: "Contact" });
     },
     btnPerfilClicked() {
-    this.$router.push({
-      name: "Perfil",
-      params: { id: this.getLoggedUser.id_user },
-    });
+      this.$router.push({
+        name: "Perfil",
+        params: { id: this.getLoggedUser.id_user },
+      });
     },
     btnContactsClicked() {
       this.$router.push({
@@ -123,8 +123,24 @@ export default {
       this.$router.push({ name: "BackofficeNews" });
     },
     btnLogoutClicked() {
-      this.$store.commit("SIGN_OUT");
-      this.$router.push({ name: "Consultants" });
+      this.$swal({
+        title: "Tem a certeza?",
+        text: "Não vai conseguir reverter!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      }).then((result) => {
+        if (result) {
+          this.$store.commit("SIGN_OUT");
+          this.$router.push({ name: "Consultants" });
+          this.$swal({
+              text: "Até a próxima!",
+              icon: "success",
+              buttons: false,
+              timer: 2000,
+            });
+        }
+      });
     },
   },
   computed: {

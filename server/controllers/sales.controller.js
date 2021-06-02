@@ -27,12 +27,11 @@ async function addSale(req, res) {
     const query = `insert into sales (id_property, property_value, consultant_gains, company_gains, id_user ,fundraiser_gains) values ("${idProperty}",
                     "${propertyValue}", "${consultantGains}", "${companyGains}", "${idUser}", "${fundraiserGains}")`
 
-    const queryProperty = `update property set id_status = 10 where id_property = ${idProperty}`
-
     con.query(query, (err, results, fields) => {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
         }
+        const queryProperty = `update property set id_status = 10 where id_property = ${idProperty}`
         con.query(queryProperty, (err, results2, fields) => {
             if (err) {
                 return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
@@ -43,7 +42,7 @@ async function addSale(req, res) {
                 if (err) {
                     return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
                 }
-                const queryBalance = `update balance set passive += ${consultantGains} where id_balance = ${results3[0].id_balance}`
+                const queryBalance = `update balance set passive = passive + ${consultantGains} where id_balance = ${results3[0].id_balance}`
                 console.log(results3[0].id_balance)
                 con.query(queryBalance, (err, results4, fields) => {
                     if (err) {
@@ -60,7 +59,7 @@ async function addSale(req, res) {
                             if (err) {
                                 return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
                             }
-                            const queryBalanceFundraiser = `update balance set passive += ${fundraiserGains} where id_balance = ${results6[0].id_balance}`
+                            const queryBalanceFundraiser = `update balance set passive = passive + ${fundraiserGains} where id_balance = ${results6[0].id_balance}`
                             con.query(queryBalanceFundraiser, (err, results7, fields) => {
                                 if (err) {
                                     return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))

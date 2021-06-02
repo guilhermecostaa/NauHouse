@@ -30,10 +30,7 @@
               v-if="type == 'property'"
               >Vender</b-button
             >
-            <b-button
-              class="mr-2"
-              variant="primary"
-              v-if="type == 'property'"
+            <b-button class="mr-2" variant="primary" v-if="type == 'property'"
               >Tranferência</b-button
             >
             <b-button
@@ -411,7 +408,6 @@ export default {
           },
         },
       },
-      saled: false,
       consultants: [],
       status: [],
       statusObj: [],
@@ -435,18 +431,18 @@ export default {
           `/property/${this.statusObj.id_property}/status`,
           {
             idStatus: this.form.edit.property.status,
-          });
-        if (response.status === 200) {
-          this.$swal({
-            text: `Estado Alterado!`,
-            icon: "success",
-            button: false,
-            timer: 2000,
-          });
-          console.log("entreiiiiii")
-          this.$store.commit("EDIT_PROPERTY", "Propriedade Editado");
-          this.modalStatus = false;
-        }
+          }
+        );
+        this.$swal({
+          text: `Estado Alterado!`,
+          icon: "success",
+          button: false,
+          timer: 2000,
+        });
+        console.log("entreiiiiii");
+        console.log(response)
+        this.$store.commit("EDIT_PROPERTY", "Imóvel Editado");
+        this.modalStatus = false;
       } catch (err) {
         console.log(err.response);
       }
@@ -474,7 +470,6 @@ export default {
         });
         this.$store.commit("EDIT_PROPERTY", "Imóvel Alterado");
         this.modalSell = false;
-        this.saled = true;
       } catch (error) {
         if (error) {
           this.$swal({
@@ -661,7 +656,7 @@ export default {
           this.status = response.data.content;
           for (let i = 0; i < this.status.length; i++) {
             if (this.status[i].status == "Vendido") {
-              console.log("entrei")
+              console.log("entrei");
               const index = this.status.indexOf(this.status[i]);
               if (index > -1) {
                 this.status.splice(index, 1);

@@ -23,8 +23,8 @@
         </div>
       </div>
     </div>
-    <div class="container text-left text-md-left">
-      <div class="row bg-lighter mt-2">
+    <div class="text-left text-md-left">
+      <div class="row bg-lighter mt-2 mx-auto">
         <div class="copyrights col-md-4 col-lg-6 mt-4">
           <p>Copyright © 2018 NauHOUSE – by VIRAL | Consulting</p>
         </div>
@@ -53,20 +53,11 @@ export default {
   position: relative;
   left: 0;
   bottom: 0;
-  width: 100%;
 }
 
 img.resize {
   max-width:80%;
   max-height:30%;
-}
-
-#footer .bg-lighter {
-  width: 100%;
-  height: 100%;
-  background-color: #e2e2e2;
-  text-align: center;
-  color: black !important;
 }
 
 #footer .bg-lighter {

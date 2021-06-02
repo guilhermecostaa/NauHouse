@@ -2,16 +2,8 @@
   <div class="home">
     <div id="homeImgFilter">
       <img src="@/assets/img/Home.png" class="img-fluid" alt="Home" />
-      <div>
-        <b-nav tabs align="center">
-          <b-nav-item active>Active</b-nav-item>
-          <b-nav-item>Link</b-nav-item>
-          <b-nav-item>Link with a long name </b-nav-item>
-          <b-nav-item disabled>Disabled</b-nav-item>
-        </b-nav>
-      </div>
-      <div class="row">
-        <div class=".col-md-6 .offset-md-3">
+      <div class="row justify-content-center mr-3 ml-3">
+        <div class=".col-md-6 .offset-md-3" >
           <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
               <a
@@ -204,6 +196,24 @@
         </div>
       </div>
     </div>
+
+    <div class="mt-5 container">
+      <h3 class="subtitle mt-4">Destaques</h3>
+      <span v-if="this.spotlight.length === 0">SEM IMÓVEIS DESTACADOS</span>
+      <div v-else>
+        <div class="cards">
+          <b-row>
+            <PropertyCard
+              class="mt-3 col-md-4 col-sm-6 col-xs-12"
+              v-for="property in getSpotlightProperties()"
+              :key="property.id_property"
+              :property="property"
+            ></PropertyCard>
+          </b-row>
+        </div>
+      </div>
+    </div>
+
     <div id="information" class="container mt-5">
       <div class="row mt-5">
         <div class="col-lg-4 info_container">
@@ -257,12 +267,47 @@
 
 <script>
 // @ is an alias to /src
+import PropertyCard from "@/components/PropertyCard.vue";
 import Footer from "@/components/Footer.vue";
 export default {
   name: "Home",
   components: {
     Footer,
+    PropertyCard,
   },
+  data() {
+    return {
+      properties: [],
+      spotlight: [],
+    };
+  },
+  created() {
+    this.loadProperties();
+  },
+  methods: {
+    async loadProperties() {
+      try {
+        const response = await this.$http.get(`/property`);
+        if (response.status === 200) {
+          this.properties = response.data.content;
+        }
+        console.log(this.properties)
+      } catch (err) {
+        console.log(err.response);
+      }
+    },
+    getSpotlightProperties() {
+      console.log("entreiiiii")
+      this.properties.filter((property) => property.id_status == 11);
+      for (let i = 0; i < 6; i++) {
+        console.log("entrei")
+        const random = Math.floor(Math.random() * this.properties.length);
+        this.spotlight.push(this.properties[random]);
+      }
+      console.log(this.spotlight)
+      return this.spotlight
+    },
+  }, 
 };
 </script>
 

@@ -15,6 +15,7 @@ import Agenda from '../views/Consultants/Agenda.vue'
 import BackofficeNews from '../views/Backoffice/BackofficeNews.vue'
 import BackofficeProperties from '../views/Backoffice/BackofficeProperties.vue'
 import BackofficeUsers from '../views/Backoffice/BackofficeUsers.vue'
+import Store from "../store";
 
 Vue.use(VueRouter)
 
@@ -22,7 +23,7 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
   },
   {
     path: '/about',
@@ -68,31 +69,49 @@ const routes = [
     path: "/consultant/:id",
     name: "Perfil",
     component: Perfil,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/contacts/:id",
     name: "Contacts",
     component: Contacts,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/agenda/:id",
     name: "Agenda",
     component: Agenda,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/backoffice/news",
     name: "BackofficeNews",
     component: BackofficeNews,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/backoffice/users",
     name: "BackofficeUsers",
     component: BackofficeUsers,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/backoffice/properties",
     name: "BackofficeProperties",
     component: BackofficeProperties,
+    meta: {
+      requiresAuth: true
+    }
   },
 ]
 
@@ -101,5 +120,17 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth) {
+    if (Store.getters.loggedUser == {}) {
+      next({ name: "Login" })
+    } else{
+      next()
+    }
+  }else{
+    next()
+  }
+});
 
 export default router
