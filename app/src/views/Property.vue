@@ -208,7 +208,7 @@
 </template>
 
 
-<script defer async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDP0okVU8h4a_Jtudkw0MXDnVJ8ordub8k"></script>
+<script defer async src="https://maps.googleapis.com/maps/api/js?key="></script>
 <script>
 import GoogleMaps from '@/components/GoogleMaps.vue'
 import { gmapApi } from "vue2-google-maps";

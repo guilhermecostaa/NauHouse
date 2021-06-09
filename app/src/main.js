@@ -37,7 +37,7 @@ Vue.component('VueCtkDateTimePicker', VueCtkDateTimePicker);
 Vue.use(VueSplide);
 Vue.use(VueGoogleMaps, {
   load: {
-    key: 'AIzaSyAa4qu6OZs16gGb0hdxS5t1AN_05jWGZyg',
+    key: '',
     libraries: 'places'
   }
 })
