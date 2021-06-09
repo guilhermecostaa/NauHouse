@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <b-form @submit.prevent="addUser" enctype="multipart/form-data">
       <h4 class="subtitle mt-4">Dados Pessoais</h4>
-      <!-- Nome password-->
+     <!-- Nome password-->
       <div class="row">
         <div class="col-md-6 col-sm-12">
           <b-form-group id="input-name" label="Nome" label-for="input-name">
@@ -52,6 +52,7 @@
               :state="Boolean(form.avatar)"
               @change="selectFile"
               ref="file"
+              name="avatar"
               required
             ></b-form-file>
           </b-form-group>
@@ -859,7 +860,7 @@ export default {
         name: "",
         password: "",
         email: "",
-        avatar: "",
+        avatar: undefined,
         phone: "",
         userType: "",
         nacionality: "",

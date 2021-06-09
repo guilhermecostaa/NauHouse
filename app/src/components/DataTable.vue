@@ -27,10 +27,16 @@
               class="mr-2"
               variant="primary"
               @click="sellHouse(data.item)"
+              v-show="data.item.id_status != 'Vendido'"
               v-if="type == 'property'"
               >Vender</b-button
             >
-            <b-button class="mr-2" variant="primary" v-if="type == 'property'"
+            <b-button
+              class="mr-2"
+              variant="primary"
+              @click="tranfer(data.item)"
+              v-show="data.item.id_status == 'Vendido'"
+              v-if="type == 'property'"
               >Tranferência</b-button
             >
             <b-button
@@ -421,6 +427,45 @@ export default {
     this.loadStatus();
   },
   methods: {
+    tranfer(obj) {
+      console.log(obj);
+      this.$swal({
+        title: "Pretende realizar a transferência?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      }).then((result) => {
+        if (result) {
+          try {
+            const response = this.$http.post(
+              `/sales/transfer/${obj.id_property}`,
+              {
+                consultantGains: obj.consultantGains,
+                fundraiserGains: obj.fundraiserGains,
+              }
+            );
+            console.log(response);
+            this.$swal({
+              text: "Tranferência concluida!",
+              icon: "success",
+              buttons: false,
+              timer: 2000,
+            });
+            this.$store.commit("EDIT_PROPERTY", "Venda concluida");
+          } catch (error) {
+            if (error) {
+              this.$swal({
+                text: `Ups occoreu um erro!`,
+                icon: "error",
+                timer: 2000,
+                buttons: false,
+              });
+              console.log(error);
+            }
+          }
+        }
+      });
+    },
     statusModal(obj) {
       this.modalStatus = true;
       this.statusObj = obj;
@@ -440,7 +485,7 @@ export default {
           timer: 2000,
         });
         console.log("entreiiiiii");
-        console.log(response)
+        console.log(response);
         this.$store.commit("EDIT_PROPERTY", "Imóvel Editado");
         this.modalStatus = false;
       } catch (err) {
@@ -519,6 +564,7 @@ export default {
           }
           if (this.type == "property") {
             const response = this.$http.delete(`/property/${obj.id_property}`);
+            this.$store.commit("DELETE_PROPERTY", "Imóvel Apagado");
             console.log(response);
             this.$swal({
               title: "Apagado!",
@@ -545,21 +591,37 @@ export default {
       });
     },
     editItem(obj) {
-      this.modal = true;
       // Exibir a janela
       if (this.type == "news") {
+        this.modal = true;
         (this.form.edit.news.id = obj.id_news),
-          (this.form.edit.news.title = obj.title),
-          (this.form.edit.news.photo = obj.image),
-          (this.form.edit.news.desc = obj.description);
+        (this.form.edit.news.title = obj.title),
+        (this.form.edit.news.photo = obj.image),
+        (this.form.edit.news.desc = obj.description);
       }
       if (this.type == "contacts") {
+        this.modal = true;
         (this.form.edit.contact.id = obj.id_contacts),
-          (this.form.edit.contact.name = obj.name),
-          (this.form.edit.contact.email = obj.email),
-          (this.form.edit.contact.number = obj.number);
+        (this.form.edit.contact.name = obj.name),
+        (this.form.edit.contact.email = obj.email),
+        (this.form.edit.contact.number = obj.number);
         (this.form.edit.contact.status = obj.status),
-          (this.form.edit.contact.description = obj.description);
+        (this.form.edit.contact.description = obj.description);
+      }
+      if (this.type == "users") {
+        this.$swal({
+          title: "Tem a certeza que pretende editar?",
+          icon: "warning",
+          buttons: true,
+          dangerMode: true,
+        }).then((result) => {
+          if (result) {
+            this.$router.push({
+              name: "BackofficeUsersEdit",
+              params: { id: obj.id_user },
+            });
+          }
+        });
       }
     },
     updateNews() {

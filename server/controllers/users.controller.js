@@ -1,11 +1,7 @@
 const con = require("../connection")
 const messages = require("../messages")
 const bcrypt = require("bcryptjs")
-const multer = require('multer')
 
-const upload = multer({
-    dest: './upload/'
-})
 
 async function getUsers(req, res) {
     const query = "select * from users;"

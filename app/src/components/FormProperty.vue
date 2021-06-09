@@ -459,7 +459,14 @@
             <b-form-select
               id="input-consultantId"
               v-model="form.consultantId"
-              :options="consultants"
+              :options="
+                consultants.map((consultant) => {
+                  return {
+                    value: consultant.id_user,
+                    text: consultant.name,
+                  };
+                })
+              "
               required
             ></b-form-select>
           </b-form-group>
@@ -467,13 +474,13 @@
       </div>
 
       <h4 class="subtitle mt-4">Caracteristica do Imóvel</h4>
-      <!-- Exposição e Vista-->
+      <!-- Localização e Exposição-->
       <div class="row">
         <div class="col-md-6 col-sm-12">
           <p class="bold mt-3 mb-1">{{ groups[0].name }}</p>
           <b-form-checkbox-group
-            id="checkbox-group-sunExposure"
-            v-model="sunExposure"
+            id="checkbox-group-location"
+            v-model="location"
             :options="
               getCharacteristicsByGroupId(groups[0].id_group).map(
                 (characteristic) => {
@@ -490,8 +497,8 @@
         <div class="col-md-6 col-sm-12">
           <p class="bold mt-3 mb-1">{{ groups[1].name }}</p>
           <b-form-checkbox-group
-            id="checkbox-group-view"
-            v-model="view"
+            id="checkbox-group-sunExposure"
+            v-model="sunExposure"
             :options="
               getCharacteristicsByGroupId(groups[1].id_group).map(
                 (characteristic) => {
@@ -507,13 +514,13 @@
         </div>
       </div>
 
-      <!-- Piso e Revestimento-->
+      <!-- Vista e Piso-->
       <div class="row">
         <div class="col-md-6 col-sm-12">
           <p class="bold mt-3 mb-1">{{ groups[2].name }}</p>
           <b-form-checkbox-group
-            id="checkbox-group-level"
-            v-model="level"
+            id="checkbox-group-view"
+            v-model="view"
             :options="
               getCharacteristicsByGroupId(groups[2].id_group).map(
                 (characteristic) => {
@@ -528,32 +535,10 @@
           </b-form-checkbox-group>
         </div>
         <div class="col-md-6 col-sm-12">
-          <p class="bold mt-3 mb-1">{{ groups[12].name }}</p>
-          <b-form-checkbox-group
-            id="checkbox-group-externalCoating"
-            v-model="externalCoating"
-            :options="
-              getCharacteristicsByGroupId(groups[12].id_group).map(
-                (characteristic) => {
-                  return {
-                    value: characteristic.id_characteristic,
-                    text: characteristic.characteristic,
-                  };
-                }
-              )
-            "
-          >
-          </b-form-checkbox-group>
-        </div>
-      </div>
-
-      <!-- Caixilharia e Persianas-->
-      <div class="row">
-        <div class="col-md-6 col-sm-12">
           <p class="bold mt-3 mb-1">{{ groups[3].name }}</p>
           <b-form-checkbox-group
-            id="checkbox-group-frames"
-            v-model="frames"
+            id="checkbox-group-level"
+            v-model="level"
             :options="
               getCharacteristicsByGroupId(groups[3].id_group).map(
                 (characteristic) => {
@@ -567,11 +552,15 @@
           >
           </b-form-checkbox-group>
         </div>
+      </div>
+
+      <!-- Revestimento Exterior e Caixilharia-->
+      <div class="row">
         <div class="col-md-6 col-sm-12">
           <p class="bold mt-3 mb-1">{{ groups[4].name }}</p>
           <b-form-checkbox-group
-            id="checkbox-group-blinds"
-            v-model="blinds"
+            id="checkbox-group-externalCoating"
+            v-model="externalCoating"
             :options="
               getCharacteristicsByGroupId(groups[4].id_group).map(
                 (characteristic) => {
@@ -585,15 +574,11 @@
           >
           </b-form-checkbox-group>
         </div>
-      </div>
-
-      <!-- Pavimento e Segurança-->
-      <div class="row">
         <div class="col-md-6 col-sm-12">
           <p class="bold mt-3 mb-1">{{ groups[5].name }}</p>
           <b-form-checkbox-group
-            id="checkbox-group-floor"
-            v-model="floor"
+            id="checkbox-group-frames"
+            v-model="frames"
             :options="
               getCharacteristicsByGroupId(groups[5].id_group).map(
                 (characteristic) => {
@@ -607,11 +592,15 @@
           >
           </b-form-checkbox-group>
         </div>
+      </div>
+
+      <!-- Persianas e Pavimento-->
+      <div class="row">
         <div class="col-md-6 col-sm-12">
           <p class="bold mt-3 mb-1">{{ groups[6].name }}</p>
           <b-form-checkbox-group
-            id="checkbox-group-security"
-            v-model="security"
+            id="checkbox-group-blinds"
+            v-model="blinds"
             :options="
               getCharacteristicsByGroupId(groups[6].id_group).map(
                 (characteristic) => {
@@ -625,15 +614,11 @@
           >
           </b-form-checkbox-group>
         </div>
-      </div>
-
-      <!-- Alarme e Infraestruturas-->
-      <div class="row">
         <div class="col-md-6 col-sm-12">
           <p class="bold mt-3 mb-1">{{ groups[7].name }}</p>
           <b-form-checkbox-group
-            id="checkbox-group-alarm"
-            v-model="alarm"
+            id="checkbox-group-floor"
+            v-model="floor"
             :options="
               getCharacteristicsByGroupId(groups[7].id_group).map(
                 (characteristic) => {
@@ -647,11 +632,15 @@
           >
           </b-form-checkbox-group>
         </div>
+      </div>
+
+      <!-- Segurança e Alarme -->
+      <div class="row">
         <div class="col-md-6 col-sm-12">
           <p class="bold mt-3 mb-1">{{ groups[8].name }}</p>
           <b-form-checkbox-group
-            id="checkbox-group-infraestructure"
-            v-model="infraestructure"
+            id="checkbox-group-security"
+            v-model="security"
             :options="
               getCharacteristicsByGroupId(groups[8].id_group).map(
                 (characteristic) => {
@@ -665,15 +654,11 @@
           >
           </b-form-checkbox-group>
         </div>
-      </div>
-
-      <!-- Cozinha e Equipamento-->
-      <div class="row">
         <div class="col-md-6 col-sm-12">
           <p class="bold mt-3 mb-1">{{ groups[9].name }}</p>
           <b-form-checkbox-group
-            id="checkbox-group-kitchen"
-            v-model="kitchen"
+            id="checkbox-group-alarm"
+            v-model="alarm"
             :options="
               getCharacteristicsByGroupId(groups[9].id_group).map(
                 (characteristic) => {
@@ -687,13 +672,57 @@
           >
           </b-form-checkbox-group>
         </div>
+      </div>
+
+      <!-- Infraestruturas e Cozinha-->
+      <div class="row">
         <div class="col-md-6 col-sm-12">
           <p class="bold mt-3 mb-1">{{ groups[10].name }}</p>
+          <b-form-checkbox-group
+            id="checkbox-group-infraestructure"
+            v-model="infraestructure"
+            :options="
+              getCharacteristicsByGroupId(groups[10].id_group).map(
+                (characteristic) => {
+                  return {
+                    value: characteristic.id_characteristic,
+                    text: characteristic.characteristic,
+                  };
+                }
+              )
+            "
+          >
+          </b-form-checkbox-group>
+        </div>
+        <div class="col-md-6 col-sm-12">
+          <p class="bold mt-3 mb-1">{{ groups[11].name }}</p>
+          <b-form-checkbox-group
+            id="checkbox-group-kitchen"
+            v-model="kitchen"
+            :options="
+              getCharacteristicsByGroupId(groups[11].id_group).map(
+                (characteristic) => {
+                  return {
+                    value: characteristic.id_characteristic,
+                    text: characteristic.characteristic,
+                  };
+                }
+              )
+            "
+          >
+          </b-form-checkbox-group>
+        </div>
+      </div>
+
+      <!-- Equipamento-->
+      <div class="row">
+        <div class="col-sm-12">
+          <p class="bold mt-3 mb-1">{{ groups[12].name }}</p>
           <b-form-checkbox-group
             id="checkbox-group-equipment"
             v-model="equipment"
             :options="
-              getCharacteristicsByGroupId(groups[10].id_group).map(
+              getCharacteristicsByGroupId(groups[12].id_group).map(
                 (characteristic) => {
                   return {
                     value: characteristic.id_characteristic,
@@ -710,12 +739,12 @@
       <!-- Anotações-->
       <div class="row">
         <div class="col-sm-12">
-          <p class="bold mt-3 mb-1">{{ groups[11].name }}</p>
+          <p class="bold mt-3 mb-1">{{ groups[13].name }}</p>
           <b-form-checkbox-group
             id="checkbox-group-notes"
             v-model="notes"
             :options="
-              getCharacteristicsByGroupId(groups[11].id_group).map(
+              getCharacteristicsByGroupId(groups[13].id_group).map(
                 (characteristic) => {
                   return {
                     value: characteristic.id_characteristic,
@@ -749,6 +778,7 @@ export default {
     this.loadEnergeticEfficiency();
     this.loadStatus();
     this.loadGroups();
+    this.loadUsers();
     this.loadCharacteristics();
   },
   data() {
@@ -788,15 +818,11 @@ export default {
       purposes: [],
       shapes: [],
       energeticEfficiency: [],
-      consultants: [
-        { text: "Select One", value: null },
-        { text: "Carla Lopes", value: "1" },
-        { text: "Carlos Conceição", value: "2" },
-        { text: "Tânia Igreja", value: "3" },
-      ],
+      consultants: [],
       groups: [],
       characteristics: [],
       status: [],
+      location: [],
       sunExposure: [],
       view: [],
       level: [],
@@ -890,9 +916,19 @@ export default {
         console.log(err.response);
       }
     },
+    async loadUsers() {
+      try {
+        const response = await this.$http.get(`/users`);
+        if (response.status === 200) {
+          this.consultants = response.data.content;
+        }
+      } catch (err) {
+        console.log(err.response);
+      }
+    },
     async addProperty() {
       try {
-        const response = await this.$http.post("/news", {
+        const response = await this.$http.post("/property", {
           title: this.form.title,
           subtitle: this.form.subtitle,
           desc: this.form.desc,
@@ -911,7 +947,7 @@ export default {
           usableArea: this.form.usableArea,
           landArea: this.form.landArea,
           constructionGrossArea: this.form.constructionGrossArea,
-          implementationArea: this.implementationArea,
+          implementationArea: this.form.implementationArea,
           room: this.form.rooms,
           bathrooms: this.form.bathroom,
           suites: this.form.suites,
@@ -925,7 +961,7 @@ export default {
         });
         console.log(response);
         this.$swal({
-          text: `Noticia Adicionada!`,
+          text: `Imóvel Adicionado!`,
           icon: "success",
           button: false,
           timer: 2000,

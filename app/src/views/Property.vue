@@ -75,7 +75,7 @@
           <div class="card-body">
             <h5 class="card-title mb-0">{{ this.user[0].name }}</h5>
 
-            <p class="mt-0">Consultor Imobiliário</p>
+            <p class="mt-0 text">Consultor Imobiliário</p>
             <p><b-icon-telephone-fill /> +351 252167609</p>
             <p><b-icon-phone-fill /> {{ this.user[0].number }}</p>
             <p><b-icon-envelope /> {{ this.user[0].email }}</p>
@@ -102,6 +102,9 @@
       </div>
       <div class="col-md-6 col-sm-12">
         <h4 class="mt-3">Mapa</h4>
+        <div id="myMap">
+          <GoogleMaps :address="this.property.address"></GoogleMaps>
+        </div>
       </div>
     </div>
 
@@ -179,7 +182,14 @@
           </div>
 
           <div
-            class="row align-items-center d-flex justify-content-center mt-5 mb-5"
+            class="
+              row
+              align-items-center
+              d-flex
+              justify-content-center
+              mt-5
+              mb-5
+            "
           >
             <b-button
               class="btn-add mt-5 mb-5"
@@ -193,24 +203,25 @@
       </div>
     </b-modal>
 
-    <ImagesCarousel>
-      
-    </ImagesCarousel>
-
+    <ImagesCarousel> </ImagesCarousel>
   </div>
 </template>
 
 
-
+<script defer async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDP0okVU8h4a_Jtudkw0MXDnVJ8ordub8k"></script>
 <script>
+import GoogleMaps from '@/components/GoogleMaps.vue'
+import { gmapApi } from "vue2-google-maps";
 import { ImagesCarousel } from "@/components/ImagesCarousel";
 export default {
   name: "Property",
   components: {
-    ImagesCarousel
+    ImagesCarousel,
+    GoogleMaps
   },
   created() {
     this.loadProperty();
+    this.initMap();
   },
   data() {
     return {
@@ -241,6 +252,8 @@ export default {
         { message: "Foo" },
         { message: "Bar" },
       ],
+      map: null,
+      mapCenter: { lat: 0, lng: 0 },
     };
   },
   methods: {
@@ -274,10 +287,33 @@ export default {
         console.log(err.response);
       }
     },
+    /*initMap() {
+      let map = new google.maps.Map(document.querySelector("#myMap"), {
+        center: { lat: 41.148481, lng: -8.606893 },
+        zoom: 15,
+      });
+      let geocoder = new google.maps.Geocoder();
+      /*----------------------------------------------
+      //posicao inicial
+      geocoder.geocode(
+        { address: this.property.address },
+        (results2, status) => {
+          if (status == "OK") {
+            map.setCenter(results2[0].geometry.location);
+          } else {
+            alert("Geocode was not sucessfull" + status);
+          }
+        }
+      );
+    },*/
   },
-  computed: {},
+  computed: {
+    google: gmapApi,
+  },
 };
 </script>
+
+
 
 <style>
 .btn.btn-danger {

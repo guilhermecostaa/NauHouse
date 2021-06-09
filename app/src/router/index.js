@@ -106,9 +106,25 @@ const routes = [
     }
   },
   {
+    path: "/backoffice/users/:id/edit",
+    name: "BackofficeUsersEdit",
+    component: BackofficeUsers,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
     path: "/backoffice/properties",
     name: "BackofficeProperties",
     component: BackofficeProperties,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: "/backoffice/properties/:id/edit",
+    name: "BackofficePropertiesEdit",
+    component: BackofficeUsers,
     meta: {
       requiresAuth: true
     }

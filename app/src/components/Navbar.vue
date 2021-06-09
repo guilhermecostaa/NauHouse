@@ -125,7 +125,6 @@ export default {
     btnLogoutClicked() {
       this.$swal({
         title: "Tem a certeza?",
-        text: "Não vai conseguir reverter!",
         icon: "warning",
         buttons: true,
         dangerMode: true,

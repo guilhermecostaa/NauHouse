@@ -22,6 +22,51 @@ async function getUserSalesById(req, res) {
     })
 }
 
+async function editTransfer(req, res) {
+    const { idProperty } = req.params
+    const { consultantGains, fundraiserGains } = req.body
+
+    const query = `select * from sales where id_property = ${idProperty}`
+    con.query(query, (err, results6, fields) => {
+        if (err) {
+            return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
+        }
+        console.log(results6)
+        const queryIdBalance = `select id_balance from users where id_user = ${results6[0].id_user}`
+        con.query(queryIdBalance, (err, results, fields) => {
+            if (err) {
+                return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
+            }
+            const queryBalance = `update balance set passive = passive - ${consultantGains}, active = active + ${consultantGains} where id_balance = ${results[0].id_balance}`
+            con.query(queryBalance, (err, results2, fields) => {
+                if (err) {
+                    return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
+                }
+                const queryFundraiser = `select consultant_id from property where id_property = ${idProperty}`
+                con.query(queryFundraiser, (err, results3, fields) => {
+                    if (err) {
+                        return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
+                    }
+                    const queryIdBalanceFundraiser = `select id_balance from users where id_user = ${results3[0].consultant_id}`
+                    con.query(queryIdBalanceFundraiser, (err, results4, fields) => {
+                        if (err) {
+                            return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
+                        }
+                        const queryBalanceFundraiser = `update balance set passive = passive - ${fundraiserGains}, active = active + ${fundraiserGains} where id_balance = ${results4[0].id_balance}`
+                        con.query(queryBalanceFundraiser, (err, results5, fields) => {
+                            if (err) {
+                                return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
+                            }
+                            res.send(messages.getSuccess("getTransfer", results6))
+                        })
+                    })
+                })
+            })
+        })
+    })
+
+}
+
 async function addSale(req, res) {
     const { idProperty, propertyValue, consultantGains, companyGains, idUser, fundraiserGains } = req.body
     const query = `insert into sales (id_property, property_value, consultant_gains, company_gains, id_user ,fundraiser_gains) values ("${idProperty}",
@@ -108,4 +153,4 @@ async function editSale(req, res) {
 }
 
 
-module.exports = { getSales, getUserSalesById, addSale, deleteSale, editSale }
+module.exports = { getSales, getUserSalesById, editTransfer, addSale, deleteSale, editSale }

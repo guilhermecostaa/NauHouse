@@ -5,7 +5,7 @@
       <div class="col-lg-3 col-md-4 col-6">
         <img
           src="@/assets/img/CarlosConceição.png"
-          class="img-fluid img-thumbnail rounded-circle"
+          class="img-fluid img-thumbnail"
         />
       </div>
       <div class="col-lg-9 col-md-8 col-12">
@@ -21,7 +21,7 @@
             </div>
           </div>
           <div class="col-md-6 col-12">
-            <div class="conta mr-5 ml-3">
+            <div class="conta mr-5 ml-3 mt-2">
               <p class="name">Conta Corrente</p>
               <div class="information mt-3">
                 <p>Saldo: {{ getLoggedUser.active + getLoggedUser.passive }}</p>
@@ -90,7 +90,7 @@ export default {
     this.loadSales();
   },
   methods: {
-    async loadProperties() {
+     async loadProperties() {
       try {
         const response = await this.$http.get(
           `/property/user/${this.getLoggedUser.id_user}`

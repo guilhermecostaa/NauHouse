@@ -52,26 +52,16 @@ export default {
       }
     },
     getTitle(title) {
-      if (title.length < 50) {
+      if (title.length < 30) {
         return title;
       } else {
-        const spacePosition = title.indexOf(" ", 60);
+        const spacePosition = title.indexOf(" ", 30);
         return `${title.substr(0, spacePosition)}...`;
       }
     },
   },
   computed: {
-    dataUrl() {
-      return (
-        "data:image/jpeg;base64," +
-        btoa(
-          new Uint8Array(this.property.image).reduce(
-            (data, byte) => data + String.fromCharCode(byte),
-            ""
-          )
-        )
-      );
-    },
+    
   },
 };
 </script>
