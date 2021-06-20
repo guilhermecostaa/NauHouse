@@ -6,6 +6,8 @@ import axios from 'axios'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import 'bootstrap'
+import 'bootstrap/dist/css/bootstrap.min.css'
 import 'vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css';
 import VueSweetalert2 from 'vue-sweetalert2';
 import ToggleButton from 'vue-js-toggle-button';
@@ -14,6 +16,8 @@ import VueSwal from 'vue-swal'
 import VueSplide from '@splidejs/vue-splide';
 import '@splidejs/splide/dist/css/themes/splide-sea-green.min.css';
 import * as VueGoogleMaps from 'vue2-google-maps';
+import '@fortawesome/fontawesome-free/css/all.css'
+import '@fortawesome/fontawesome-free/js/all.js'
 
 import{ init } from 'emailjs-com';
 init("user_ERkgj4TuWJz3216R2nMuM");

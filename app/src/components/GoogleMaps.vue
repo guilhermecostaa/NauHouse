@@ -1,46 +1,51 @@
 <template>
-  <div>
-    <GmapMap :center="center" :zoom="17" :address="address">
-      <GmapMarker
+  <div class="mt-4">
+    <gmap-map :zoom="17" :center="center" style="width: 100%; height: 300px">
+      <gmap-marker
         :key="index"
-        v-for="(m, index) in markers"
+        v-for="(m, index) in locationMarkers"
         :position="m.position"
         @click="center = m.position"
-      />
-    </GmapMap>
+      ></gmap-marker>
+    </gmap-map>
   </div>
 </template>
-
+ 
 <script>
 export default {
-  name: "GoogleMaps",
-  mounted(){
-    this.addMarker()
+  name: "AddGoogleMap",
+  props: ["address"],
+  created() {
+    this.addLocationMarker();
   },
   data() {
     return {
-      center: { lat: 41.35481, lng: -8.7434 },
-      currentPlace: null,
-      markers: [],
-      places: []
+      center: {
+        lat: 41.3538,
+        lng: -8.74287,
+      },
+      locationMarkers: [],
+      locPlaces: [],
+      existingPlace: this.address,
     };
   },
   methods: {
-    setPlace(address) {
-      this.currentPlace = address;
-    },
-    addMarker() {
-      if (this.currentPlace) {
+    addLocationMarker() {
+      if (this.existingPlace) {
         const marker = {
-          lat: this.currentPlace.geometry.location.lat(),
-          lng: this.currentPlace.geometry.location.lng(),
+          lat: this.existingPlace.geometry.location.lat(),
+          lng: this.existingPlace.geometry.location.lng(),
         };
-        this.markers.push({ position: marker });
-        this.places.push(this.currentPlace);
+        this.locationMarkers.push({ position: marker });
+        this.locPlaces.push(this.existingPlace);
         this.center = marker;
-        this.currentPlace = null;
+        this.existingPlace = null;
       }
     },
   },
 };
 </script>
+
+<style scoped>
+
+</style>

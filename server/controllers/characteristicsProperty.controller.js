@@ -2,7 +2,8 @@ const con = require("../connection")
 const messages = require("../messages")
 
 async function getCharacteristicsProperty(req, res) {
-    const query = "select * from characteristics_property;"
+    const { id } = req.params
+    const query = `select * from characteristics_property where id_property = ${id};`
     con.query(query, (err, results, fields) => {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))

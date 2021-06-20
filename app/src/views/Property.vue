@@ -7,8 +7,10 @@
           <h5 class="mt-5 mb-0">{{ this.property[0].subtitle }}</h5>
           <p>NHPT-{{ this.$route.params.id }}</p>
 
-          <p class="mt-3 mb-0">Área Bruta:</p>
-          <p class="MT-1">Área:</p>
+          <p class="mt-3 mb-0">
+            Área Bruta: {{ this.property[0].construction_gross_area }}
+          </p>
+          <p class="MT-1">Área: {{ this.property[0].usable_area }}</p>
 
           <p class="mt-3 mb-5">Valor: {{ this.property[0].price }}€</p>
           <b-button class="btn-danger mt-3 mb-5 mr-3" squared variant="danger"
@@ -42,28 +44,37 @@
     <div class="row ml-3 mt-3">
       <div class="col-md-8 col-sm-12">
         <h4 class="mt-3 mb-3">Caracteristicas</h4>
-        <div>
-          <p>
-            <b-icon-telephone-fill class="mr-2" />
-            {{ this.property[0].bedroom }}
-          </p>
-          <p>
-            <b-icon-telephone-fill class="mr-2" /> {{ this.property[0].suites }}
-          </p>
-          <p>
-            <b-icon-telephone-fill class="mr-2" />
-            {{ this.property[0].bathrooms }}
-          </p>
-          <p>
-            <b-icon-telephone-fill class="mr-2" />
-            {{ this.property[0].closed_garage }}
-          </p>
+        <div class="row mt-2">
+          <div class="col-lg-3 col-md-4 col-sm-6">
+            <p>
+              <i class="fas fa-bed mr-1"></i>
+              {{ this.property[0].bedroom }} quartos
+            </p>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-6">
+            <p>
+              <i class="fas fa-bed mr-1"></i>
+              {{ this.property[0].suites }} suítes
+            </p>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-6">
+            <p>
+              <i class="fas fa-toilet mr-1"></i>
+              {{ this.property[0].bathrooms }} WC's
+            </p>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-6">
+            <p>
+              <i class="fas fa-car mr-1"></i>
+              {{ this.property[0].closed_garage }} Garagens
+            </p>
+          </div>
         </div>
-        <div class="column_wrapper">
+        <div class="column_wrapper mt-3">
           <ul id="example-1">
-            <li v-for="item in items" :key="item.message">
+            <li v-for="item in items" :key="item.id_characteristic">
               <p class="mt-1">
-                <b-icon icon="check" class="red" /> {{ item.message }}
+                <b-icon icon="check" class="red" /> {{ item.characteristic }}
               </p>
             </li>
           </ul>
@@ -78,7 +89,7 @@
             <p class="mt-0 text">Consultor Imobiliário</p>
             <p><b-icon-telephone-fill /> +351 252167609</p>
             <p><b-icon-phone-fill /> {{ this.user[0].number }}</p>
-            <p><b-icon-envelope /> {{ this.user[0].email }}</p>
+            <p><i class="fas fa-envelope"></i> {{ this.user[0].email }}</p>
 
             <div style="text-align: center">
               <b-button
@@ -103,7 +114,7 @@
       <div class="col-md-6 col-sm-12">
         <h4 class="mt-3">Mapa</h4>
         <div id="myMap">
-          <GoogleMaps :address="this.property.address"></GoogleMaps>
+          <GoogleMaps :address="this.property[0].address"></GoogleMaps>
         </div>
       </div>
     </div>
@@ -122,6 +133,18 @@
                   type="text"
                   name="name"
                   required
+                ></b-form-input>
+              </b-form-group>
+            </div>
+          </div>
+          <div class="row mt-3" v-show="false">
+            <div class="col-sm-12">
+              <b-form-group id="input-id" label="Id" label-for="input-id">
+                <b-form-input
+                  id="input-id"
+                  v-model="form.id"
+                  type="number"
+                  name="id"
                 ></b-form-input>
               </b-form-group>
             </div>
@@ -210,18 +233,21 @@
 
 <script defer async src="https://maps.googleapis.com/maps/api/js?key="></script>
 <script>
-import GoogleMaps from '@/components/GoogleMaps.vue'
+import GoogleMaps from "@/components/GoogleMaps.vue";
 import { gmapApi } from "vue2-google-maps";
 import { ImagesCarousel } from "@/components/ImagesCarousel";
+import emailjs from "emailjs-com";
 export default {
   name: "Property",
   components: {
     ImagesCarousel,
-    GoogleMaps
+    GoogleMaps,
   },
   created() {
     this.loadProperty();
-    this.initMap();
+    this.loadCharacteristics();
+    this.loadCharacteristicsProperty();
+    //this.initMap();
   },
   data() {
     return {
@@ -230,28 +256,14 @@ export default {
         phone: "",
         email: "",
         desc: "",
+        id: `${this.$route.params.id}`,
       },
       property: [],
       user: [],
       modalContact: false,
-      items: [
-        { message: "Foo" },
-        { message: "Bar" },
-        { message: "Foo" },
-        { message: "Bar" },
-        { message: "Foo" },
-        { message: "Bar" },
-        { message: "Foo" },
-        { message: "Bar" },
-        { message: "Foo" },
-        { message: "Bar" },
-        { message: "Foo" },
-        { message: "Bar" },
-        { message: "Foo" },
-        { message: "Bar" },
-        { message: "Foo" },
-        { message: "Bar" },
-      ],
+      items: [],
+      characteristics: [],
+      characteristicsProperty: [],
       map: null,
       mapCenter: { lat: 0, lng: 0 },
     };
@@ -268,7 +280,6 @@ export default {
         if (response.status === 200) {
           this.property = response.data.content;
         }
-        console.log(this.property);
       } catch (err) {
         console.log(err.response);
       }
@@ -282,10 +293,77 @@ export default {
         if (response.status === 200) {
           this.user = response.data.content;
         }
-        console.log(this.user);
       } catch (err) {
         console.log(err.response);
       }
+    },
+    async loadCharacteristics() {
+      try {
+        const response = await this.$http.get(`/characteristics`);
+        if (response.status === 200) {
+          this.characteristics = response.data.content;
+        }
+      } catch (err) {
+        console.log(err.response);
+      }
+    },
+    async loadCharacteristicsProperty() {
+      try {
+        const response = await this.$http.get(
+          `/characteristicsProperty/${this.$route.params.id}`
+        );
+        if (response.status === 200) {
+          this.characteristicsProperty = response.data.content;
+        }
+        for (let i = 0; i < this.characteristicsProperty.length; i++) {
+          for (let j = 0; j < this.characteristics.length; j++) {
+            if (
+              this.characteristics[j].id_characteristics ==
+              this.characteristicsProperty[i].id_characteristics
+            ) {
+              this.items.push(this.characteristics[j]);
+            }
+          }
+        }
+      } catch (err) {
+        console.log(err.response);
+      }
+    },
+    sendEmail(e) {
+      emailjs
+        .sendForm(
+          "service_7r1oyel",
+          "template_tvazc95",
+          e.target,
+          "user_ERkgj4TuWJz3216R2nMuM"
+        )
+        .then(
+          (result) => {
+            this.$swal({
+              text: `Email enviado!`,
+              icon: "success",
+              timer: 2000,
+              button: false,
+            });
+            this.modalContact = false;
+            console.log("SUCCESS!", result.status, result.text);
+          },
+          (error) => {
+            this.$swal({
+              text: "Ups! Ocorreu um erro! Tente de novo",
+              icon: "error",
+              timer: 2000,
+              button: false,
+            });
+            console.log("FAILED...", error);
+          }
+        );
+      // Reset form field
+
+      this.form.name = "";
+      this.form.phone = "";
+      this.form.email = "";
+      this.form.desc = "";
     },
     /*initMap() {
       let map = new google.maps.Map(document.querySelector("#myMap"), {

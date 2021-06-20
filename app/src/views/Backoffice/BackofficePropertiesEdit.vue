@@ -1,52 +1,24 @@
 <template>
   <div>
     <div id="backofficeProperties" class="container-fluid">
-      <h3 class="title mt-4 ml-4">Adicionar Imóvel</h3>
+      <h3 class="title mt-4 ml-3">Editar Imóvel NHPT-{{this.property[0].id_property}}</h3>
       <div class="mr-3">
-        <FormProperty />
+        <FormProperty :edit="true"/>
       </div>
-    </div>
-
-    <div class="dataTable container-fluid mt-5">
-      <DataTable
-        name="propety"
-        :items="
-          getProperties.map((property) => {
-            return {
-              id_property: property.id_property,
-              habitation: property.habitation,
-              county: property.county,
-              price: property.price,
-              id_status: getStatusById(property.id_status).status,
-            };
-          })
-        "
-        :fields="[
-          'id_property',
-          'habitation',
-          'county',
-          'price',
-          'id_status',
-          'actions',
-        ]"
-        type="property"
-      ></DataTable>
     </div>
   </div>
 </template>
 
 <script>
 import FormProperty from "@/components/FormProperty.vue";
-import DataTable from "@/components/DataTable.vue";
 export default {
   name: "BackofficeProperties",
   components: {
-    FormProperty,
-    DataTable,
+    FormProperty
   },
   created() {
-    this.loadStatus();
-    this.loadProperties();
+    this.loadProperty();
+    this.loadCharacteristicsProperty();
     this.$store.subscribe((mutation) => {
       switch (mutation.type) {
         case "ADD_PROPERTY":
@@ -63,46 +35,37 @@ export default {
   },
   data() {
     return {
-      properties: [],
-      status: [],
+      property: [],
+      characteristicsProperty: []
     };
   },
   methods: {
-    async loadProperties() {
+    async loadProperty() {
       try {
-        const response = await this.$http.get("/property");
+        const response = await this.$http.get(`/property/${this.$route.params.id}`);
         if (response.status === 200) {
-          this.properties = response.data.content;
-          console.log(this.properties);
-          return this.properties;
+          this.property = response.data.content;
+          console.log(this.property);
+          return this.property;
         }
       } catch (err) {
         console.log(err.response);
       }
     },
-    async loadStatus() {
+    async loadCharacteristicsProperty() {
       try {
-        const response = await this.$http.get("/status");
+        const response = await this.$http.get(
+          `/characteristicsProperty/${this.$route.params.id}`
+        );
         if (response.status === 200) {
-          this.status = response.data.content;
-          console.log(this.status);
-          return this.status;
+          this.characteristicsProperty = response.data.content;
         }
       } catch (err) {
         console.log(err.response);
       }
-    },
-    getStatusById(id) {
-      return this.status.find((status) => status.id_status === id);
     },
   },
   computed: {
-    getProperties() {
-      return this.properties;
-    },
-    getRows() {
-      return this.properties.length;
-    },
   },
 };
 </script>

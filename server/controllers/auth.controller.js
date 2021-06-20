@@ -18,7 +18,7 @@ async function signIn(req, res) {
     if (!email || !password) {
         return res.status(400).send({ error: "Missing arguments." })
     }
-    const query = `select * from users where email = "${email}"`
+    const query = `select * from mydb.users, mydb.availability, mydb.balance, mydb.objective_user where mydb.users.id_availability= mydb.availability.id_availability and mydb.balance.id_balance = mydb.users.id_balance and mydb.objective_user.id_objectives_users = mydb.users.id_objectives_users and mydb.users.email = "${email}"`
     con.query(query, (err, results, fields) => {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))

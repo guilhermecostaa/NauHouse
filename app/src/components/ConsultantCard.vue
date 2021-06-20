@@ -7,7 +7,7 @@
             <p class="mt">Consultor Imobiliário</p>
             <p><b-icon-telephone-fill /> +351 252167609</p>
             <p><b-icon-phone-fill /> {{ user.number }}</p>
-            <p><b-icon-envelope /> {{ user.email }}</p>
+            <p><i class="fas fa-envelope"></i> {{ user.email }}</p>
           </div>
         </b-card-text>
         <template #footer>

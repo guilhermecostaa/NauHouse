@@ -15,6 +15,8 @@ import Agenda from '../views/Consultants/Agenda.vue'
 import BackofficeNews from '../views/Backoffice/BackofficeNews.vue'
 import BackofficeProperties from '../views/Backoffice/BackofficeProperties.vue'
 import BackofficeUsers from '../views/Backoffice/BackofficeUsers.vue'
+import BackofficePropertiesEdit from '../views/Backoffice/BackofficePropertiesEdit.vue'
+import BackofficeUsersEdit from '../views/Backoffice/BackofficeUsersEdit.vue'
 import Store from "../store";
 
 Vue.use(VueRouter)
@@ -108,7 +110,7 @@ const routes = [
   {
     path: "/backoffice/users/:id/edit",
     name: "BackofficeUsersEdit",
-    component: BackofficeUsers,
+    component: BackofficeUsersEdit,
     meta: {
       requiresAuth: true
     }
@@ -124,7 +126,7 @@ const routes = [
   {
     path: "/backoffice/properties/:id/edit",
     name: "BackofficePropertiesEdit",
-    component: BackofficeUsers,
+    component: BackofficePropertiesEdit,
     meta: {
       requiresAuth: true
     }

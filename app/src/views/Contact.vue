@@ -14,7 +14,7 @@
         <p class="mr-2 ml-2"><b-icon-telephone-fill /> +351 252 167 609</p>
       </div>
       <div class="row align-items-center d-flex justify-content-center">
-        <p class="mr-2 ml-2"><b-icon-envelope /> geral@nauhouse.pt</p>
+        <p class="mr-2 ml-2"><i class="fas fa-envelope"></i> geral@nauhouse.pt</p>
       </div>
       <div class="row align-items-center d-flex justify-content-center">
         <h3 class="subtitle mt-5">Contacto Direto</h3>

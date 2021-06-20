@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <b-form @submit.prevent="addUser" enctype="multipart/form-data">
       <h4 class="subtitle mt-4">Dados Pessoais</h4>
-     <!-- Nome password-->
+      <!-- Nome password-->
       <div class="row">
         <div class="col-md-6 col-sm-12">
           <b-form-group id="input-name" label="Nome" label-for="input-name">
@@ -849,10 +849,70 @@
 
 <script>
 export default {
+  props: ["edit"],
   created() {
     this.loadUserType();
     this.loadUsers();
     console.log(this.users);
+  },
+  mounted() {
+    if (this.edit) {
+      console.log("entrei")
+      this.loadUser();
+      console.log(this.user);
+      this.form.name = this.user.name;
+      this.form.email = this.user.email;
+      this.form.phone = this.user.phone;
+      this.form.password = this.user.password;
+      this.form.nacionality = this.user.nacionality;
+      this.formData = this.user.avatar;
+      this.form.birthday = this.user.birthday;
+      this.form.userType = this.user.userType;
+      this.form.placeOfBirth = this.user.placeOfBirth;
+      this.form.civilId = this.user.civilId;
+      this.form.validity = this.user.validity;
+      this.form.address = this.user.address;
+      this.form.maritalStatus = this.user.maritalStatus;
+      this.form.postalCode = this.user.postalCode;
+      this.form.fiscalId = this.user.fiscalId;
+      this.form.niss = this.user.niss;
+      this.form.academicQualification = this.user.academicQualification;
+      this.form.academicArea = this.user.academicArea;
+      this.form.personalContact = this.user.personalContact;
+      this.form.emergencyContact = this.user.emergencyContact;
+      this.form.employmentSituation = this.user.employmentSituation;
+      this.form.personalEmail = this.user.personalEmail;
+      this.form.regime = this.user.regime;
+      this.form.schedule = this.user.schedule;
+      this.form.nif = this.user.nif;
+      this.form.experience = this.user.experience;
+      this.form.time = this.user.time;
+      this.form.agency = this.user.agency;
+      this.form.ownCar = this.user.ownCar;
+      this.form.actingZone = this.user.actingZone;
+      this.form.team = this.user.team;
+      this.form.elements = this.user.elements;
+      this.form.acquisition = this.user.acquisition;
+      this.form.transaction = this.user.transaction;
+      this.form.faturationVolume = this.user.faturationVolume;
+      this.form.anotation = this.user.anotation;
+      this.form.availability = this.user.availability;
+      this.form.workType = this.user.workType;
+      this.form.availabilityDays = this.user.availabilityDays;
+      this.form.availabilitySchedule = this.user.availabilitySchedule;
+      this.form.generalMeeting = this.user.generalMeeting;
+      this.form.suportMeeting = this.user.suportMeeting;
+      this.form.scale = this.user.scale;
+      this.form.publicityZone = this.user.publicityZone;
+      this.form.positioningZone = this.user.positioningZone;
+      this.form.mensalPublicity = this.user.mensalPublicity;
+      this.form.flyers = this.user.flyers;
+      this.form.mensalInvoice = this.user.mensalInvoice;
+      this.form.mensalAcquisition = this.user.mensalAcquisition;
+      this.form.mensalTransaction = this.user.mensalTransaction;
+      this.form.firstZone = this.user.firstZone;
+      this.form.secondZone = this.user.secondZone;
+    }
   },
   data() {
     return {
@@ -912,6 +972,7 @@ export default {
         thirdZone: "",
       },
       users: [],
+      user: [],
       userTypes: [],
       verifyFields: false,
     };
@@ -919,7 +980,7 @@ export default {
   methods: {
     selectFile() {
       this.form.avatar = this.$refs.file.files[0];
-      console.log(this.$refs.file.files[0])
+      console.log(this.$refs.file.files[0]);
     },
     async loadUserType() {
       try {
@@ -1021,7 +1082,7 @@ export default {
         if (this.verifyFields == false) {
           const formData = new FormData();
           formData.append("file", this.form.avatar);
-          console.log(formData)
+          console.log(formData);
           const response = await this.$http.post("/users", {
             name: this.form.name,
             email: this.form.email,
@@ -1088,58 +1149,58 @@ export default {
           });
           this.$store.commit("ADD_USER", "User Adicionado");
           (this.form.name = ""),
-          (this.form.password = ""),
-          (this.form.email = ""),
-          (this.form.avatar = ""),
-          (this.form.phone = ""),
-          (this.form.userType = ""),
-          (this.form.nacionality = ""),
-          (this.form.birthday = ""),
-          (this.form.placeOfBirth = ""),
-          (this.form.civilId = ""),
-          (this.form.validity = ""),
-          (this.form.address = ""),
-          (this.form.maritalStatus = ""),
-          (this.form.postalCode = ""),
-          (this.form.fiscalId = ""),
-          (this.form.niss = ""),
-          (this.form.academicQualification = ""),
-          (this.form.academicArea = ""),
-          (this.form.personalContact = ""),
-          (this.form.emergencyContact = ""),
-          (this.form.employmentSituation = ""),
-          (this.form.personalEmail = ""),
-          (this.form.regime = ""),
-          (this.form.schedule = ""),
-          (this.form.nif = ""),
-          (this.form.experience = ""),
-          (this.form.time = ""),
-          (this.form.agency = ""),
-          (this.form.ownCar = ""),
-          (this.form.actingZone = ""),
-          (this.form.team = ""),
-          (this.form.elements = ""),
-          (this.form.acquisition = ""),
-          (this.form.transaction = ""),
-          (this.form.faturationVolume = ""),
-          (this.form.anotation = ""),
-          (this.form.availability = ""),
-          (this.form.workType = ""),
-          (this.form.availabilityDays = ""),
-          (this.form.availabilitySchedule = ""),
-          (this.form.generalMeeting = ""),
-          (this.form.suportMeeting = ""),
-          (this.form.scale = ""),
-          (this.form.publicityZone = ""),
-          (this.form.positioningZone = ""),
-          (this.form.mensalPublicity = ""),
-          (this.form.flyers = ""),
-          (this.form.mensalInvoice = ""),
-          (this.form.mensalAcquisition = ""),
-          (this.form.mensalTransaction = ""),
-          (this.form.firstZone = ""),
-          (this.form.secondZone = ""),
-          (this.form.thirdZone = "");
+            (this.form.password = ""),
+            (this.form.email = ""),
+            (this.form.avatar = ""),
+            (this.form.phone = ""),
+            (this.form.userType = ""),
+            (this.form.nacionality = ""),
+            (this.form.birthday = ""),
+            (this.form.placeOfBirth = ""),
+            (this.form.civilId = ""),
+            (this.form.validity = ""),
+            (this.form.address = ""),
+            (this.form.maritalStatus = ""),
+            (this.form.postalCode = ""),
+            (this.form.fiscalId = ""),
+            (this.form.niss = ""),
+            (this.form.academicQualification = ""),
+            (this.form.academicArea = ""),
+            (this.form.personalContact = ""),
+            (this.form.emergencyContact = ""),
+            (this.form.employmentSituation = ""),
+            (this.form.personalEmail = ""),
+            (this.form.regime = ""),
+            (this.form.schedule = ""),
+            (this.form.nif = ""),
+            (this.form.experience = ""),
+            (this.form.time = ""),
+            (this.form.agency = ""),
+            (this.form.ownCar = ""),
+            (this.form.actingZone = ""),
+            (this.form.team = ""),
+            (this.form.elements = ""),
+            (this.form.acquisition = ""),
+            (this.form.transaction = ""),
+            (this.form.faturationVolume = ""),
+            (this.form.anotation = ""),
+            (this.form.availability = ""),
+            (this.form.workType = ""),
+            (this.form.availabilityDays = ""),
+            (this.form.availabilitySchedule = ""),
+            (this.form.generalMeeting = ""),
+            (this.form.suportMeeting = ""),
+            (this.form.scale = ""),
+            (this.form.publicityZone = ""),
+            (this.form.positioningZone = ""),
+            (this.form.mensalPublicity = ""),
+            (this.form.flyers = ""),
+            (this.form.mensalInvoice = ""),
+            (this.form.mensalAcquisition = ""),
+            (this.form.mensalTransaction = ""),
+            (this.form.firstZone = ""),
+            (this.form.secondZone = ""),
+            (this.form.thirdZone = "");
         }
       } catch (err) {
         console.log(err);
@@ -1152,6 +1213,20 @@ export default {
           });
           console.log(err);
         }
+      }
+    },
+    async loadUser() {
+      try {
+        const response = await this.$http.get(
+          `/users/${this.$route.params.id}`
+        );
+        if (response.status === 200) {
+          this.user = response.data.content;
+          console.log(this.user);
+          return this.user;
+        }
+      } catch (err) {
+        console.log(err.response);
       }
     },
   },

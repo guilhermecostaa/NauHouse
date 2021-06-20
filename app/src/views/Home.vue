@@ -3,7 +3,7 @@
     <div id="homeImgFilter">
       <img src="@/assets/img/Home.png" class="img-fluid" alt="Home" />
       <div class="row justify-content-center mr-3 ml-3">
-        <div class=".col-md-6 .offset-md-3" >
+        <div class=".col-md-6 .offset-md-3">
           <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
               <a
@@ -47,8 +47,15 @@
             >
               <b-form inline>
                 <b-form-select
-                  v-model="selected"
-                  :options="options"
+                  v-model="category"
+                  :options="
+                    categories.map((category) => {
+                      return {
+                        text: category.name,
+                        value: category.id_category,
+                      };
+                    })
+                  "
                   class="selectForm"
                 >
                   <template #first>
@@ -62,8 +69,14 @@
                 </b-form-select>
 
                 <b-form-select
-                  v-model="selected"
-                  :options="options"
+                  v-model="district"
+                  :options="
+                    districts.map((district) => {
+                      return {
+                        text: district,
+                      };
+                    })
+                  "
                   class="selectForm"
                 >
                   <template v-slot:first>
@@ -74,8 +87,14 @@
                 </b-form-select>
 
                 <b-form-select
-                  v-model="selected"
-                  :options="options"
+                  v-model="county"
+                  :options="
+                    counties.map((county) => {
+                      return {
+                        text: county,
+                      };
+                    })
+                  "
                   class="selectForm"
                 >
                   <template #first>
@@ -279,10 +298,20 @@ export default {
     return {
       properties: [],
       spotlight: [],
+      districts: [],
+      district: "",
+      categories: [],
+      category: "",
+      counties: [],
+      county: "",
     };
   },
   created() {
     this.loadProperties();
+    this.loadDistricts();
+    this.loadCategories();
+    this.loadCounties();
+    console.log(this.districts);
   },
   methods: {
     async loadProperties() {
@@ -291,23 +320,52 @@ export default {
         if (response.status === 200) {
           this.properties = response.data.content;
         }
-        console.log(this.properties)
+        console.log(this.properties);
       } catch (err) {
         console.log(err.response);
       }
     },
     getSpotlightProperties() {
-      console.log("entreiiiii")
       this.properties.filter((property) => property.id_status == 11);
       for (let i = 0; i < 6; i++) {
-        console.log("entrei")
+        console.log("entrei");
         const random = Math.floor(Math.random() * this.properties.length);
         this.spotlight.push(this.properties[random]);
       }
-      console.log(this.spotlight)
-      return this.spotlight
+      console.log(this.spotlight);
+      return this.spotlight;
     },
-  }, 
+    async loadCategories() {
+      try {
+        const response = await this.$http.get(`/category`);
+        if (response.status === 200) {
+          this.categories = response.data.content;
+        }
+      } catch (err) {
+        console.log(err.response);
+      }
+    },
+    loadDistricts() {
+      for (let i = 0; i < this.properties.length; i++) {
+        for (let j = 0; j < this.districts.length; j++) {
+          if (this.properties[i].district != this.districts[j]) {
+            console.log(this.properties[i].district);
+            this.districts.push(this.properties[i].district);
+          }
+        }
+      }
+    },
+    loadCounties() {
+      for (let i = 0; i < this.properties.length; i++) {
+        for (let j = 0; j < this.counties.length; j++) {
+          if (this.properties[i].county != this.counties[j]) {
+            console.log(this.properties[i].county);
+            this.districts.push(this.properties[i].county);
+          }
+        }
+      }
+    },
+  },
 };
 </script>
 

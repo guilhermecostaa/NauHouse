@@ -2,7 +2,7 @@
   <div>
     <div id="backofficeProperties" class="container-fluid">
       <h3 class="title mt-4 ml-4">Adicionar Imóvel</h3>
-      <div class="mr-3">
+      <div class="mr-3 mb-5">
         <FormProperty />
       </div>
     </div>

@@ -3,7 +3,7 @@ const messages = require("../messages")
 let properties = []
 
 async function getProperties(req, res) {
-    const query = "select * from property;"
+    const query = "select * from mydb.property, mydb.area where mydb.property.id_property = mydb.area.id_property"
     con.query(query, (err, results, fields) => {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
@@ -14,7 +14,7 @@ async function getProperties(req, res) {
 
 async function getPropertiesById(req, res) {
     const { id } = req.params
-    const query = `select * from property where id_property = ${id}`
+    const query = `select * from mydb.property, mydb.area where mydb.property.id_property = mydb.area.id_property and mydb.property.id_property = ${id}`
     con.query(query, (err, results, fields) => {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
@@ -25,7 +25,7 @@ async function getPropertiesById(req, res) {
 
 async function getPropertiesByUser(req, res) {
     const { id } = req.params
-    const query = `select * from property where consultant_id = ${id}`
+    const query = `select * from mydb.property, mydb.area where mydb.property.id_property = mydb.area.id_property and consultant_id = ${id}`
     con.query(query, (err, results, fields) => {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
@@ -39,16 +39,16 @@ async function getPropertiesByUser(req, res) {
                 if (err) {
                     return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
                 }
-                res.send(messages.getSuccess("getPropertiesByUser", results))
-            })   
+            })
         }
+        res.send(messages.getSuccess("getPropertiesByUser", results))
     })
 }
 
 async function addProperty(req, res) {
     const { idProperty, title, subtitle, desc, district, county, address, postalCode, idCategory, idPurpose, price, idShape,
         habitation, bathrooms, suites, room, closedGarage, parking, consultantId, idEnergeticEfficiency, idStatus,
-        video, bedroom, constructionYear, usableArea, landArea, constructionGrossArea, implementationArea } = req.body
+        video, bedroom, constructionYear, usableArea, landArea, constructionGrossArea, implementationArea, characteristicsProperty } = req.body
     const query = `insert into property (id_property, title, subtitle, description, district, county, address, postal_code, id_category,
                     id_purpose, price, id_shape, habitation, bathrooms, suites, room, closed_garage, parking, consultant_id,
                     id_energetic_efficiency, id_status, video, bedroom, construction_year) values ("${idProperty}", "${title}", "${subtitle}", "${desc}", "${district}",
@@ -57,17 +57,27 @@ async function addProperty(req, res) {
                     "${idEnergeticEfficiency}","${idStatus}", "${video}", "${bedroom}", "${constructionYear}")`
     const queryArea = `insert into area (id_property, usable_area, land_area, construction_gross_area, implementation_area) values
                     ("${idProperty}", "${usableArea}", "${landArea}", "${constructionGrossArea}", "${implementationArea}")`
+
     con.query(query, (err, results, fields) => {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
         }
-        con.query(queryArea, (err, results, fields) => {
+        con.query(queryArea, (err, results2, fields) => {
             if (err) {
                 return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
             }
+            for (var i = 0; i < characteristicsProperty.length; i++) {
+                val = characteristicsProperty[i];//some manipulation of someArr[j]
+                const queryCharacteristics = `insert into characteristics_property (id_property, id_characteristics) values
+                    ("${idProperty}", "${this.val}")`
+                con.query(queryCharacteristics, (err, results3, fields) => {
+                    if (err) {
+                        return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
+                    }
+                });
+            }
             res.send(messages.getSuccess("addProperty", results))
-        }
-        )
+        })
     })
 }
 
@@ -188,7 +198,7 @@ async function editPropertyStatus(req, res) {
     const { idStatus } = req.body
     let set = []
     if (idStatus) {
-        set.push(`id_status = ${idStatus}`) 
+        set.push(`id_status = ${idStatus}`)
     }
     const query = `update property set ${set.join()} where id_property = ${id}`
     con.query(query, (err, results, fields) => {

@@ -623,6 +623,21 @@ export default {
           }
         });
       }
+      if (this.type == "property") {
+        this.$swal({
+          title: "Tem a certeza que pretende editar?",
+          icon: "warning",
+          buttons: true,
+          dangerMode: true,
+        }).then((result) => {
+          if (result) {
+            this.$router.push({
+              name: "BackofficePropertiesEdit",
+              params: { id: obj.id_property },
+            });
+          }
+        });
+      }
     },
     updateNews() {
       try {

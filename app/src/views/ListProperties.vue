@@ -16,7 +16,7 @@
         <b-form class="mt-1">
           <b-form-group
             id="input-group-location"
-            label="Location:"
+            label="Concelho:"
             label-for="input-location"
           >
             <b-form-input
@@ -99,7 +99,8 @@
           </b-form-group>
 
           <toggle-button v-model="form.pool" color="#b01e0f" /> Piscina <br />
-          <toggle-button v-model="form.elevator" color="#b01e0f" /> Elevador <br />
+          <toggle-button v-model="form.elevator" color="#b01e0f" /> Elevador
+          <br />
           <toggle-button v-model="form.garage" color="#b01e0f" /> Garagem <br />
           <toggle-button v-model="form.parking" color="#b01e0f" /> Estacionamento
         </b-form>
@@ -113,7 +114,7 @@
           <b-row>
             <PropertyCard
               class="mt-3 col-lg-3 col-md-4 col-sm-6 col-xs-12"
-              v-for="property in properties"
+              v-for="property in filteredProperties"
               :key="property.id_property"
               :property="property"
             ></PropertyCard>
@@ -131,6 +132,7 @@ export default {
   components: { PropertyCard },
   created() {
     this.loadProperties();
+    console.log(this.properties);
     this.loadCategories();
     this.loadPurposes();
     this.loadShapes();
@@ -143,6 +145,8 @@ export default {
         purpose: "",
         shape: "",
         bedrooms: "",
+        min: "",
+        max: "",
         pool: false,
         elevator: false,
         garage: false,
@@ -190,7 +194,6 @@ export default {
         const response = await this.$http.get("/property");
         if (response.status === 200) {
           this.properties = response.data.content;
-          return this.properties;
         }
       } catch (err) {
         console.log(err.response);
@@ -198,8 +201,76 @@ export default {
     },
   },
   computed: {
-    getProperties() {
-      return this.properties;
+    filteredProperties() {
+      return this.properties.filter((property) => {
+        let filterLocationResult = true;
+        let filterCategoryResult = true;
+        let filterPurposeResult = true;
+        let filterShapeResult = true;
+        let filterBedroomsResult = true;
+        //let filterPoolResult = true;
+        let filterMinResult = true;
+        let filterMaxResult = true;
+        // Filter location
+        if (this.form.location !== "") {
+          filterLocationResult = property.county.toLowerCase().includes(this.form.location.toLowerCase());
+        }
+        // Filter category
+        if (this.form.category !== "") {
+          filterCategoryResult = property.id_category === this.form.category;
+        }
+        // Filter purpose
+        if (this.form.purpose !== "") {
+          filterPurposeResult = property.id_purpose === this.form.purpose;
+        }
+        // Filter shape
+        if (this.form.shape !== "") {
+          filterShapeResult = property.id_shape === this.form.shape;
+        }
+        // Filter bedrooms
+        if (this.form.bedrooms !== "") {
+          filterBedroomsResult = property.bedroom === parseInt(this.form.bedrooms);
+        }
+        //Filter price
+        if (this.form.min !== "") {
+          filterMinResult = property.price >= parseInt(this.form.min);
+        }
+        //Filter price
+        if (this.form.max !== "") {
+          filterMaxResult = property.price <= parseInt(this.form.max);
+        }
+        // Filter pool
+        /*if (this.form.pool) {
+          filterPoolResult = property.bedroom === parseInt(this.form.bedrooms);
+        }*/
+        // return the conjunction of the two filters
+        return (
+          filterLocationResult &&
+          filterCategoryResult &&
+          filterPurposeResult &&
+          filterShapeResult &&
+          filterBedroomsResult &&
+          filterMinResult &&
+          filterMaxResult
+        );
+      });
+      /*return this.properties.filter((property) => {
+        return (
+          property.category
+            .toLowerCase()
+            .match(this.form.category.toLowerCase()) &&
+          property.location
+            .toLowerCase()
+            .match(this.form.location.toLowerCase()) &&
+          property.purpose
+            .toLowerCase()
+            .match(this.form.purpose.toLowerCase()) &&
+          property.shape.toLowerCase().match(this.form.shape.toLowerCase()) &&
+          property.bedrooms
+            .toLowerCase()
+            .match(this.form.bedrooms.toLowerCase())
+        );
+      });*/
     },
   },
 };

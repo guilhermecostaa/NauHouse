@@ -8,18 +8,18 @@
             <div class="row">
               <div class="col-lg-4">
                 <p>
-                  <b-icon-telephone-fill class="mr-2" /> {{ property.room }}
+                  <i class="fas fa-bed mr-1"></i> {{ property.bedroom }}
                 </p>
               </div>
               <div class="col-lg-4">
                 <p>
-                  <b-icon-telephone-fill class="mr-2" />
+                  <i class="fas fa-toilet mr-1"></i>
                   {{ property.bathrooms }}
                 </p>
               </div>
               <div class="col-lg-4">
                 <p>
-                  <b-icon-telephone-fill class="mr-2" /> {{ property.area }}
+                  <i class="fas fa-chart-area mr-1"></i> {{ property.usable_area }}
                 </p>
               </div>
             </div>

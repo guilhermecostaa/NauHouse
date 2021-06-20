@@ -25,7 +25,7 @@
               <p class="name">Conta Corrente</p>
               <div class="information mt-3">
                 <p>Saldo: {{ getLoggedUser.active + getLoggedUser.passive }}</p>
-                <p>Ativo:{{ getLoggedUser.active }}</p>
+                <p>Ativo: {{ getLoggedUser.active }}</p>
                 <p>Passivo: {{ getLoggedUser.passive }}</p>
               </div>
             </div>

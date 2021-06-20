@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs")
 
 
 async function getUsers(req, res) {
-    const query = "select * from users;"
+    const query = "select * from mydb.users, mydb.availability, mydb.balance, mydb.objective_user where mydb.users.id_availability= mydb.availability.id_availability and mydb.balance.id_balance = mydb.users.id_balance and mydb.objective_user.id_objectives_users = mydb.users.id_objectives_users;"
     con.query(query, (err, results, fields) => {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
@@ -15,7 +15,8 @@ async function getUsers(req, res) {
 
 async function getUserById(req, res) {
     const { id } = req.params
-    const query = `select * from users where id_user = ${id};`
+    const query = `select * from mydb.users, mydb.availability, mydb.balance, mydb.objective_user where mydb.users.id_availability = mydb.availability.id_availability and 
+    mydb.balance.id_balance = mydb.users.id_balance and mydb.objective_user.id_objectives_users = mydb.users.id_objectives_users and mydb.users.id_user = ${id};`
     con.query(query, (err, results, fields) => {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))

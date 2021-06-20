@@ -5,12 +5,11 @@
       <div class="row">
         <div class="col-lg-6 col-md-12 video">
           <video
-            width="728"
-            height="410"
             type="video"
             aspect="16by9"
             poster="@/assets/img/Logo.png"
             controls
+            class="video"
           >
             <source
               src="@/assets/video/video.mp4"
@@ -20,7 +19,7 @@
           </video>
         </div>
         <div class="col-lg-6 col-md-12">
-          <p class="mt-3 mr-5 mb-3 ml-5">
+          <p class="mt-5 mr-5 mb-3 ml-5">
             NAU House é um projeto novo, mas com anos de maturidade: tem um
             equipa dinâmica e de espírito jovem mas a seriedade, experiência e
             conhecimento do mercado reúnem décadas na área imobiliária. Somos um
@@ -55,6 +54,9 @@ export default {
 }
 
 .video {
+  margin-top: 0px;
   align-items: center;
+  width: 100%;
+  height: 480px;
 }
 </style>

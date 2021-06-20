@@ -1,9 +1,9 @@
 <template>
   <div>
     <div id="backofficeUsersEdit" class="container-fluid">
-      <h3 class="title mt-4 ml-4">Editar {{ user.name }}</h3>
+      <h3 class="title mt-4 ml-3">Editar {{ this.user[0].name }}</h3>
       <div class="mr-3">
-        <FormUsers />
+        <FormUsers :edit="true" />
       </div>
     </div>
   </div>
@@ -18,6 +18,7 @@ export default {
   },
   created() {
     this.loadUser();
+    console.log(this.user)
     this.$store.subscribe((mutation) => {
       switch (mutation.type) {
         case "ADD_USER":
@@ -37,7 +38,7 @@ export default {
   methods: {
     async loadUser() {
       try {
-        const response = await this.$http.get(`/user/${this.$route.params.id}`);
+        const response = await this.$http.get(`/users/${this.$route.params.id}`);
         if (response.status === 200) {
           this.user = response.data.content;
           console.log(this.user);
