@@ -141,7 +141,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth) {
-    if (Store.getters.loggedUser == {}) {
+    if (Store.getters.loggedUser === {}) {
       next({ name: "Login" })
     } else{
       next()

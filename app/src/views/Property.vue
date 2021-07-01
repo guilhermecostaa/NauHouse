@@ -8,15 +8,23 @@
           <p>NHPT-{{ this.$route.params.id }}</p>
 
           <p class="mt-3 mb-0">
-            Área Bruta: {{ this.property[0].construction_gross_area }}
+            Área Bruta: {{ this.property[0].construction_gross_area }} m²
           </p>
-          <p class="MT-1">Área: {{ this.property[0].usable_area }}</p>
+          <p class="MT-1">Área: {{ this.property[0].usable_area }} m²</p>
 
           <p class="mt-3 mb-5">Valor: {{ this.property[0].price }}€</p>
-          <b-button class="btn-danger mt-3 mb-5 mr-3" squared variant="danger"
+          <b-button
+            @click="openVideo"
+            class="btn-danger mt-3 mb-5 mr-3"
+            squared
+            variant="danger"
             ><b-icon-camera-video-fill /> Video</b-button
           >
-          <b-button class="btn-danger mt-3 mb-5" squared variant="danger"
+          <b-button
+            @click="openImages"
+            class="btn-danger mt-3 mb-5"
+            squared
+            variant="danger"
             ><b-icon-images /> Imagens</b-button
           >
         </div>
@@ -114,7 +122,7 @@
       <div class="col-md-6 col-sm-12">
         <h4 class="mt-3">Mapa</h4>
         <div id="myMap">
-          <GoogleMaps :address="this.property[0].address"></GoogleMaps>
+          <GoogleMaps :center="this.property[0].address"></GoogleMaps>
         </div>
       </div>
     </div>
@@ -226,7 +234,74 @@
       </div>
     </b-modal>
 
-    <ImagesCarousel> </ImagesCarousel>
+    <b-modal ref="mdlContact" v-model="modalImages" hide-footer>
+      <div class="d-block text-left">
+        <!--<ImagesCarousel :slides="slides"></ImagesCarousel>-->
+         <b-carousel
+          id="carousel-2"
+          v-model="slide"
+          controls
+          indicators
+          background="#ababab"
+          img-width= "1080"
+          img-height= "960"
+          style="text-shadow: 1px 1px 2px #333"
+          @sliding-start="onSlideStart"
+          @sliding-end="onSlideEnd"
+        >
+          <!-- Slides with image only -->
+          <b-carousel-slide
+            img-src="@/assets/img/Home.png"
+          ></b-carousel-slide>
+          <b-carousel-slide
+            img-src="@/assets/img/Foto-2.jpg"
+          ></b-carousel-slide>
+          <b-carousel-slide
+            img-src="@/assets/img/Foto-3.jpg"
+          ></b-carousel-slide>
+        </b-carousel>
+      </div>
+    </b-modal>
+
+    <b-modal ref="mdlVideo" v-model="modalVideo">
+      <!--Modal: Name-->
+      <div
+        class="modal fade"
+        id="modal1"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="myModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-lg" role="document">
+          <!--Content-->
+          <div class="modal-content">
+            <!--Body-->
+            <div class="modal-body mb-0 p-0">
+              <div
+                class="embed-responsive embed-responsive-16by9 z-depth-1-half"
+              >
+                <video
+                  type="video"
+                  aspect="16by9"
+                  poster="@/assets/img/Logo.png"
+                  controls
+                  class="video"
+                >
+                  <source
+                    src="@/assets/video/video.mp4"
+                    type="video/mp4"
+                    size="1080"
+                  />
+                </video>
+              </div>
+            </div>
+          </div>
+          <!--/.Content-->
+        </div>
+      </div>
+      <!--Modal: Name-->
+    </b-modal>
   </div>
 </template>
 
@@ -258,17 +333,31 @@ export default {
         desc: "",
         id: `${this.$route.params.id}`,
       },
+      images: [
+        { src: "@/assets/img/Foto-1.png" },
+        { src: "@/assets/img/Foto-2.png" },
+        { src: "@/assets/img/Foto-3.png" },
+      ],
       property: [],
       user: [],
       modalContact: false,
+      modalVideo: false,
+      modalImages: false,
       items: [],
       characteristics: [],
       characteristicsProperty: [],
       map: null,
       mapCenter: { lat: 0, lng: 0 },
+      sliding: null
     };
   },
   methods: {
+    onSlideStart() {
+      this.sliding = true;
+    },
+    onSlideEnd() {
+      this.sliding = false;
+    },
     openModel() {
       this.modalContact = true;
     },
@@ -365,6 +454,13 @@ export default {
       this.form.email = "";
       this.form.desc = "";
     },
+    openVideo() {
+      this.modalVideo = true;
+    },
+    openImages() {
+      this.modalImages = true;
+    },
+
     /*initMap() {
       let map = new google.maps.Map(document.querySelector("#myMap"), {
         center: { lat: 41.148481, lng: -8.606893 },

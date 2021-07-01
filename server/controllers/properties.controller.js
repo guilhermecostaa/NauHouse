@@ -14,7 +14,7 @@ async function getProperties(req, res) {
 
 async function getPropertiesById(req, res) {
     const { id } = req.params
-    const query = `select * from mydb.property, mydb.area where mydb.property.id_property = mydb.area.id_property and mydb.property.id_property = ${id}`
+    const query = `select * from mydb.property, mydb.area where mydb.property.id_property = mydb. area.id_property and mydb.property.id_property = ${id}`
     con.query(query, (err, results, fields) => {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))

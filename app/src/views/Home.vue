@@ -14,7 +14,7 @@
                 role="tab"
                 aria-controls="nav-home"
                 aria-selected="true"
-                >Home</a
+                >Vender</a
               >
               <a
                 class="nav-item nav-link"
@@ -24,7 +24,7 @@
                 role="tab"
                 aria-controls="nav-profile"
                 aria-selected="false"
-                >Profile</a
+                >Arrendar</a
               >
               <a
                 class="nav-item nav-link"
@@ -34,7 +34,7 @@
                 role="tab"
                 aria-controls="nav-contact"
                 aria-selected="false"
-                >Contact</a
+                >Outros</a
               >
             </div>
           </nav>
@@ -61,9 +61,9 @@
                   <template #first>
                     <b-form-select-option
                       class="selectForm"
-                      :value="null"
+                      value=""
                       disabled
-                      >------- Todos -------</b-form-select-option
+                      >------- Categoria -------</b-form-select-option
                     >
                   </template>
                 </b-form-select>
@@ -80,29 +80,18 @@
                   class="selectForm"
                 >
                   <template v-slot:first>
-                    <b-form-select-option :value="null" disabled
+                    <b-form-select-option value="" disabled
                       >------- Distrito -------</b-form-select-option
                     >
                   </template>
                 </b-form-select>
 
-                <b-form-select
-                  v-model="county"
-                  :options="
-                    counties.map((county) => {
-                      return {
-                        text: county,
-                      };
-                    })
-                  "
-                  class="selectForm"
-                >
-                  <template #first>
-                    <b-form-select-option :value="null" disabled
-                      >------- Concelho -------</b-form-select-option
-                    >
-                  </template>
-                </b-form-select>
+                <b-form-input
+                  id="input-bedrooms"
+                  v-model="bedrooms"
+                  placeholder="------- Quartos -------"
+                  type="number"
+                ></b-form-input>
 
                 <b-button class="btn btn-search"
                   ><b-icon-search></b-icon-search
@@ -117,43 +106,50 @@
             >
               <b-form inline>
                 <b-form-select
-                  v-model="selected"
-                  :options="options"
+                  v-model="category"
+                  :options="
+                    categories.map((category) => {
+                      return {
+                        text: category.name,
+                        value: category.id_category,
+                      };
+                    })
+                  "
                   class="selectForm"
                 >
                   <template #first>
                     <b-form-select-option
                       class="selectForm"
-                      :value="null"
+                      value=""
                       disabled
-                      >------- Todos -------</b-form-select-option
+                      >------- Categoria -------</b-form-select-option
                     >
                   </template>
                 </b-form-select>
 
                 <b-form-select
-                  v-model="selected"
-                  :options="options"
-                  class="selectForm"
+                  v-model="district"
+                  :options="
+                    districts.map((district) => {
+                      return {
+                        text: district,
+                      };
+                    })
+                  "
                 >
                   <template v-slot:first>
-                    <b-form-select-option :value="null" disabled
+                    <b-form-select-option value="" disabled
                       >------- Distrito -------</b-form-select-option
                     >
                   </template>
                 </b-form-select>
 
-                <b-form-select
-                  v-model="selected"
-                  :options="options"
-                  class="selectForm"
-                >
-                  <template #first>
-                    <b-form-select-option :value="null" disabled
-                      >------- Concelho -------</b-form-select-option
-                    >
-                  </template>
-                </b-form-select>
+                <b-form-input
+                  id="input-bedrooms"
+                  v-model="bedrooms"
+                  placeholder="------- Quartos -------"
+                  type="number"
+                ></b-form-input>
 
                 <b-button class="btn btn-search"
                   ><b-icon-search></b-icon-search
@@ -168,43 +164,51 @@
             >
               <b-form inline>
                 <b-form-select
-                  v-model="selected"
-                  :options="options"
+                  placeholder="Categoria"
+                  v-model="category"
+                  :options="
+                    categories.map((category) => {
+                      return {
+                        text: category.name,
+                        value: category.id_category,
+                      };
+                    })
+                  "
                   class="selectForm"
                 >
                   <template #first>
                     <b-form-select-option
                       class="selectForm"
-                      :value="null"
+                      value=""
                       disabled
-                      >------- Todos -------</b-form-select-option
+                      >------- Categoria -------</b-form-select-option
                     >
                   </template>
                 </b-form-select>
 
                 <b-form-select
-                  v-model="selected"
-                  :options="options"
-                  class="selectForm"
+                  v-model="district"
+                  :options="
+                    districts.map((district) => {
+                      return {
+                        text: district,
+                      };
+                    })
+                  "
                 >
                   <template v-slot:first>
-                    <b-form-select-option :value="null" disabled
+                    <b-form-select-option value="" disabled
                       >------- Distrito -------</b-form-select-option
                     >
                   </template>
                 </b-form-select>
 
-                <b-form-select
-                  v-model="selected"
-                  :options="options"
-                  class="selectForm"
-                >
-                  <template #first>
-                    <b-form-select-option :value="null" disabled
-                      >------- Concelho -------</b-form-select-option
-                    >
-                  </template>
-                </b-form-select>
+                <b-form-input
+                  id="input-bedrooms"
+                  v-model="bedrooms"
+                  placeholder="------- Quartos -------"
+                  type="number"
+                ></b-form-input>
 
                 <b-button class="btn btn-search"
                   ><b-icon-search></b-icon-search
@@ -224,7 +228,7 @@
           <b-row>
             <PropertyCard
               class="mt-3 col-md-4 col-sm-6 col-xs-12"
-              v-for="property in getSpotlightProperties()"
+              v-for="property in spotlight"
               :key="property.id_property"
               :property="property"
             ></PropertyCard>
@@ -303,15 +307,14 @@ export default {
       categories: [],
       category: "",
       counties: [],
-      county: "",
+      bedrooms: "",
     };
   },
   created() {
     this.loadProperties();
+    this.getSpotlightProperties();
     this.loadDistricts();
     this.loadCategories();
-    this.loadCounties();
-    console.log(this.districts);
   },
   methods: {
     async loadProperties() {
@@ -320,19 +323,25 @@ export default {
         if (response.status === 200) {
           this.properties = response.data.content;
         }
-        console.log(this.properties);
       } catch (err) {
         console.log(err.response);
       }
     },
     getSpotlightProperties() {
-      this.properties.filter((property) => property.id_status == 11);
-      for (let i = 0; i < 6; i++) {
-        console.log("entrei");
-        const random = Math.floor(Math.random() * this.properties.length);
-        this.spotlight.push(this.properties[random]);
+      this.properties.filter((property) => property.id_status === 11);
+      if (this.properties.length <= 6) {
+        console.log("entreeeeeei");
+        for (let i = 0; i < this.properties.length; i++) {
+          console.log(this.properties[i]);
+          this.spotlight.push(this.properties[i]);
+        }
+      } else {
+        for (let i = 0; i < 6; i++) {
+          console.log("entrei");
+          const random = Math.floor(Math.random() * this.properties.length);
+          this.spotlight.push(this.properties[random]);
+        }
       }
-      console.log(this.spotlight);
       return this.spotlight;
     },
     async loadCategories() {
@@ -346,24 +355,18 @@ export default {
       }
     },
     loadDistricts() {
+      console.log(this.districts)
       for (let i = 0; i < this.properties.length; i++) {
-        for (let j = 0; j < this.districts.length; j++) {
-          if (this.properties[i].district != this.districts[j]) {
-            console.log(this.properties[i].district);
-            this.districts.push(this.properties[i].district);
-          }
-        }
+        this.districts.push(this.properties[i].district);
       }
-    },
-    loadCounties() {
-      for (let i = 0; i < this.properties.length; i++) {
-        for (let j = 0; j < this.counties.length; j++) {
-          if (this.properties[i].county != this.counties[j]) {
-            console.log(this.properties[i].county);
-            this.districts.push(this.properties[i].county);
-          }
+      this.districts.sort();
+      for (let i = 0; i < this.districts.length; i++) {
+        if (this.districts[i] == this.districts[i - 1]) {
+          this.districts.splice(i, 1);
         }
+        i++;
       }
+      return this.districts;
     },
   },
 };
@@ -386,15 +389,14 @@ export default {
   border-radius: 0px;
 }
 
-#homeImgFilter .list-group-item {
+#homeImgFilter .nav-item {
   position: relative;
   background-color: #b01e0f;
-  opacity: 0.6;
   color: white !important;
   border-radius: 0px;
 }
 
-#homeImgFilter .list-group-item.active {
+#homeImgFilter .nav-item.active {
   background-color: #ff170f;
   color: white !important;
 }

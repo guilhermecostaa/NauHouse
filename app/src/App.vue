@@ -17,7 +17,7 @@ export default {
       this.$destroy();
     });
     if (localStorage.jwt) {
-      this.SET_JWT_TOKEN(parseInt(localStorage.jwt));
+      this.SET_JWT_TOKEN(JSON.parse(localStorage.jwt));
     }
   },
   destroyed() {
@@ -43,7 +43,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: left;
   src: local("Avenir"),
-   url(./fonts/avenir_ff/AvenirLTStd-Book.otf) format("OpenType");
+  url(./fonts/avenir_ff/AvenirLTStd-Book.otf) format("OpenType");
 }
 
 #nav {

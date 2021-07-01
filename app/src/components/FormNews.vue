@@ -1,6 +1,11 @@
 <template>
   <div class="container-fluid">
-    <b-form @submit.prevent="addNew">
+    <b-form
+      @submit.prevent="addNew"
+      enctype="multipart/form-data"
+      method="post"
+      action="/news"
+    >
       <!-- Nome -->
       <div class="row">
         <div class="col-sm-12">
@@ -18,7 +23,14 @@
       <div class="row">
         <div class="col-sm-12">
           <b-form-group label="Foto">
-            <b-form-file id="file-default" v-model="form.photo"></b-form-file>
+            <b-form-file
+              id="file-default"
+              v-model="form.photo"
+              ref="file"
+              name="file"
+              type="file"
+              @change="selectFile"
+            ></b-form-file>
           </b-form-group>
         </div>
       </div>
@@ -64,11 +76,18 @@ export default {
     };
   },
   methods: {
+    selectFile() {
+      this.form.photo = this.$refs.file.files[0];
+      console.log(this.$refs.file.files[0]);
+    },
     async addNew() {
       try {
+        let formData = new FormData();
+        formData.append("file", this.form.photo);
+        console.log(formData);
         const response = await this.$http.post("/news", {
           Title: this.form.title,
-          Image: this.form.photo,
+          Image: this.formData,
           Desc: this.form.desc,
         });
         console.log(response);
@@ -81,7 +100,7 @@ export default {
         this.form.title = "";
         this.form.photo = "";
         this.form.desc = "";
-        this.$store.commit("ADD_NEW", "New Adicionada")
+        this.$store.commit("ADD_NEW", "New Adicionada");
       } catch (err) {
         console.log(err);
         if (err) {

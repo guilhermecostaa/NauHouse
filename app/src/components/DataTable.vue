@@ -27,7 +27,9 @@
               class="mr-2"
               variant="primary"
               @click="sellHouse(data.item)"
-              v-show="data.item.id_status != 'Vendido'"
+              v-show="
+                data.item.id_status != 'Vendido' && data.item.id_status != 'Concluido'
+              "
               v-if="type == 'property'"
               >Vender</b-button
             >
@@ -35,7 +37,9 @@
               class="mr-2"
               variant="primary"
               @click="tranfer(data.item)"
-              v-show="data.item.id_status == 'Vendido'"
+              v-show="
+                data.item.id_status == 'Vendido' && data.item.id_status != 'Concluido'
+              "
               v-if="type == 'property'"
               >Tranferência</b-button
             >
@@ -118,7 +122,14 @@
           </div>
 
           <div
-            class="row align-items-center d-flex justify-content-center mt-5 mb-5"
+            class="
+              row
+              align-items-center
+              d-flex
+              justify-content-center
+              mt-5
+              mb-5
+            "
           >
             <b-button class="btn-add mt-5 mb-5" type="submit" variant="danger"
               >Editar</b-button
@@ -215,7 +226,14 @@
           </div>
 
           <div
-            class="row align-items-center d-flex justify-content-center mt-5 mb-5"
+            class="
+              row
+              align-items-center
+              d-flex
+              justify-content-center
+              mt-5
+              mb-5
+            "
           >
             <b-button class="btn-add mt-5 mb-5" type="submit" variant="danger"
               >Editar</b-button
@@ -323,7 +341,14 @@
             </div>
           </div>
           <div
-            class="row align-items-center d-flex justify-content-center mt-5 mb-5"
+            class="
+              row
+              align-items-center
+              d-flex
+              justify-content-center
+              mt-5
+              mb-5
+            "
           >
             <b-button class="btn-add mt-5 mb-5" type="submit" variant="danger"
               >Vender</b-button
@@ -360,7 +385,14 @@
             </div>
           </div>
           <div
-            class="row align-items-center d-flex justify-content-center mt-5 mb-5"
+            class="
+              row
+              align-items-center
+              d-flex
+              justify-content-center
+              mt-5
+              mb-5
+            "
           >
             <b-button class="btn-add mt-5 mb-5" type="submit" variant="danger"
               >Alterar</b-button
@@ -417,6 +449,7 @@ export default {
       consultants: [],
       status: [],
       statusObj: [],
+      sellObj: [],
       modal: false,
       modalSell: false,
       modalStatus: false,
@@ -437,12 +470,8 @@ export default {
       }).then((result) => {
         if (result) {
           try {
-            const response = this.$http.post(
-              `/sales/transfer/${obj.id_property}`,
-              {
-                consultantGains: obj.consultantGains,
-                fundraiserGains: obj.fundraiserGains,
-              }
+            const response = this.$http.get(
+              `/sales/transfer/${obj.id_property}`
             );
             console.log(response);
             this.$swal({
@@ -494,12 +523,13 @@ export default {
     },
     sellHouse(obj) {
       this.modalSell = true;
+      this.sellObj = obj;
       console.log(obj);
     },
     sell() {
       try {
         const response = this.$http.post(`/sales`, {
-          idProperty: this.form.sell.idProperty,
+          idProperty: this.sellObj.id_property,
           propertyValue: this.form.sell.price,
           consultantGains: this.form.sell.consultantGains,
           companyGains: this.form.sell.companyGains,
@@ -595,18 +625,18 @@ export default {
       if (this.type == "news") {
         this.modal = true;
         (this.form.edit.news.id = obj.id_news),
-        (this.form.edit.news.title = obj.title),
-        (this.form.edit.news.photo = obj.image),
-        (this.form.edit.news.desc = obj.description);
+          (this.form.edit.news.title = obj.title),
+          (this.form.edit.news.photo = obj.image),
+          (this.form.edit.news.desc = obj.description);
       }
       if (this.type == "contacts") {
         this.modal = true;
         (this.form.edit.contact.id = obj.id_contacts),
-        (this.form.edit.contact.name = obj.name),
-        (this.form.edit.contact.email = obj.email),
-        (this.form.edit.contact.number = obj.number);
+          (this.form.edit.contact.name = obj.name),
+          (this.form.edit.contact.email = obj.email),
+          (this.form.edit.contact.number = obj.number);
         (this.form.edit.contact.status = obj.status),
-        (this.form.edit.contact.description = obj.description);
+          (this.form.edit.contact.description = obj.description);
       }
       if (this.type == "users") {
         this.$swal({

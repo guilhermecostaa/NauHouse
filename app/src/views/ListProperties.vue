@@ -136,6 +136,8 @@ export default {
     this.loadCategories();
     this.loadPurposes();
     this.loadShapes();
+    this.loadCharacteristics();
+    this.loadCharacteristicsProperty();
   },
   data() {
     return {
@@ -156,6 +158,9 @@ export default {
       purposes: [],
       shapes: [],
       properties: [],
+      characteristics: [],
+      characteristicsProperty: [],
+      items: []
     };
   },
   methods: {
@@ -199,6 +204,39 @@ export default {
         console.log(err.response);
       }
     },
+    async loadCharacteristics() {
+      try {
+        const response = await this.$http.get(`/characteristics`);
+        if (response.status === 200) {
+          this.characteristics = response.data.content;
+        }
+      } catch (err) {
+        console.log(err.response);
+      }
+    },
+    async loadCharacteristicsProperty() {
+      try {
+        const response = await this.$http.get(
+          `/characteristicsProperty/${this.$route.params.id}`
+        );
+        if (response.status === 200) {
+          this.characteristicsProperty = response.data.content;
+          console.log(this.characteristicsProperty)
+        }
+        for (let i = 0; i < this.characteristicsProperty.length; i++) {
+          for (let j = 0; j < this.characteristics.length; j++) {
+            if (
+              this.characteristics[j].id_characteristics ==
+              this.characteristicsProperty[i].id_characteristics
+            ) {
+              this.items.push(this.characteristics[j]);
+            }
+          }
+        }
+      } catch (err) {
+        console.log(err.response);
+      }
+    },
   },
   computed: {
     filteredProperties() {
@@ -213,7 +251,7 @@ export default {
         let filterMaxResult = true;
         // Filter location
         if (this.form.location !== "") {
-          filterLocationResult = property.county.toLowerCase().includes(this.form.location.toLowerCase());
+          filterLocationResult = property.county.toLowerCase().includes(this.form.location.toLowerCase()) || property.district.toLowerCase().includes(this.form.location.toLowerCase())
         }
         // Filter category
         if (this.form.category !== "") {
@@ -254,23 +292,6 @@ export default {
           filterMaxResult
         );
       });
-      /*return this.properties.filter((property) => {
-        return (
-          property.category
-            .toLowerCase()
-            .match(this.form.category.toLowerCase()) &&
-          property.location
-            .toLowerCase()
-            .match(this.form.location.toLowerCase()) &&
-          property.purpose
-            .toLowerCase()
-            .match(this.form.purpose.toLowerCase()) &&
-          property.shape.toLowerCase().match(this.form.shape.toLowerCase()) &&
-          property.bedrooms
-            .toLowerCase()
-            .match(this.form.bedrooms.toLowerCase())
-        );
-      });*/
     },
   },
 };

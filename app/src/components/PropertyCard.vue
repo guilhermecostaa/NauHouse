@@ -1,15 +1,39 @@
 <template>
   <b-col>
     <div>
-      <b-card :title="getTitle(property.title)" @click="propertyPage" class="mb-1 mt-2">
+      <b-card @click="propertyPage">
+        <b-carousel
+          id="carousel-1"
+          v-model="slide"
+          controls
+          indicators
+          background="#ababab"
+          img-width="1024"
+          img-height="480"
+          style="text-shadow: 1px 1px 2px #333"
+          @sliding-start="onSlideStart"
+          @sliding-end="onSlideEnd"
+        >
+          <!-- Slides with image only -->
+          <b-carousel-slide
+            img-src="https://picsum.photos/1024/480/?image=58"
+          ></b-carousel-slide>
+          <b-carousel-slide
+            img-src="https://picsum.photos/1024/480/?image=52"
+          ></b-carousel-slide>
+          <b-carousel-slide
+            img-src="https://picsum.photos/1024/480/?image=53"
+          ></b-carousel-slide>
+        </b-carousel>
         <b-card-text>
+          <div class="mt-2">
+            <h5>{{ getTitle(property.title) }}</h5>
+          </div>
           <div class="information">
             <p class="mt-2">{{ getDescription(property.description) }}</p>
             <div class="row">
               <div class="col-lg-4">
-                <p>
-                  <i class="fas fa-bed mr-1"></i> {{ property.bedroom }}
-                </p>
+                <p><i class="fas fa-bed mr-1"></i> {{ property.bedroom }}</p>
               </div>
               <div class="col-lg-4">
                 <p>
@@ -19,7 +43,8 @@
               </div>
               <div class="col-lg-4">
                 <p>
-                  <i class="fas fa-chart-area mr-1"></i> {{ property.usable_area }}
+                  <i class="fas fa-chart-area mr-1"></i>
+                  {{ property.usable_area }}
                 </p>
               </div>
             </div>
@@ -34,7 +59,9 @@
 export default {
   props: ["property"],
   data() {
-    return {};
+    return {
+      sliding: null,
+    };
   },
   methods: {
     propertyPage() {
@@ -59,10 +86,14 @@ export default {
         return `${title.substr(0, spacePosition)}...`;
       }
     },
+    onSlideStart() {
+      this.sliding = true;
+    },
+    onSlideEnd() {
+      this.sliding = false;
+    },
   },
-  computed: {
-    
-  },
+  computed: {},
 };
 </script>
 

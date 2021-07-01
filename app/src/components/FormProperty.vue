@@ -795,7 +795,7 @@
 
 <script>
 export default {
-  props: ["edit"],
+  props: ["edit", "data"],
   created() {
     this.loadCategories();
     this.loadPurposes();
@@ -811,36 +811,6 @@ export default {
   mounted() {
     if (this.edit) {
       this.loadProperty();
-      this.form.name = this.property.name;
-      this.form.title = this.property.email;
-      this.form.subtitle = this.property.phone;
-      this.form.desc = this.property.password;
-      this.form.district = this.property.nacionality;
-      this.form.county = this.property.avatar;
-      this.form.address = this.property.birthday;
-      this.form.postalCode = this.property.userType;
-      this.form.price = this.property.placeOfBirth;
-      this.form.category = this.property.civilId;
-      this.form.purpose = this.property.validity;
-      this.form.shape = this.property.address;
-      this.form.id = this.property.maritalStatus;
-      this.form.energeticEfficiency = this.property.postalCode;
-      this.form.habitation = this.property.fiscalId;
-      this.form.constructionYear = this.property.niss;
-      this.form.usableArea = this.property.academicQualification;
-      this.form.landArea = this.property.academicArea;
-      this.form.constructionGrossArea = this.property.personalContact;
-      this.form.implementationArea = this.property.emergencyContact;
-      this.form.rooms = this.property.employmentSituation;
-      this.form.bathroom = this.property.personalEmail;
-      this.form.suites = this.property.regime;
-      this.form.bedrooms = this.property.schedule;
-      this.form.garage = this.property.nif;
-      this.form.parking = this.property.experience;
-      this.form.video = this.property.time;
-      this.form.photos = this.property.agency;
-      this.form.status = this.property.ownCar;
-      this.form.consultantId = this.property.actingZone;
     }
   },
   data() {
@@ -1113,8 +1083,37 @@ export default {
           `/property/${this.$route.params.id}`
         );
         if (response.status === 200) {
-          this.property = response.data.content;
+          this.property = response.data.content[0];
           console.log(this.property);
+          this.form.title = this.property.title;
+          this.form.subtitle = this.property.subtitle;
+          this.form.desc = this.property.description;
+          this.form.district = this.property.district;
+          this.form.county = this.property.county;
+          this.form.address = this.property.address;
+          this.form.postalCode = this.property.postal_code;
+          this.form.price = this.property.price;
+          this.form.category = this.property.id_category;
+          this.form.purpose = this.property.id_purpose;
+          this.form.shape = this.property.id_shape;
+          this.form.id = this.property.id_property;
+          this.form.energeticEfficiency = this.property.id_energetic_efficiency;
+          this.form.habitation = this.property.habitation;
+          this.form.constructionYear = this.property.construction_year;
+          this.form.usableArea = this.property.usable_area;
+          this.form.landArea = this.property.land_area;
+          this.form.constructionGrossArea = this.property.construction_gross_area;
+          this.form.implementationArea = this.property.implementation_area;
+          this.form.rooms = this.property.room;
+          this.form.bathroom = this.property.bathrooms;
+          this.form.suites = this.property.suites;
+          this.form.bedrooms = this.property.bedroom;
+          this.form.garage = this.property.closed_garage;
+          this.form.parking = this.property.parking;
+          this.form.video = this.property.video;
+          this.form.photos = this.property.photos;
+          this.form.status = this.property.id_status;
+          this.form.consultantId = this.property.consultant_id;
         }
       } catch (err) {
         console.log(err.response);

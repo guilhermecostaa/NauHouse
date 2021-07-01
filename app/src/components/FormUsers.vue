@@ -743,7 +743,7 @@
       </div>
       <!-- Elementos Angariações Transações-->
       <div class="row">
-        <div class="col-md-4 col-sm-12">
+        <div class="col-md-6 col-sm-12">
           <b-form-group
             id="input-mensalAcquisition"
             label="Angariações Mês"
@@ -757,7 +757,7 @@
             ></b-form-input>
           </b-form-group>
         </div>
-        <div class="col-md-4 col-sm-12">
+        <div class="col-md-6 col-sm-12">
           <b-form-group
             id="input-averageTransaction"
             label="Valor Médio Transação"
@@ -766,21 +766,6 @@
             <b-form-input
               id="input-averageTransaction"
               v-model="form.averageTransaction"
-              type="text"
-              class="mb-2"
-              required
-            ></b-form-input>
-          </b-form-group>
-        </div>
-        <div class="col-md-4 col-sm-12">
-          <b-form-group
-            id="input-mensalTransaction"
-            label="Transação mês"
-            label-for="input-mensalTransaction"
-          >
-            <b-form-input
-              id="input-mensalTransaction"
-              v-model="form.mensalTransaction"
               type="text"
               class="mb-2"
               required
@@ -966,7 +951,7 @@ export default {
         flyers: "",
         mensalInvoice: "",
         mensalAcquisition: "",
-        mensalTransaction: "",
+        averageTransaction: "",
         firstZone: "",
         secondZone: "",
         thirdZone: "",
@@ -1136,7 +1121,7 @@ export default {
             averageTransaction: this.form.mensalTransaction,
             firstZone: this.form.firstZone,
             secondZone: this.form.secondZone,
-            thirdZone: this.form.title,
+            thirdZone: this.form.thirdZone,
             active: 0,
             passive: 0,
           });
@@ -1221,9 +1206,61 @@ export default {
           `/users/${this.$route.params.id}`
         );
         if (response.status === 200) {
-          this.user = response.data.content;
+          this.user = response.data.content[0];
           console.log(this.user);
-          return this.user;
+          this.form.name = this.user.name;
+          this.form.password = this.user.password;
+          this.form.email = this.user.email;
+          this.form.avatar = this.user.avatar;
+          this.form.phone = this.user.number;
+          this.form.userType = this.user.user_type_id;
+          this.form.nacionality = this.user.nacionality;
+          this.form.birthday = this.user.birthday;
+          this.form.placeOfBirth = this.user.place_of_birth;
+          this.form.civilId = this.user.civil_id;
+          this.form.validity = this.user.validity;
+          this.form.address = this.user.address;
+          this.form.maritalStatus = this.user.marital_status;
+          this.form.postalCode = this.user.postal_code;
+          this.form.fiscalId = this.user.fiscal_id;
+          this.form.niss = this.user.niss;
+          this.form.academicQualification = this.user.academic_qualification;
+          this.form.academicArea = this.user.academic_area;
+          this.form.personalContact = this.user.personal_contact;
+          this.form.emergencyContact = this.user.emergency_contact;
+          this.form.employmentSituation = this.user.employment_situation;
+          this.form.personalEmail = this.user.personal_email;
+          this.form.regime = this.user.regime;
+          this.form.schedule = this.user.schedule;
+          this.form.nif = this.user.nif;
+          this.form.experience = this.user.experience;
+          this.form.time = this.user.time;
+          this.form.agency = this.user.agency;
+          this.form.ownCar = this.user.own_car;
+          this.form.actingZone = this.user.acting_zone;
+          this.form.team = this.user.team;
+          this.form.elements = this.user.elements;
+          this.form.acquisition = this.user.acquisition;
+          this.form.transaction = this.user.transaction;
+          this.form.faturationVolume = this.user.faturation_volume;
+          this.form.anotation = this.user.anotation;
+          this.form.availability = this.user.availability;
+          this.form.workType = this.user.work_type;
+          this.form.availabilityDays = this.user.days;
+          this.form.availabilitySchedule = this.user.availability_schedule;
+          this.form.generalMeeting = this.user.general_meeting;
+          this.form.suportMeeting = this.user.accomplish_meeting;
+          this.form.scale = this.user.scale;
+          this.form.publicityZone = this.user.publicity_zone;
+          this.form.positioningZone = this.user.positioning_zone;
+          this.form.mensalPublicity = this.user.mensal_publicity;
+          this.form.flyers = this.user.flyers;
+          this.form.mensalInvoice = this.user.mensal_invoice;
+          this.form.mensalAcquisition = this.user.mensal_acquisition;
+          this.form.averageTransaction = this.user.average_transaction;
+          this.form.firstZone = this.user.first_zone;
+          this.form.secondZone = this.user.second_zone;
+          this.form.thirdZone = this.user.third_zone;
         }
       } catch (err) {
         console.log(err.response);
