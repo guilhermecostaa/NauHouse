@@ -13,13 +13,13 @@
           <p class="MT-1">Área: {{ this.property[0].usable_area }} m²</p>
 
           <p class="mt-3 mb-5">Valor: {{ this.property[0].price }}€</p>
-          <b-button
+          <!--<b-button
             @click="openVideo"
             class="btn-danger mt-3 mb-5 mr-3"
             squared
             variant="danger"
             ><b-icon-camera-video-fill /> Video</b-button
-          >
+          >-->
           <b-button
             @click="openImages"
             class="btn-danger mt-3 mb-5"
@@ -32,6 +32,12 @@
           <img
             src="@/assets/img/Home.png"
             class="img-fluid mt-3 mr-5 mx-auto d-block"
+            @click="openImages"
+          />
+          <img
+            src="@/assets/img/Home.png"
+            class="img-fluid mt-3 mr-5 mx-auto d-block"
+            @click="openImages"
           />
         </div>
         <div class="col-lg-4 col-md-6 col-sm-12">
@@ -39,11 +45,13 @@
             src="@/assets/img/Home.png"
             class="img-fluid mt-3 mr-5"
             alt="Responsive image"
+            @click="openImages"
           />
           <img
             src="@/assets/img/Home.png"
             class="img-fluid mt-3 mb-3 mr-5"
             alt="Responsive image"
+            @click="openImages"
           />
         </div>
       </div>
@@ -251,13 +259,13 @@
         >
           <!-- Slides with image only -->
           <b-carousel-slide
-            img-src="@/assets/img/Home.png"
+            img-src="https://nauhouse.pt/wp-content/uploads/2021/06/IMG_8269.jpg"
           ></b-carousel-slide>
           <b-carousel-slide
-            img-src="@/assets/img/Foto-2.jpg"
+            img-src="https://nauhouse.pt/wp-content/uploads/2021/06/IMG_8269.jpg"
           ></b-carousel-slide>
           <b-carousel-slide
-            img-src="@/assets/img/Foto-3.jpg"
+            img-src="https://nauhouse.pt/wp-content/uploads/2021/06/IMG_8270-Cópia-1024x623.jpg"
           ></b-carousel-slide>
         </b-carousel>
       </div>
@@ -321,7 +329,7 @@ export default {
   created() {
     this.loadProperty();
     this.loadCharacteristics();
-    this.loadCharacteristicsProperty();
+    
     //this.initMap();
   },
   data() {
@@ -392,6 +400,7 @@ export default {
         if (response.status === 200) {
           this.characteristics = response.data.content;
         }
+        this.loadCharacteristicsProperty();
       } catch (err) {
         console.log(err.response);
       }

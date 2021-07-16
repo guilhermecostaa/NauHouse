@@ -34,7 +34,7 @@
                 role="tab"
                 aria-controls="nav-contact"
                 aria-selected="false"
-                >Outros</a
+                >Trespasse</a
               >
             </div>
           </nav>
@@ -59,10 +59,7 @@
                   class="selectForm"
                 >
                   <template #first>
-                    <b-form-select-option
-                      class="selectForm"
-                      value=""
-                      disabled
+                    <b-form-select-option class="selectForm" value="" disabled
                       >------- Categoria -------</b-form-select-option
                     >
                   </template>
@@ -74,6 +71,7 @@
                     districts.map((district) => {
                       return {
                         text: district,
+                        value: district,
                       };
                     })
                   "
@@ -93,7 +91,7 @@
                   type="number"
                 ></b-form-input>
 
-                <b-button class="btn btn-search"
+                <b-button class="btn btn-search" @click="searchSellProperty()"
                   ><b-icon-search></b-icon-search
                 ></b-button>
               </b-form>
@@ -118,10 +116,7 @@
                   class="selectForm"
                 >
                   <template #first>
-                    <b-form-select-option
-                      class="selectForm"
-                      value=""
-                      disabled
+                    <b-form-select-option class="selectForm" value="" disabled
                       >------- Categoria -------</b-form-select-option
                     >
                   </template>
@@ -151,7 +146,7 @@
                   type="number"
                 ></b-form-input>
 
-                <b-button class="btn btn-search"
+                <b-button class="btn btn-search" @click="searchRentProperty()"
                   ><b-icon-search></b-icon-search
                 ></b-button>
               </b-form>
@@ -177,10 +172,7 @@
                   class="selectForm"
                 >
                   <template #first>
-                    <b-form-select-option
-                      class="selectForm"
-                      value=""
-                      disabled
+                    <b-form-select-option class="selectForm" value="" disabled
                       >------- Categoria -------</b-form-select-option
                     >
                   </template>
@@ -192,6 +184,7 @@
                     districts.map((district) => {
                       return {
                         text: district,
+                        value: district,
                       };
                     })
                   "
@@ -210,7 +203,7 @@
                   type="number"
                 ></b-form-input>
 
-                <b-button class="btn btn-search"
+                <b-button class="btn btn-search" @click="searchOtherProperty()"
                   ><b-icon-search></b-icon-search
                 ></b-button>
               </b-form>
@@ -312,9 +305,9 @@ export default {
   },
   created() {
     this.loadProperties();
-    this.getSpotlightProperties();
-    this.loadDistricts();
     this.loadCategories();
+    console.log(this.properties);
+    console.log(this.districts)
   },
   methods: {
     async loadProperties() {
@@ -322,27 +315,26 @@ export default {
         const response = await this.$http.get(`/property`);
         if (response.status === 200) {
           this.properties = response.data.content;
+          this.getSpotlightProperties();
+          this.loadDistricts();
         }
       } catch (err) {
         console.log(err.response);
       }
     },
     getSpotlightProperties() {
-      this.properties.filter((property) => property.id_status === 11);
-      if (this.properties.length <= 6) {
-        console.log("entreeeeeei");
-        for (let i = 0; i < this.properties.length; i++) {
-          console.log(this.properties[i]);
-          this.spotlight.push(this.properties[i]);
-        }
-      } else {
+      let highlight = this.properties.filter(
+        (property) => property.id_status === 11
+      );
+      if (highlight.length > 6) {
         for (let i = 0; i < 6; i++) {
           console.log("entrei");
-          const random = Math.floor(Math.random() * this.properties.length);
-          this.spotlight.push(this.properties[random]);
+          const random = Math.floor(Math.random() * highlight.length);
+          this.spotlight.push(highlight[random]);
         }
+      } else {
+        this.spotlight = highlight;
       }
-      return this.spotlight;
     },
     async loadCategories() {
       try {
@@ -355,7 +347,7 @@ export default {
       }
     },
     loadDistricts() {
-      console.log(this.districts)
+      console.log(this.districts);
       for (let i = 0; i < this.properties.length; i++) {
         this.districts.push(this.properties[i].district);
       }
@@ -364,9 +356,28 @@ export default {
         if (this.districts[i] == this.districts[i - 1]) {
           this.districts.splice(i, 1);
         }
-        i++;
       }
-      return this.districts;
+    },
+    searchSellProperty() {
+      this.$router.push({ name: "ListProperties" });
+      this.$store.commit("ADD_CATEGORY", this.category);
+      this.$store.commit("ADD_PURPOSE", 9);
+      this.$store.commit("ADD_DISTRICT", this.district);
+      this.$store.commit("ADD_BEDROOMS", this.bedrooms);
+    },
+    searchRentProperty() {
+      this.$router.push({ name: "ListProperties" });
+      this.$store.commit("ADD_CATEGORY", this.category);
+      this.$store.commit("ADD_PURPOSE", 8);
+      this.$store.commit("ADD_DISTRICT", this.district);
+      this.$store.commit("ADD_BEDROOMS", this.bedrooms);
+    },
+    searchOtherProperty() {
+      this.$router.push({ name: "ListProperties" });
+      this.$store.commit("ADD_CATEGORY", this.category);
+      this.$store.commit("ADD_PURPOSE", 10);
+      this.$store.commit("ADD_DISTRICT", this.district);
+      this.$store.commit("ADD_BEDROOMS", this.bedrooms);
     },
   },
 };

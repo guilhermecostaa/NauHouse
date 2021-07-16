@@ -1,8 +1,8 @@
 <template>
   <div class="container-fluid">
     <h3 class="subtitle mt-4">{{ this.news[0].title }}</h3>
-    <img src="" alt="" class="image-fluid" />
-    <p>{{ this.news[0].description }}</p>
+    <img src="https://nauhouse.pt/wp-content/uploads/2021/05/mary-blackwey-1vdtcskv6hu-unsplash.jpg" alt="" class="image-fluid mt-2 center" />
+    <p class="mt-3">{{ this.news[0].description }}</p>
   </div>
 </template>
 
@@ -35,4 +35,10 @@ export default {
 </script>
 
 <style>
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
 </style>

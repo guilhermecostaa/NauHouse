@@ -1115,8 +1115,163 @@ export default {
           this.form.status = this.property.id_status;
           this.form.consultantId = this.property.consultant_id;
         }
+        this.getCharacteristicsPropertyToFill(this.$route.params.id);
+        console.log(this.location);
       } catch (err) {
         console.log(err.response);
+      }
+    },
+    async editProperty() {
+      try {
+        const response = await this.$http.put(
+          `/property/${this.$route.params.id}`,
+          {
+            title: this.form.title,
+            subtitle: this.form.subtitle,
+            desc: this.form.desc,
+            district: this.form.district,
+            county: this.form.county,
+            address: this.form.address,
+            postalCode: this.form.postalCode,
+            price: this.form.price,
+            idCategory: this.form.category,
+            idPurpose: this.form.purpose,
+            idShape: this.form.shape,
+            idEnergeticEfficiency: this.form.energeticEfficiency,
+            habitation: this.form.habitation,
+            constructionYear: this.form.constructionYear,
+            usableArea: this.form.usableArea,
+            landArea: this.form.landArea,
+            constructionGrossArea: this.form.constructionGrossArea,
+            implementationArea: this.form.implementationArea,
+            room: this.form.rooms,
+            bathrooms: this.form.bathroom,
+            suites: this.form.suites,
+            bedroom: this.form.bedrooms,
+            closedGarage: this.form.garage,
+            parking: this.form.parking,
+            photos: this.form.photos,
+            video: this.form.video,
+            consultantId: this.form.consultantId,
+            idStatus: this.form.status,
+          }
+        );
+        if (response.status === 200) {
+          this.$swal({
+            text: `Utilizador Editado!`,
+            icon: "success",
+            button: false,
+            timer: 2000,
+          });
+          this.$store.commit("EDIT_PROPERTY", "Propriedade Editada");
+          this.$router.push({ name: "BackofficeUsers" });
+        }
+      } catch (err) {
+        console.log(err.response);
+        this.$swal({
+          text: `Ups occoreu um erro!`,
+          icon: "error",
+          timer: 2000,
+          button: false,
+        });
+      }
+    },
+    getCharacteristicsPropertyToFill(id) {
+      let newProperty = [];
+      for (let i = 0; i < this.properties.length; i++) {
+        if (this.properties[i].id_property == id) {
+          this.properties[i] = newProperty;
+        }
+        for (let j = 0; j < this.characteristicsProperty.length; j++) {
+          if (
+            this.characteristicsProperty[j].id_property ==
+            this.newProperty[0].id_property
+          ) {
+            if (this.newProperty[0].characteristics === undefined) {
+              this.newProperty[0].characteristics = [];
+            }
+            this.newProperty[0].characteristics.push(
+              this.characteristicsProperty[j].id_characteristics
+            );
+          }
+        }
+      }
+      for (let i = 0; i < newProperty[0].characteristics.length; i++) {
+        switch (id) {
+          case 1:
+            if (34 <= newProperty[0].characteristics[i] <= 39) {
+              console.log("entrei");
+              this.location.push(newProperty[0].characteristics[i]);
+            }
+            break;
+          case 2:
+            if (40 <= newProperty[0].characteristics[i] <= 45) {
+              this.sunExposure.push(newProperty[0].characteristics[i]);
+            }
+            break;
+          case 3:
+            if (46 <= newProperty[0].characteristics[i] <= 52) {
+              this.view.push(newProperty[0].characteristics[i]);
+            }
+            break;
+          case 4:
+            if (53 <= newProperty[0].characteristics[i] <= 57) {
+              this.level.push(newProperty[0].characteristics[i]);
+            }
+            break;
+          case 5:
+            if (58 <= newProperty[0].characteristics[i] <= 63) {
+              this.externalCoating.push(newProperty[0].characteristics[i]);
+            }
+            break;
+          case 6:
+            if (64 <= newProperty[0].characteristics[i] <= 72) {
+              this.frames.push(newProperty[0].characteristics[i]);
+            }
+            break;
+          case 7:
+            if (73 <= newProperty[0].characteristics[i] <= 81) {
+              this.blinds.push(newProperty[0].characteristics[i]);
+            }
+            break;
+          case 8:
+            if (82 <= newProperty[0].characteristics[i] <= 87) {
+              this.floor.push(newProperty[0].characteristics[i]);
+            }
+            break;
+          case 9:
+            if (88 <= newProperty[0].characteristics[i] <= 93) {
+              this.security.push(newProperty[0].characteristics[i]);
+            }
+            break;
+          case 10:
+            if (94 <= newProperty[0].characteristics[i] <= 99) {
+              this.alarm.push(newProperty[0].characteristics[i]);
+            }
+            break;
+          case 11:
+            if (100 <= newProperty[0].characteristics[i] <= 109) {
+              this.infraestructure.push(newProperty[0].characteristics[i]);
+            }
+            break;
+          case 12:
+            if (110 <= newProperty[0].characteristics[i] <= 117) {
+              this.kitchen.push(newProperty[0].characteristics[i]);
+            }
+            break;
+          case 13:
+            if (118 <= newProperty[0].characteristics[i] <= 127) {
+              this.equipment.push(newProperty[0].characteristics[i]);
+            }
+            break;
+          case 14:
+            if (128 <= newProperty[0].characteristics[i]) {
+              this.notes.push(newProperty[0].characteristics[i]);
+            }
+            break;
+          default:
+            break;
+        }
       }
     },
   },

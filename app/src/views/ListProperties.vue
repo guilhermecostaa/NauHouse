@@ -11,12 +11,12 @@
       </div>
     </div>
 
-    <b-sidebar id="sidebar-1" title="Filtro" shadow>
+    <b-sidebar id="sidebar-1" title="Filtro" right shadow>
       <div class="px-3 py-1">
         <b-form class="mt-1">
           <b-form-group
             id="input-group-location"
-            label="Concelho:"
+            label="Localização:"
             label-for="input-location"
           >
             <b-form-input
@@ -102,7 +102,8 @@
           <toggle-button v-model="form.elevator" color="#b01e0f" /> Elevador
           <br />
           <toggle-button v-model="form.garage" color="#b01e0f" /> Garagem <br />
-          <toggle-button v-model="form.parking" color="#b01e0f" /> Estacionamento
+          <toggle-button v-model="form.parking" color="#b01e0f" />
+          Estacionamento
         </b-form>
       </div>
     </b-sidebar>
@@ -127,17 +128,18 @@
 
 <script>
 import PropertyCard from "@/components/PropertyCard.vue";
+import { mapGetters } from "vuex";
 export default {
   name: "ListProperties",
   components: { PropertyCard },
   created() {
     this.loadProperties();
-    console.log(this.properties);
     this.loadCategories();
     this.loadPurposes();
     this.loadShapes();
     this.loadCharacteristics();
     this.loadCharacteristicsProperty();
+    this.loadHomeFilter();
   },
   data() {
     return {
@@ -160,7 +162,7 @@ export default {
       properties: [],
       characteristics: [],
       characteristicsProperty: [],
-      items: []
+      items: [],
     };
   },
   methods: {
@@ -216,12 +218,10 @@ export default {
     },
     async loadCharacteristicsProperty() {
       try {
-        const response = await this.$http.get(
-          `/characteristicsProperty/${this.$route.params.id}`
-        );
+        const response = await this.$http.get(`/characteristicsProperty/`);
         if (response.status === 200) {
           this.characteristicsProperty = response.data.content;
-          console.log(this.characteristicsProperty)
+          console.log(this.characteristicsProperty);
         }
         for (let i = 0; i < this.characteristicsProperty.length; i++) {
           for (let j = 0; j < this.characteristics.length; j++) {
@@ -233,9 +233,38 @@ export default {
             }
           }
         }
+        this.getCharacteristicsProperty();
       } catch (err) {
         console.log(err.response);
       }
+    },
+    getCharacteristicsProperty() {
+      for (let i = 0; i < this.properties.length; i++) {
+        for (let j = 0; j < this.characteristicsProperty.length; j++) {
+          if (
+            this.characteristicsProperty[j].id_property ==
+            this.properties[i].id_property
+          ) {
+            if (this.properties[i].characteristics === undefined) {
+              this.properties[i].characteristics = [];
+            }
+            this.properties[i].characteristics.push(
+              this.characteristicsProperty[j].id_characteristics
+            );
+          }
+        }
+      }
+      console.log(this.properties);
+    },
+    loadHomeFilter() {
+      this.form.purpose = this.getPurpose;
+      this.form.category = this.getCategory;
+      this.form.location = this.getDistrict;
+      this.form.bedrooms = this.getBedrooms;
+      this.$store.commit("ADD_CATEGORY", "");
+      this.$store.commit("ADD_PURPOSE", "");
+      this.$store.commit("ADD_DISTRICT", "");
+      this.$store.commit("ADD_BEDROOMS", "");
     },
   },
   computed: {
@@ -246,12 +275,21 @@ export default {
         let filterPurposeResult = true;
         let filterShapeResult = true;
         let filterBedroomsResult = true;
-        //let filterPoolResult = true;
+        let filterPoolResult = true;
         let filterMinResult = true;
         let filterMaxResult = true;
+        let filterElevatorResult = true;
+        let filterGarageResult = true;
+        let filterParkingResult = true;
         // Filter location
         if (this.form.location !== "") {
-          filterLocationResult = property.county.toLowerCase().includes(this.form.location.toLowerCase()) || property.district.toLowerCase().includes(this.form.location.toLowerCase())
+          filterLocationResult =
+            property.county
+              .toLowerCase()
+              .includes(this.form.location.toLowerCase()) ||
+            property.district
+              .toLowerCase()
+              .includes(this.form.location.toLowerCase());
         }
         // Filter category
         if (this.form.category !== "") {
@@ -267,7 +305,8 @@ export default {
         }
         // Filter bedrooms
         if (this.form.bedrooms !== "") {
-          filterBedroomsResult = property.bedroom === parseInt(this.form.bedrooms);
+          filterBedroomsResult =
+            property.bedroom === parseInt(this.form.bedrooms);
         }
         //Filter price
         if (this.form.min !== "") {
@@ -278,9 +317,34 @@ export default {
           filterMaxResult = property.price <= parseInt(this.form.max);
         }
         // Filter pool
-        /*if (this.form.pool) {
-          filterPoolResult = property.bedroom === parseInt(this.form.bedrooms);
-        }*/
+        if (this.form.pool) {
+          if (property.characteristics) {
+            filterPoolResult = property.characteristics.some(
+              (characteristic) => characteristic === 147
+            );
+          } else{
+            filterPoolResult = false
+          }
+        }
+        // Filter pool
+        if (this.form.elevator) {
+          if (property.characteristics) {
+            filterElevatorResult = property.characteristics.some(
+              (characteristic) => characteristic === 129
+            );
+            console.log(filterElevatorResult)
+          } else{
+            filterPoolResult = false
+          }
+        }
+        // Filter pool
+        if (this.form.garage) {
+          filterGarageResult = property.closed_garage !== 0;
+        }
+        // Filter pool
+        if (this.form.parking) {
+          filterParkingResult = property.parking !== 0;
+        }
         // return the conjunction of the two filters
         return (
           filterLocationResult &&
@@ -289,10 +353,15 @@ export default {
           filterShapeResult &&
           filterBedroomsResult &&
           filterMinResult &&
-          filterMaxResult
+          filterMaxResult &&
+          filterPoolResult &&
+          filterElevatorResult &&
+          filterGarageResult &&
+          filterParkingResult
         );
       });
     },
+    ...mapGetters(["getCategory", "getPurpose", "getDistrict", "getBedrooms"]),
   },
 };
 </script>

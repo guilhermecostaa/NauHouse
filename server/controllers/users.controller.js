@@ -129,25 +129,19 @@ async function deleteUser(req, res) {
 
 async function editUser(req, res) {
     const { id } = req.params
-    let { name, email, password, userType, nacionality, avatar, birthday, placeOfBirth, maritalStatus, civilId,
+    let { name, email, userType, nacionality, avatar, birthday, placeOfBirth, maritalStatus, civilId,
         validity, address, postalCode, fiscalId, niss, academicQualification, academicArea, personalContact, emergencyContact,
         employmentSituation, personalEmail, regime, schedule, nif, experience, time, agency, ownCar, actingZone, team, elements,
         acquisition, transaction, faturationVolume, anotation, idAvailability, days, availabilitySchedule, availability,
         generalMeeting, accomplishMeeting, scale, idWorkType, workType, idObjectivesUsers, mensalInvoice, mensalAcquisition,
         averageTransaction, positioningZone, mensalPublicity, flyers, publicityZone, idZone, firstZone, secondZone,
-        thirdZone, idBalance, active, passive } = req.body
-
-    let salt = 10
-    let hash = await bcrypt.hash(password, salt)
-    password = hash
+        thirdZone } = req.body
 
     let set = []
     let setAvailability = []
     let setWorkType = []
     let setObjectives = []
     let setZone = []
-    let setBalance = []
-
 
     //User
     if (name) {
@@ -155,9 +149,6 @@ async function editUser(req, res) {
     }
     if (email) {
         set.push(`email = "${email}"`)
-    }
-    if (password) {
-        set.push(`password = "${password}"`)
     }
     if (userType) {
         set.push(`user_type_id = "${userType}"`)
@@ -310,45 +301,50 @@ async function editUser(req, res) {
     if (thirdZone) {
         setZone.push(`third_zone = "${thirdZone}"`)
     }
-    //Balance 
-    if (active) {
-        setBalance.push(`active = "${active}"`)
-    }
-    if (passive) {
-        setBalance.push(`passive = "${passive}"`)
-    }
-    const queryUser = `update users set ${set.join()} where id_user = ${id}`
-    const queryAvailability = `update availability set ${setAvailability.join()} where id_availability = ${idAvailability}`
-    const queryWorkType = `update work_type set ${setWorkType.join()} where id_work_type = ${idWorkType}`
-    const queryObjective = `update objective_user set ${setObjectives.join()} where id_objectives_users = ${idObjectivesUsers}`
-    const queryZone = `update zone set ${setZone.join()} where id_zone = ${idZone}`
-    const queryBalance = `update balance set ${setBalance.join()} where id_balance = ${idBalance}`
-
-    con.query(queryAvailability, (err, results, fields) => {
+    const queryUser = `select * from mydb.users, mydb.availability, mydb.balance, mydb.objective_user, mydb.zone where mydb.users.id_availability = mydb.availability.id_availability and 
+    mydb.balance.id_balance = mydb.users.id_balance and mydb.objective_user.id_objectives_users = mydb.users.id_objectives_users and mydb.zone.id_zone = mydb.users.id_zone and mydb.users.id_user = ${id};`
+    con.query(queryUser, (err, results, fields) => {
         if (err) {
+            console.log(err)
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
         }
-        con.query(queryWorkType, (err, results, fields) => {
+        console.log(results)
+        idWorkType = results[0].id_work_type
+        const queryWorkType = `update work_type set ${setWorkType.join()} where id_work_type = ${idWorkType}`
+        con.query(queryWorkType, (err, results2, fields) => {
+            console.log(queryWorkType)
             if (err) {
+                console.log(idWorkType)
                 return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
             }
-            con.query(queryObjective, (err, results, fields) => {
+            idObjectivesUsers = results[0].id_objectives_users
+            const queryObjective = `update objective_user set ${setObjectives.join()} where id_objectives_users = ${idObjectivesUsers}`
+            console.log("objective")
+            con.query(queryObjective, (err, results3, fields) => {
                 if (err) {
                     return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
                 }
-                con.query(queryZone, (err, results, fields) => {
+                idZone = results[0].id_zone
+                const queryZone = `update zone set ${setZone.join()} where id_zone = ${idZone}`
+                con.query(queryZone, (err, results4, fields) => {
                     if (err) {
+                        console.log("zone")
                         return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
                     }
-                    con.query(queryBalance, (err, results, fields) => {
+                    idAvailability = results[0].id_availability
+                    const queryAvailability = `update availability set ${setAvailability.join()} where id_availability = ${idAvailability}`
+                    con.query(queryAvailability, (err, results6, fields) => {
                         if (err) {
+                            console.log(queryAvailability)
                             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
                         }
-                        con.query(queryUser, (err, results, fields) => {
+                        const queryUpdateUser = `update users set ${set.join()} where id_user = ${id}`
+                        con.query(queryUpdateUser, (err, results7, fields) => {
                             if (err) {
+                                console.log(err)
                                 return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
                             }
-                            res.send(messages.getSuccess("EditUser", results))
+                            res.send(messages.getSuccess("EditUser", results7))
                         })
                     })
                 })

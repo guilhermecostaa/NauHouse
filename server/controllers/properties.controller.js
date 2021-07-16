@@ -8,12 +8,24 @@ async function getProperties(req, res) {
         if (err) {
             return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
         }
-        res.send(messages.getSuccess("getProperties", results))
+        const properties = results
+        for (let i = 0; i < properties.length; i++) {
+            const queryChar = `select id_characteristics from characteristics_property where id_property = ${properties[i].id_property}`
+            con.query(queryChar, (err2, results2, fields) => {
+                if (err2) {
+                    return res.status(messages.error().status).send(messages.error("error", err2.sqlMessage))
+                }
+                console.log(results2)
+                properties[i].characteristics = results2
+            }) 
+        }
+        res.send(messages.getSuccess("getProperties", properties))
     })
 }
 
 async function getPropertiesById(req, res) {
     const { id } = req.params
+
     const query = `select * from mydb.property, mydb.area where mydb.property.id_property = mydb. area.id_property and mydb.property.id_property = ${id}`
     con.query(query, (err, results, fields) => {
         if (err) {

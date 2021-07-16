@@ -1,9 +1,12 @@
 <template>
   <div class="container-fluid">
-    <b-form @submit.prevent="addUser" enctype="multipart/form-data">
+    <b-form
+      @submit.prevent="edit == true ? editUser() : addUser()"
+      enctype="multipart/form-data"
+    >
       <h4 class="subtitle mt-4">Dados Pessoais</h4>
       <!-- Nome password-->
-      <div class="row">
+      <div class="row" v-show="edit == false">
         <div class="col-md-6 col-sm-12">
           <b-form-group id="input-name" label="Nome" label-for="input-name">
             <b-form-input
@@ -24,6 +27,18 @@
               id="input-password"
               v-model="form.password"
               type="password"
+              required
+            ></b-form-input>
+          </b-form-group>
+        </div>
+      </div>
+      <div class="row" v-show="edit == true">
+        <div class="col-md-12">
+          <b-form-group id="input-name" label="Nome" label-for="input-name">
+            <b-form-input
+              id="input-name"
+              v-model="form.name"
+              type="text"
               required
             ></b-form-input>
           </b-form-group>
@@ -572,7 +587,7 @@
       <h4 class="subtitle mt-4">
         Disponibilidade E Objetivos profissionais a que se Propõe
       </h4>
-      <!--disponibilidade Dias-->
+      <!--Disponibilidade Dias-->
       <div class="row">
         <div class="col-md-6 col-sm-12">
           <b-form-group
@@ -821,12 +836,13 @@
         </div>
       </div>
 
+      <!-- Butão-->
       <div
         class="row align-items-center d-flex justify-content-center mt-5 mb-5"
       >
-        <b-button class="btn-add mt-5 mb-5" type="submit" variant="danger"
-          >Adicionar</b-button
-        >
+        <b-button class="btn-add mt-5 mb-5" type="submit" variant="danger">{{
+          edit == true ? "Editar" : "Adicionar"
+        }}</b-button>
       </div>
     </b-form>
   </div>
@@ -842,61 +858,9 @@ export default {
   },
   mounted() {
     if (this.edit) {
-      console.log("entrei")
+      console.log("entrei");
       this.loadUser();
       console.log(this.user);
-      this.form.name = this.user.name;
-      this.form.email = this.user.email;
-      this.form.phone = this.user.phone;
-      this.form.password = this.user.password;
-      this.form.nacionality = this.user.nacionality;
-      this.formData = this.user.avatar;
-      this.form.birthday = this.user.birthday;
-      this.form.userType = this.user.userType;
-      this.form.placeOfBirth = this.user.placeOfBirth;
-      this.form.civilId = this.user.civilId;
-      this.form.validity = this.user.validity;
-      this.form.address = this.user.address;
-      this.form.maritalStatus = this.user.maritalStatus;
-      this.form.postalCode = this.user.postalCode;
-      this.form.fiscalId = this.user.fiscalId;
-      this.form.niss = this.user.niss;
-      this.form.academicQualification = this.user.academicQualification;
-      this.form.academicArea = this.user.academicArea;
-      this.form.personalContact = this.user.personalContact;
-      this.form.emergencyContact = this.user.emergencyContact;
-      this.form.employmentSituation = this.user.employmentSituation;
-      this.form.personalEmail = this.user.personalEmail;
-      this.form.regime = this.user.regime;
-      this.form.schedule = this.user.schedule;
-      this.form.nif = this.user.nif;
-      this.form.experience = this.user.experience;
-      this.form.time = this.user.time;
-      this.form.agency = this.user.agency;
-      this.form.ownCar = this.user.ownCar;
-      this.form.actingZone = this.user.actingZone;
-      this.form.team = this.user.team;
-      this.form.elements = this.user.elements;
-      this.form.acquisition = this.user.acquisition;
-      this.form.transaction = this.user.transaction;
-      this.form.faturationVolume = this.user.faturationVolume;
-      this.form.anotation = this.user.anotation;
-      this.form.availability = this.user.availability;
-      this.form.workType = this.user.workType;
-      this.form.availabilityDays = this.user.availabilityDays;
-      this.form.availabilitySchedule = this.user.availabilitySchedule;
-      this.form.generalMeeting = this.user.generalMeeting;
-      this.form.suportMeeting = this.user.suportMeeting;
-      this.form.scale = this.user.scale;
-      this.form.publicityZone = this.user.publicityZone;
-      this.form.positioningZone = this.user.positioningZone;
-      this.form.mensalPublicity = this.user.mensalPublicity;
-      this.form.flyers = this.user.flyers;
-      this.form.mensalInvoice = this.user.mensalInvoice;
-      this.form.mensalAcquisition = this.user.mensalAcquisition;
-      this.form.mensalTransaction = this.user.mensalTransaction;
-      this.form.firstZone = this.user.firstZone;
-      this.form.secondZone = this.user.secondZone;
     }
   },
   data() {
@@ -1106,7 +1070,7 @@ export default {
             faturationVolume: this.form.faturationVolume,
             anotation: this.form.anotation,
             availability: this.form.availability,
-            workType: this.form.workType,
+            workType: this.form.regime,
             days: this.form.availabilityDays,
             availabilitySchedule: this.form.availabilitySchedule,
             generalMeeting: this.form.generalMeeting,
@@ -1245,7 +1209,6 @@ export default {
           this.form.faturationVolume = this.user.faturation_volume;
           this.form.anotation = this.user.anotation;
           this.form.availability = this.user.availability;
-          this.form.workType = this.user.work_type;
           this.form.availabilityDays = this.user.days;
           this.form.availabilitySchedule = this.user.availability_schedule;
           this.form.generalMeeting = this.user.general_meeting;
@@ -1265,6 +1228,110 @@ export default {
       } catch (err) {
         console.log(err.response);
       }
+    },
+    async editUser() {
+      try {
+        console.log(this.form.birthday);
+        const response = await this.$http.put(
+          `/users/${this.$route.params.id}`,
+          {
+            name: this.form.name,
+            email: this.form.email,
+            number: this.form.phone,
+            password: this.form.password,
+            nacionality: this.form.nacionality,
+            avatar: this.formData,
+            birthday: this.formatDate(this.form.birthday),
+            userType: this.form.userType,
+            placeOfBirth: this.form.placeOfBirth,
+            civilId: this.form.civilId,
+            validity: this.formatDate(this.form.validity),
+            address: this.form.address,
+            maritalStatus: this.form.maritalStatus,
+            postalCode: this.form.postalCode,
+            fiscalId: this.form.fiscalId,
+            niss: this.form.niss,
+            academicQualification: this.form.academicQualification,
+            academicArea: this.form.academicArea,
+            personalContact: this.form.personalContact,
+            emergencyContact: this.form.emergencyContact,
+            employmentSituation: this.form.employmentSituation,
+            personalEmail: this.form.personalEmail,
+            regime: this.form.regime,
+            schedule: this.form.schedule,
+            nif: this.form.nif,
+            experience: this.form.experience,
+            time: this.form.time,
+            agency: this.form.agency,
+            ownCar: this.form.ownCar,
+            actingZone: this.form.actingZone,
+            team: this.form.team,
+            elements: this.form.elements,
+            acquisition: this.form.acquisition,
+            transaction: this.form.transaction,
+            faturationVolume: this.form.faturationVolume,
+            anotation: this.form.anotation,
+            availability: this.form.availability,
+            workType: this.form.regime,
+            days: this.form.availabilityDays,
+            availabilitySchedule: this.form.availabilitySchedule,
+            generalMeeting: this.form.generalMeeting,
+            accomplishMeeting: this.form.suportMeeting,
+            scale: this.form.scale,
+            publicityZone: this.form.publicityZone,
+            positioningZone: this.form.positioningZone,
+            mensalPublicity: this.form.mensalPublicity,
+            flyers: this.form.flyers,
+            mensalInvoice: this.form.mensalInvoice,
+            mensalAcquisition: this.form.mensalAcquisition,
+            averageTransaction: this.form.averageTransaction,
+            firstZone: this.form.firstZone,
+            secondZone: this.form.secondZone,
+            thirdZone: this.form.thirdZone,
+          }
+        );
+        if (response.status === 200) {
+          this.$swal({
+            text: `Utilizador Editado!`,
+            icon: "success",
+            button: false,
+            timer: 2000,
+          });
+          this.$store.commit("EDIT_USER", "Utilizador Editado");
+          this.$router.push({ name: "BackofficeUsers" });
+        }
+      } catch (err) {
+        console.log(err.response);
+        if (err.response.data.message.toLowerCase().indexOf("duplicate") !== -1) {
+          if (
+            err.response.data.message.toLowerCase().indexOf("for key 'users.email_UNIQUE'") !== -1
+          ) {
+            this.$swal({
+              text: `Já existe um utilizador com esse email!`,
+              icon: "error",
+              timer: 2000,
+              button: false,
+            });
+          }
+        }
+        this.$swal({
+          text: `Ups occoreu um erro!`,
+          icon: "error",
+          timer: 2000,
+          button: false,
+        });
+      }
+    },
+    formatDate(date) {
+      var d = new Date(date),
+        month = "" + (d.getMonth() + 1),
+        day = "" + d.getDate(),
+        year = d.getFullYear();
+
+      if (month.length < 2) month = "0" + month;
+      if (day.length < 2) day = "0" + day;
+
+      return [year, month, day].join("-");
     },
   },
 };

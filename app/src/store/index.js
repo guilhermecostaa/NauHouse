@@ -17,11 +17,19 @@ export default new Vuex.Store({
     addContact: "",
     addUser: "",
     addProperty: "",
-    addEvent: ""
+    addEvent: "",
+    category: "",
+    purpose: "",
+    district: "",
+    bedrooms: ""
   },
   getters: {
     getJwtToken: state => state.jwt,
     getLoggedUser: state => state.loggedUser,
+    getCategory: state => state.category,
+    getPurpose: state => state.purpose,
+    getDistrict: state => state.district,
+    getBedrooms: state => state.bedrooms,
   },
   mutations: {
     SIGN_IN: (state, payload) => state.loggedUser = payload,
@@ -49,6 +57,14 @@ export default new Vuex.Store({
     ADD_EVENT: (state, addEvent) => state.addEvent = addEvent,
     EDIT_EVENT: (state, addEvent) => state.addEvent = addEvent,
     DELETE_EVENT: (state, addEvent) => state.addEvent = addEvent,
+    ADD_CATEGORY: (state, category) => state.category = category,
+    DELETE_CATEGORY: (state, category) => state.category = category,
+    ADD_PURPOSE: (state, purpose) => state.purpose = purpose, 
+    DELETE_PURPOSE: (state, purpose) => state.purpose = purpose,
+    ADD_DISTRICT: (state, district) => state.district = district,
+    DELETE_DISTRICT: (state, district) => state.district = district,
+    ADD_BEDROOMS: (state, bedrooms) => state.bedrooms = bedrooms,
+    DELETE_BEDROOMS: (state, bedrooms) => state.bedrooms = bedrooms,
   },
   actions: {
   },

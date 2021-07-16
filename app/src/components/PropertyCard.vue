@@ -16,13 +16,13 @@
         >
           <!-- Slides with image only -->
           <b-carousel-slide
-            img-src="https://picsum.photos/1024/480/?image=58"
+            img-src="https://nauhouse.pt/wp-content/uploads/2021/06/IMG_8265-C%C3%B3pia.jpg"
           ></b-carousel-slide>
           <b-carousel-slide
-            img-src="https://picsum.photos/1024/480/?image=52"
+            img-src="https://nauhouse.pt/wp-content/uploads/2021/06/IMG_8269.jpg"
           ></b-carousel-slide>
           <b-carousel-slide
-            img-src="https://picsum.photos/1024/480/?image=53"
+            img-src="https://nauhouse.pt/wp-content/uploads/2021/06/IMG_8270-Cópia-1024x623.jpg"
           ></b-carousel-slide>
         </b-carousel>
         <b-card-text>

@@ -1,6 +1,17 @@
 const con = require("../connection")
 const messages = require("../messages")
 
+async function getAllCharacteristicsProperty(req, res) {
+    const query = `select * from characteristics_property;`
+    con.query(query, (err, results, fields) => {
+        if (err) {
+            return res.status(messages.error().status).send(messages.error("error", err.sqlMessage))
+        }
+        res.send(messages.getSuccess("getCharacteristicsProperty", results))
+    })
+}
+
+
 async function getCharacteristicsProperty(req, res) {
     const { id } = req.params
     const query = `select * from characteristics_property where id_property = ${id};`
@@ -54,4 +65,4 @@ async function editCharacteristicProperty(req, res) {
 }
 
 
-module.exports = { getCharacteristicsProperty, addCharacteristicProperty, deleteCharacteristicProperty, editCharacteristicProperty}
+module.exports = { getAllCharacteristicsProperty, getCharacteristicsProperty, addCharacteristicProperty, deleteCharacteristicProperty, editCharacteristicProperty}

@@ -3,7 +3,7 @@
     <div id="backofficeProperties" class="container-fluid">
       <h3 class="title mt-4 ml-3">Editar Imóvel NHPT-{{this.property[0].id_property}}</h3>
       <div class="mr-3">
-        <FormProperty :edit="true" :data="user"/>
+        <FormProperty :edit="true"/>
       </div>
     </div>
   </div>
@@ -34,7 +34,7 @@ export default {
     });
   },
   mounted(){
-    
+
   },
   data() {
     return {

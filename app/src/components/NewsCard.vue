@@ -3,7 +3,7 @@
     <div>
       <b-card
         :title="getTitle(news.title)"
-        :img-src="dataUrl"
+        img-src="https://nauhouse.pt/wp-content/uploads/2021/05/mary-blackwey-1vdtcskv6hu-unsplash.jpg"
         class="mb-1 mt-2"
         @click="newsPage(news.id_news)"
       >
@@ -48,18 +48,6 @@ export default {
     },
   },
   computed: {
-    dataUrl() {
-      return (
-        "data:image/jpeg;base64," +
-        btoa(
-          new Uint8Array(this.news.photo).reduce(
-            (data, byte) => data + String.fromCharCode(byte),
-            ""
-          )
-        )
-      );
-    },
-    
   },
 };
 </script>

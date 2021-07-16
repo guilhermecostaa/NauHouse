@@ -10,7 +10,7 @@
     <div class="dataTable container-fluid mt-5">
       <DataTable
         name="news"
-        :items="getNews"
+        :items="getNews.map(news => {return{title: getTitle(news.title), description: getDescription(news.description)}})"
         :fields="['title', 'description', 'actions']"
         type="news"
       ></DataTable>
@@ -54,10 +54,27 @@ export default {
         const response = await this.$http.get("/news");
         if (response.status === 200) {
           this.news = response.data.content;
+          console.log(this.news)
           return this.news;
         }
       } catch (err) {
         console.log(err.response);
+      }
+    },
+    getDescription(description) {
+      if (description.length < 60) {
+        return description;
+      } else {
+        const spacePosition = description.indexOf(" ",60);
+        return `${description.substr(0, spacePosition)}...`;
+      }
+    },
+    getTitle(title) {
+      if (title.length < 30) {
+        return title;
+      } else {
+        const spacePosition = title.indexOf(" ", 30);
+        return `${title.substr(0, spacePosition)}...`;
       }
     },
   },

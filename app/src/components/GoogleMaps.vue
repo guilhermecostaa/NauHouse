@@ -15,7 +15,7 @@
 export default {
   name: "AddGoogleMap",
   props: ["address"],
-  created() {
+  mounted() {
     this.addLocationMarker();
   },
   data() {
@@ -26,7 +26,7 @@ export default {
       },
       locationMarkers: [],
       locPlaces: [],
-      existingPlace: this.address,
+      existingPlace: this.center,
     };
   },
   methods: {
@@ -39,7 +39,6 @@ export default {
         this.locationMarkers.push({ position: marker });
         this.locPlaces.push(this.existingPlace);
         this.center = marker;
-        this.existingPlace = null;
       }
     },
   },
