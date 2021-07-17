@@ -39,11 +39,7 @@ Vue.use(IconsPlugin);
 Vue.use(ToggleButton);
 Vue.component('VueCtkDateTimePicker', VueCtkDateTimePicker);
 Vue.use(VueSplide);
-Vue.use(VueGoogleMaps, {
-  load: {
-    libraries: 'places'
-  }
-})
+
 
 Vue.config.productionTip = false
 
